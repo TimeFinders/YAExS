@@ -55,6 +55,9 @@ Unfortunately, this often leads to large numbers of students having three or mor
 
 We will create an automated web-based system to schedule exams which we call YAExS 
 (Yet Another Exam Scheduler - pronounced “yikes!”).
+
+\textcolor{red}{Why is our solution good. make people want to use our solution.}
+
 Using the Unified Process of software engineering, we will develop YAExS
  over the coming semester. 
 This report represents the first stage of our project: Inception. 
@@ -69,17 +72,20 @@ The entire system will be customizable, easy to use, and flexible
 \end{comment}
 
 
-
-
-
-
-
+%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Business Case} %Andrew
 \textcolor{blue}{ business case for the project (including a short analysis of the
  competition, market space or similar commercial off the shelf software) (12 points),}
 , reduce/eliminate conflicts which cause headaches for students\&professors\&the registrar, minimize hand-word needed and so reduce errors,will speed up exam scheduling by allow preferences to be stated before the exam schedule is made so the schedule does not have to be remade several times, will allow for easy sensitivity analysis (e.g. what if we want to have just 16 exam periods, or what if we don't use west hall, or what if we want to minimize the number of students with back-to-back finals).
 \subsection{Project Stakeholders} %Andrew
 \textcolor{blue}{a description of the project stakeholders (7 points),}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Major Features} %Auston
 \textcolor{blue}{ list of the major features of the completed project (7 points),}
 % General list for now. Formatting/Table-ing could be improved later
@@ -104,22 +110,22 @@ The entire system will be customizable, easy to use, and flexible
   \item View entire up-to-date exam schedule on website
   \end{itemize}
 \end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Major Risks} %Auston
-\textcolor{blue}{a and a list of the major risks of the project (10 points)}
-\textcolor{red}{Vera's thoughts. I'm not really sure what risks are. but here are some possibilities that popped into my head while procrastinating on writing my own sections:
-scheduling algorithm may not converge,
-may not be able to get all data in a usable form,
-registrar may decide not to let us use student data for privacy reasons 
-registrar may hate the project}
+
 \begin{itemize}
 \item The scheduling algorithm may not converge, leaving the core of the system useless.
 \item Limited experience with web development and database management.
-\item For privacy reasons, the registrar may not be willing to provide detailed information about which courses students are taking. Without that, the scheduler would not be able to accurately prevent conflicts.
+\item For privacy reasons, the Registrar may not be willing to provide detailed information about which courses students are taking. Without that, the scheduler would not be able to accurately prevent conflicts.
 \item Some of our preferred programming languages may have difficulty communicating between each other. % Not sure about this one.
 \end{itemize}
 
 
-%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{User Scenarios}  %JEFF+VERA
 \textcolor{blue}{The User Scenario should create a realistic picture of a persona using the software.  
 Look for details about the Persona and the User Interface.  
@@ -128,7 +134,20 @@ Was the User Scenario compelling?
 Is the picture painted realistic and detailed?
 Each has a persona, goals, and sequence of steps}
 \subsection{Instructors} %JEFF
-%\subsection{Department Scheduling Coordinator} %JEFF - OPTIONAL
+\begin{description}
+\item[Name:]
+\item[Age:]
+\item[Occupation:]
+\item[Background:]
+
+\item[Goals:]
+\begin{enumerate}
+\end{enumerate}
+
+\item[Sequence of Steps:]
+\end{description}
+
+
 \subsection{Registrar}  %VERA
 
 \begin{description}
@@ -138,47 +157,49 @@ Each has a persona, goals, and sequence of steps}
 \item[Background:] Reggie came to RPI in 1984 when he  back moved from
  Chicago to raise his children in the capital area where he was raised. 
 He worked in various offices of the administration before becoming
- the Assistant Registrar in 1997. 
+ the Assistant Registrar in 1997.  As the Assistant Registrar, he is in charge of planning RPI's academic calendar,  scheduling classes, overseeing student course registration and scheduling final exams.
+
 He has used web-based applications in the past, but it takes him some 
 time to get accustomed to new interfaces. 
 He uses Microsoft Excel often but has never written his own code
  and has never used Excel’s optimization capabilities.
 
 \item[Goals:]
+Reggie would like to:
 \begin{enumerate}
-\item Keep his email inbox clear of scheduling requests.
-\item Prevent erroneous requests from affecting the final exam schedule
- (ex students making fake requests, professors personal vacations, etc.)
-\item Reduce time spent supervising work study students handcrafting lists of
- cross-listed courses at the beginning of each semester.
-\item Reduce or eliminate need to schedule exams by hand.
-\item Minimize or eliminate need to schedule make-up exams for students with
- two exams scheduled at the same time or with multiple exams in one day.
+\item Reduce the number of make-up exams for students with two exams scheduled at the same time or with multiple exams in one day.
+\item Speed up the exam scheduling process.
+\item Keep his email inbox clear of schedule change requests from RPI instructors.
+\item Reduce the effort he spends supervising work study students handcrafting lists of cross-listed courses at the beginning of each semester.
+\item Minimize errors made by those work study students.
 \item Update final exam schedule to accommodate last minute requests 
 from professors.
 \end{enumerate}
 
 \item[Sequence of Steps]
 During the second week of classes Reggie logs on to his YAExS account and
- sees that all instructors have already logged in and input their exam preferences.  
-Reggie clicks the “instructor preference summary” button to see an overview of
- the data from instructors. He sees that 195 courses need to have exams
- scheduled, with 42 of those made up of multiple sections. 
-Five professors have indicated that they do not want exams on the last day, 
-and twelve would prefer not to have evening exams.
+ sees that all instructors have already logged in and input their
+ exam preferences.  
+Reggie selects “instructor preference summary”  to see an overview of
+ the data from instructors. He sees how many courses need to have exams
+ scheduled, and how many of those are made up of multiple sections. 
+He sees that a number of professors have indicated that they do not
+want exams on the last day, and a few would prefer not to have evening exams.
 
-He can now input his configuration settings and schedule exam.
+Next, Reggie inputs his configuration settings and schedule exam.
 He marks his preference as "reduce evening exams" since he has had many professors
 in the past complain when their exams were scheduled in the evening, 
-even if they didn't express that preference ahead of time. Next he clicks "schedule exams."
+even if they didn't express that preference ahead of time. 
+He then prompts the system to schedule exams.
 
-The next day, Reggie returns to check on his exam schedule. When he logs in, he sees
-that an exam schedule has been computed. He clicks "exam schedule summary" and sees that
-the the exam schedule has no exam conflicts, uses only 15 evening slots, and respects all
-the professor preferences. 
+The next day, Reggie returns to check on his exam schedule. 
+When he logs in, he sees that an exam schedule has been computed. 
+He chooses "exam schedule summary" and sees that
+the the exam schedule has no exam conflicts, uses few evening slots, 
+and respects all the professor preferences. 
 
-Satisfied with this schedule, Reggie clicks: download exam schedule file and sends it to all
-department heads for a final review.
+Satisfied with this schedule, Reggie clicks: download exam schedule file
+ and sends it to all department heads for a final review.
 
 
 \end{description}
@@ -214,10 +235,10 @@ Iteration II 09/24 - 10/01&
 Elaboration Deliverables: 
 	 \begin{packed_itemize} 
 	\vspace{-0.15in}
-		\item Use Cases
 		\item Domain Model Diagram
-		\item Deployment Diagram
 		\item Supplemental Specification
+		\item Deployment Diagram
+		\item Use Cases
 		\item Work Breakdown Structure
 		\item Updated Project Schedule
    \end{packed_itemize}
@@ -283,9 +304,9 @@ Implementation \#4:
 	\begin{packed_itemize}
 		\vspace{-0.15in}
 		\item Coordination of features
-		\item Integration of whole system
+		\item Integrate entire system
 	\end{packed_itemize}
-Final Test Result 
+Final Test Results
 
 Final Deliverables:
 	\begin{packed_itemize}
@@ -304,10 +325,8 @@ Stakeholder Review 2 and Final Release
 
 
 \section{Contribution Summary} %EVERYONE
-\textcolor{blue}{Table saying who did what.}
-
-\begin{table}
-\centering % center the table
+%\begin{table}
+%\centering % center the table
 \begin{tabular}{|p{1.4in}|p{4in}|}
 \hline
 \textbf{Name}     & \textbf{Contributions} \\
@@ -348,12 +367,13 @@ Vera Axelrod
 		\item Wrote Reggie Star Use Scenario
 		\item Wrote Project Schedule
 		\item Coordinated meetings with Assistant Registrar
+		\item Contributed research on competition
 	\end{packed_itemize}
 	\vspace{-0.4in}
 \\
 \hline
 \end{tabular}
-\end{table}
+%\end{table}
 
 
 \section{Status Report} %AUSTON
