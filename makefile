@@ -1,2 +1,2 @@
-Inception.pdf : Inception.tex
-    pdflatex -synctex=1 Inception.tex
+Inception.pdf: Inception.tex
+	pdflatex -synctex=1 Inception.tex
