@@ -4,6 +4,7 @@
 \usepackage{color} %colored text
 \usepackage{titling} % compresses the title
 \usepackage[none]{hyphenat} %surround text in {} to prevent hyphenation
+\usepackage{multirow}
 
 %squeezed itemize for table.
 \newenvironment{packed_itemize}{
@@ -182,7 +183,9 @@ department heads for a final review.
 
 \end{description}
 
-
+%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Project Schedule} %VERA
 
 \begin{table}
@@ -207,7 +210,7 @@ department heads for a final review.
 \hline
 %%%%%%%%%%%%%%%%%%%%
 Elaboration 09/24-10/11& 
-Iteration II 09/24 - 10/11& 
+Iteration II 09/24 - 10/01& 
 Elaboration Deliverables: 
 	 \begin{packed_itemize} 
 	\vspace{-0.15in}
@@ -218,19 +221,64 @@ Elaboration Deliverables:
 		\item Work Breakdown Structure
 		\item Updated Project Schedule
    \end{packed_itemize}
+
+Simple Executives:
+	\begin{packed_itemize}
+		\vspace{-0.15in}
+		\item \textcolor{red}{Server and Client}
+		\item Instructor and Registrar User Interface Prototypes
+	\end{packed_itemize}
    \vspace{-0.4in}
 & Elaboration Complete
 \\
 & & & \\
 \hline
+
 %%%%%%%%%%%%%%%%%%%%
-Construction 10/11 - 10/29  10/29 -11/19 &
-&& \\
-&&& \\
-\hline
+\multirow{20}{*}{Construction }
+ &
+ Iteration III 10/01 - 10/12 &
+ Design of System:
+	\begin{packed_itemize}
+		\vspace{-0.15in}
+		\item Static Class Diagram
+		\item Design Approach
+	\end{packed_itemize}
+
+ Design of Functions:
+	\begin{packed_itemize}
+		\vspace{-0.15in}
+		\item Sequence Diagram
+		\item  Design Pattern
+	\end{packed_itemize}
+
+ Implementation \# 1
+	\begin{packed_itemize}
+		\vspace{-0.15in}
+		\item Code Skeleton
+		\item Major Classes
+	\end{packed_itemize}
+ & Design Complete \\  \cline{2-4}
+%%%%%
+&
+ Iteration IV 10/12 - 10/29 &
+ Implementation \# 2: \emph{Must} features, including: \textcolor{red}{MUST FEATURES}
+ 
+Sprint \# 1 Deliverable: Object Calisthenics Sample Code
+ & Iterative Release \\  \cline{2-4}
+%%%%%
+ &
+ Iteration IV 10/29 - 11/19 &
+ Implementation \# 3: Features to be added, including \textcolor{red}{additional feautres}
+
+Spring \# 2 Deliverables: Testing Documents, Code Review &
+ Stakeholder Review \#1 
+and
+
+Beta Release \\ \hline
 %%%%%%%%%%%%%%%%%%%%
 Transition  11/19 - 12/06 &
-Iteration SOMENUMBER 11/19 - 12/06 &
+Iteration V 11/19 - 12/06 &
 Implementation \#4: 
 	\begin{packed_itemize}
 		\vspace{-0.15in}
@@ -253,6 +301,7 @@ Stakeholder Review 2 and Final Release
 \hline
 \end{tabular}
 \end{table}
+
 
 \section{Contribution Summary} %EVERYONE
 \textcolor{blue}{Table saying who did what.}
