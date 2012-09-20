@@ -81,14 +81,37 @@ The entire system will be customizable, easy to use, and flexible
 \textcolor{blue}{a description of the project stakeholders (7 points),}
 \subsection{Major Features} %Auston
 \textcolor{blue}{ list of the major features of the completed project (7 points),}
+% General list for now. Formatting/Table-ing could be improved later
+\begin{itemize}
+  \item Interface for course instructors
+  \begin{itemize}
+    \item Specify which courses have exams
+    \item Request particular times, dates, rooms, or other preferences
+    \item Receive updates on scheduling from the registrar
+  \end{itemize}
+  \item Interface for the Registrar
+  \begin{itemize}
+    \item Ability to start the schedule optimization
+    \item Communicate with course instructors and department schedulers
+    \item Track which instructors have not yet responded
+    \item Post the completed schedule to a public website
+    \item Upload data on which courses each student is taking % Good for now? We still don't know the details here...
+    \item Manual control over schedules after generation
+  \end{itemize}
+\end{itemize}
 \subsection{Major Risks} %Auston
 \textcolor{blue}{a and a list of the major risks of the project (10 points)}
-
 \textcolor{red}{Vera's thoughts. I'm not really sure what risks are. but here are some possibilities that popped into my head while procrastinating on writing my own sections:
 scheduling algorithm may not converge,
 may not be able to get all data in a usable form,
 registrar may decide not to let us use student data for privacy reasons 
 registrar may hate the project}
+\begin{itemize}
+  \item The scheduling algorithm may not converge, leaving the core of the system useless.
+  \item Limited experience with web development and database management.
+  \item For privacy reasons, the registrar may not be willing to provide detailed information about which courses students are taking. Without that, the scheduler would not be able to accurately prevent conflicts.
+  \item Some of our preferred programming languages may have difficulty communicating between each other. % Not sure about this one.
+\end{itemize}
 
 
 %%%%%%%%%%%%%%%%%%%%
