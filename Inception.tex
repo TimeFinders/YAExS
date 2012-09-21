@@ -85,28 +85,29 @@ Yet to come are the Project Elaboration, two Project Stakeholder Product Reviews
 %%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Major Features} %Auston
 \textcolor{blue}{ list of the major features of the completed project (7 points),}
-% General list for now. Formatting/Table-ing could be improved later
-\begin{itemize}
-\item Interface for course instructors
-  \begin{itemize}
-  \item Specify which courses have exams
-  \item Request particular times, dates, rooms, or other preferences
-  \item Receive updates on scheduling from the registrar
-  \end{itemize}
-\item Interface for the registrar
-  \begin{itemize}
-  \item Ability to start the scheduling program
-  \item Communicate with course instructors and department schedulers
-  \item Track which instructors have not yet responded
-  \item Post the completed schedule to a public website
-  \item Upload data on which courses each student is taking % Good for now? We still don't know the details here...
-  \item Manual control over schedules after generation
-  \end{itemize}
-\item Interface for students
-  \begin{itemize}
-  \item View entire up-to-date exam schedule on website
-  \end{itemize}
-\end{itemize}
+% Not a very pretty table, but could be worse
+\begin{table}[htbp]
+  \centering
+  \begin{tabular} {| l | r |}
+    \hline
+    \textbf{Feature} & \textbf{Priority} \\ \hline \hline
+    \multicolumn{2}{|c|}{\textbf{Interface for course instructors}} \\ \hline
+    Specify which courses have exams & Must \\ \hline
+    Request particular times, dates, rooms, or other preferences & Should \\ \hline
+    Receive updates on scheduling changes & Should \\ \hline
+    \multicolumn{2}{|c|}{\textbf{Interface for the registrar}} \\ \hline
+    Ability to start the scheduling program & Must \\ \hline
+    Manual control over schedules after generation & Must \\ \hline
+    Post the completed schedule to a public website & Should \\ \hline
+    Set scheduler preferences & Should \\ \hline
+    Notify course instructors and department schedulers about deadlines and updates & Could \\ \hline
+    Track which instructors have not yet responded & Could \\ \hline
+    Provide student course registration information & Could \\ \hline
+    \multicolumn{2}{|c|}{\textbf{Interface for students}} \\ \hline
+    View entire up-to-date schedule on website & Could \\ \hline
+  \end{tabular}
+  \caption{Table of major features, categorized by priority as Must, Should, or Could.}
+\end{table}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%
@@ -390,7 +391,7 @@ Vera Axelrod
 \subsection{Challenges} % I'm using this for more immediate risks, so it won't be exactly the same as the Major Risks section
 \begin{itemize}
 \item Lack of experience with web development and database management
-\item Available data on courses may be insufficient for proper optimization
+\item Available data on courses may be insufficient or difficult to find
 \end{itemize}
 
 \subsection{Upcoming Plans}
