@@ -76,19 +76,33 @@ Yet to come are the Project Elaboration, two Project Stakeholder Product Reviews
 \textcolor{blue}{ business case for the project (including a short analysis of the
  competition, market space or similar commercial off the shelf software) (12 points)}
 
-\subsubsection{Background}
+\subsubsection{The Problem}
 Computing power has improved significantly over the last decade.  Computers are now powerful and flexible enough to solve many problems that previously could only be solved manually by humans.  For example generating directions from a map was previously a job more easily done by people, but today Google maps and personal GPS devices quickly and accurately plan routes between locations separated by five miles or five thousand.  Technology has also evolved enough to allow rapid gathering and dissemination of information via networking.  A letter which used to take 3-5 days to send now takes  3-5 seconds via e-mail.
-\par Presently, at RPI, final exam scheduling is done manually by several individuals in the Registrars office including the Assistant Registrar Michael Conroy.  Te process involves emailing all faculty on campus to determine which classes/sections actually have a final exam.  After gathering all this information they create an exam schedule.  Currently that process involves much copy and pasting in Excel and even more guess and check work.  After determining a preliminary schedule, rooms are assigned for each exam and the schedule is forwarded to faculty for a final check before being released to the student body.  Right now the Office of the Registrar relies on the students in the Polytechnic student newspaper to help catch conflicts.  Not only is the entire inefficient but typically results in a schedule where multiple students have conflicts or more than two exams in a day.  Per RPI policy any student who is scheduled for more than two exams in one day is eligible to have the additional exams rescheduled.
-\par We believe that using modern computers is possible to streamline this process using a single integrated IT solution.  Given that most students are not able to have two classes at once, and that no students take more than 10 classes (two exams per day for five days) we feel that there are multiple final exam schedules that do not contain \emph{any} conflicts.
+
+\par Presently at RPI, final exam scheduling is done manually by several individuals in the Registrars office including the Assistant Registrar Michael Conroy.  The process involves emailing all faculty on campus to determine which classes/sections actually have final exams, and which classes/sections meet together for their exams.  After gathering all this information, the exam schedule is created.  Currently that process involves much copy and pasting in Excel and even more guess and check work.  After determining a preliminary schedule, rooms are assigned for each exam and the schedule is forwarded to faculty for a final check before being released to the student body.  Right now the Office of the Registrar relies on the students in the Polytechnic student newspaper to help catch conflicts.  Not only is the entire process inefficient but it typically results in a schedule where multiple students have conflicts or more than two exams in a day.  Per RPI policy, any student who is scheduled for more than two exams in one day (and of course for two exams at one time) is eligible to have a make-up exam. Scheduling make-up exams is a headache for the Registrar's Office, the course instructors, and the students, and can lead to unfair exam practices.
+
+\subsubsection{Project Feasibility}
+\par We believe that using modern computers is possible to streamline this process using a single integrated IT solution.  All of the course and student registration data is already available electronically to the Registrar's Office on the banner system, all that remains in terms of data processing is to collect information from instructors about which exams need to be scheduled.
+
+Once all the data is integrated into a single system, exams can be scheduled to reduce conflicts using mathematical optimization. Today dozens of commercial and open source optimizers are available that can easily handle a problem of this size on a standard RPI laptop in a matter of hours.  
+
+Currently the Registrar schedules exams over 20 periods (four time periods per day over five days).  Since there are fewer than 20 non-overlapping periods when the vast majority of RPI classes meet (e.g. Monday/Thursday from 8am-10am) and since the vast majority of students are enrolled in non-overlapping classes, finding an exam schedule with few conflicts should be possible.  In fact, previous work by Axelrod and Sebastian found exam schedules with no conflicts for RPI's Fall 2011 semester.
+
+\subsubsection{Competition}
+
+Mitchell and Max: their program has major issues (see Axelrod and Sebastian).
+Lots of paid things, too expensive!
+open source projects may be hard to adapt to RPI, or difficult to integrate seamlessly into the RPI system.
 
 
-\begin{comment}
-reduce/eliminate conflicts which cause headaches for students\&professors\&the registrar, minimize hand-word needed and so reduce errors,will speed up exam scheduling by allow preferences to be stated before the exam schedule is made so the schedule does not have to be remade several times, will allow for easy sensitivity analysis (e.g. what if we want to have just 16 exam periods, or what if we don't use west hall, or what if we want to minimize the number of students with back-to-back finals).
-\end{comment}
 
 \subsection{Project Stakeholders} %Andrew
 \textcolor{blue}{a description of the project stakeholders (7 points),}
+Team members
 
+Michael Conroy
+
+Team instructors
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%
@@ -411,4 +425,13 @@ Vera Axelrod
 \item Plan coding strategy and distribute work
 \item Stay in touch with Assistant Registrar
 \end{itemize}
+
+\section{References}
+
+Axelrod, Vera and Katie Sebastian. Exam Scheduling. May 17, 2012. Unpublished project report for MATP 6640/ISYE 6770 Linear Programming.
+
+McGinley,  Patton. 2011 Linear Programming Software Survey. ORMS Today, Vol. 38, No. 3.  Accessed Sep 22, 2012. <http://www.orms-today.org/surveys/LP/LP-survey.html>
+
 \end{document}
+
+
