@@ -47,24 +47,24 @@
 \subsection{Executive Summary} %Vera
 
 For years, final exam scheduling at Rensselaer Polytechnic Institute has been
- completed by hand in the Registrar’s Office. 
+ completed by hand in the Registrar’s Office.
 Unfortunately, this often leads to large numbers of students having three or more
  exams in one day and, in some cases, students with multiple exams scheduled at
- the same time.  
+ the same time.
  The process is also time-consuming since it requires integration of many different
- types of data (course schedules, student registration, room availability, etc). 
+ types of data (course schedules, student registration, room availability, etc).
 
-We will create an automated web-based system to schedule exams which we call YAExS 
+We will create an automated web-based system to schedule exams which we call YAExS
 (Yet Another Exam Scheduler - pronounced ``yikes!").
-This system will integrate all the data necessary to schedule exams to simplify the 
-scheduling process, and will produce exam schedules that minimizes conflicts 
-while respecting instructor and Registrar preferences whenever possible.  
-The entire system will be customizable, easy to use, and flexible 
+This system will integrate all the data necessary to schedule exams to simplify the
+scheduling process, and will produce exam schedules that minimizes conflicts
+while respecting instructor and Registrar preferences whenever possible.
+The entire system will be customizable, easy to use, and flexible
 so that the exam schedule can be changed to satisfy last-minute requirements.
 
 Using the Unified Process of software engineering, we will develop YAExS
- over the coming semester. 
-This report represents the first stage of our project: Inception. 
+ over the coming semester.
+This report represents the first stage of our project: Inception.
 Yet to come are the Project Elaboration, two Project Stakeholder Product Reviews,
  and a Transition Report.
 
@@ -74,8 +74,18 @@ Yet to come are the Project Elaboration, two Project Stakeholder Product Reviews
 %%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Business Case} %Andrew
 \textcolor{blue}{ business case for the project (including a short analysis of the
- competition, market space or similar commercial off the shelf software) (12 points),}
-, reduce/eliminate conflicts which cause headaches for students\&professors\&the registrar, minimize hand-word needed and so reduce errors,will speed up exam scheduling by allow preferences to be stated before the exam schedule is made so the schedule does not have to be remade several times, will allow for easy sensitivity analysis (e.g. what if we want to have just 16 exam periods, or what if we don't use west hall, or what if we want to minimize the number of students with back-to-back finals).
+ competition, market space or similar commercial off the shelf software) (12 points)}
+
+\subsubsection{Background}
+Computing power has improved significantly over the last decade.  Computers are now powerful and flexible enough to solve many problems that previously could only be solved manually by humans.  For example generating directions from a map was previously a job more easily done by people, but today Google maps and personal GPS devices quickly and accurately plan routes between locations separated by five miles or five thousand.  Technology has also evolved enough to allow rapid gathering and dissemination of information via networking.  A letter which used to take 3-5 days to send now takes  3-5 seconds via e-mail.
+\par Presently, at RPI, final exam scheduling is done manually by several individuals in the Registrars office including the Assistant Registrar Michael Conroy.  Te process involves emailing all faculty on campus to determine which classes/sections actually have a final exam.  After gathering all this information they create an exam schedule.  Currently that process involves much copy and pasting in Excel and even more guess and check work.  After determining a preliminary schedule, rooms are assigned for each exam and the schedule is forwarded to faculty for a final check before being released to the student body.  Right now the Office of the Registrar relies on the students in the Polytechnic student newspaper to help catch conflicts.  Not only is the entire inefficient but typically results in a schedule where multiple students have conflicts or more than two exams in a day.  Per RPI policy any student who is scheduled for more than two exams in one day is eligible to have the additional exams rescheduled.
+\par We believe that using modern computers is possible to streamline this process using a single integrated IT solution.  Given that most students are not able to have two classes at once, and that no students take more than 10 classes (two exams per day for five days) we feel that there are multiple final exam schedules that do not contain \emph{any} conflicts.
+
+
+\begin{comment}
+reduce/eliminate conflicts which cause headaches for students\&professors\&the registrar, minimize hand-word needed and so reduce errors,will speed up exam scheduling by allow preferences to be stated before the exam schedule is made so the schedule does not have to be remade several times, will allow for easy sensitivity analysis (e.g. what if we want to have just 16 exam periods, or what if we don't use west hall, or what if we want to minimize the number of students with back-to-back finals).
+\end{comment}
+
 \subsection{Project Stakeholders} %Andrew
 \textcolor{blue}{a description of the project stakeholders (7 points),}
 
@@ -125,10 +135,10 @@ Yet to come are the Project Elaboration, two Project Stakeholder Product Reviews
 %%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%
 \section{User Scenarios}  %JEFF+VERA
-\textcolor{blue}{The User Scenario should create a realistic picture of a persona using the software.  
-Look for details about the Persona and the User Interface.  
-Did the Persona achieve their goal?  
-Was the User Scenario compelling?  
+\textcolor{blue}{The User Scenario should create a realistic picture of a persona using the software.
+Look for details about the Persona and the User Interface.
+Did the Persona achieve their goal?
+Was the User Scenario compelling?
 Is the picture painted realistic and detailed?
 Each has a persona, goals, and sequence of steps}
 \subsection{Instructors} %JEFF
@@ -153,12 +163,12 @@ Each has a persona, goals, and sequence of steps}
 \item[Age:]  65
 \item[Occupation:] RPI Assistant Registrar
 \item[Background:] Reggie came to RPI in 1984 when he  back moved from
- Chicago to raise his children in the capital area where he was raised. 
+ Chicago to raise his children in the capital area where he was raised.
 He worked in various offices of the administration before becoming
  the Assistant Registrar in 1997.  As the Assistant Registrar, he is in charge of planning RPI's academic calendar,  scheduling classes, overseeing student course registration and scheduling final exams.
 
-He has used web-based applications in the past, but it takes him some 
-time to get accustomed to new interfaces. 
+He has used web-based applications in the past, but it takes him some
+time to get accustomed to new interfaces.
 He uses Microsoft Excel often but has never written his own code
  and has never used Excel’s optimization capabilities.
 
@@ -170,33 +180,33 @@ Reggie would like to:
 \item Keep his email inbox clear of schedule change requests from RPI instructors.
 \item Reduce the effort he spends supervising work study students handcrafting lists of cross-listed courses at the beginning of each semester.
 \item Minimize errors made by those work study students.
-\item Update final exam schedule to accommodate last minute requests 
+\item Update final exam schedule to accommodate last minute requests
 from professors.
 \end{enumerate}
 
 \item[Sequence of Steps]
 During the second week of classes Reggie logs on to his YAExS account and
  sees that all instructors have already logged in and input their
- exam preferences.  
+ exam preferences.
 Reggie selects “instructor preference summary”  to see an overview of
  the data from instructors. He sees how many courses need to have exams
- scheduled, and how many of those are made up of multiple sections. 
+ scheduled, and how many of those are made up of multiple sections.
 He sees that a number of professors have indicated that they do not
 want exams on the last day, and a few would prefer not to have evening exams.
 
 Next, Reggie inputs his configuration settings and schedule exam.
 He marks his preference as "reduce evening exams" since he has had many professors
-in the past complain when their exams were scheduled in the evening, 
-even if they didn't express that preference ahead of time. 
+in the past complain when their exams were scheduled in the evening,
+even if they didn't express that preference ahead of time.
 He then prompts the system to schedule exams.
 
-The next day, Reggie returns to check on his exam schedule. 
-When he logs in, he sees that an exam schedule has been computed. 
+The next day, Reggie returns to check on his exam schedule.
+When he logs in, he sees that an exam schedule has been computed.
 He chooses "exam schedule summary" and sees that
-the the exam schedule has no exam conflicts, uses few evening slots, 
-and respects all the professor preferences. 
+the the exam schedule has no exam conflicts, uses few evening slots,
+and respects all the professor preferences.
 
-Satisfied with this schedule, Reggie downloads the exam schedule 
+Satisfied with this schedule, Reggie downloads the exam schedule
  and sends it to all department heads for a final review.
 
 
@@ -215,7 +225,7 @@ Satisfied with this schedule, Reggie downloads the exam schedule
 Inception 09/06 - 09/24 &
 Iteration I 09/06 - 09/24 & \vspace{0.1in}
 Inception Deliverables:
-	 \begin{packed_itemize} 
+	 \begin{packed_itemize}
 	\vspace{-0.15in}
 		\item Vision Statement
 		\item Use Scenarios
@@ -225,10 +235,10 @@ Inception Deliverables:
 	& Inception Complete\\
 \hline
 %%%%%%%%%%%%%%%%%%%%
-Elaboration 09/24-10/11& 
+Elaboration 09/24-10/11&
 Iteration II 09/24 - 10/01&  \vspace{0.1in}
-Elaboration Deliverables: 
-	 \begin{packed_itemize} 
+Elaboration Deliverables:
+	 \begin{packed_itemize}
 	\vspace{-0.15in}
 		\item Domain Model Diagram
 		\item Supplemental Specification
@@ -277,23 +287,23 @@ Collect Sample Data from Registrar
 %%%%%
 &
  Iteration IV 10/12 - 10/29 & \vspace{0.1in}
- Implementation \# 2: 
+ Implementation \# 2:
 \emph{Must} features:
 	\begin{packed_itemize}
 	\vspace{-0.15in}
 		\item Cross-reference course detection
-		\item Schedule exams and assign rooms 
+		\item Schedule exams and assign rooms
 		\item Interface to display exam schedule
 	\end{packed_itemize}
 
 {\raggedright
-Sprint \# 1 Deliverable: 
+Sprint \# 1 Deliverable:
 Object Calisthenics Sample Code }
  & Iterative Release \\  \cline{2-4}
 %%%%%
- & 
+ &
  Iteration IV 10/29 - 11/19 & \vspace{0.1in}
- Implementation \# 3: Additional Features 
+ Implementation \# 3: Additional Features
 	\begin{packed_itemize}
 	\vspace{-0.15in}
 		\item Instructor exam sign-up website
@@ -303,13 +313,13 @@ Object Calisthenics Sample Code }
 
 Sprint \# 2 Deliverables:
  Testing Documents, Code Review &
-Stakeholder Review \#1 
+Stakeholder Review \#1
 and
 Beta Release \\ \hline
 %%%%%%%%%%%%%%%%%%%%
 Transition  11/19 - 12/06 &
 Iteration V 11/19 - 12/06 & \vspace{0.1in}
-Implementation \#4: 
+Implementation \#4:
 	\begin{packed_itemize}
 		\vspace{-0.15in}
 		\item Coordination of features
@@ -324,7 +334,7 @@ Final Deliverables:
 		\item Peer Reviews
 	\vspace{-0.15in}
 	\end{packed_itemize}
-& 
+&
 Stakeholder Review 2 and Final Release \\
 \hline
 \end{tabular}
@@ -342,15 +352,15 @@ Stakeholder Review 2 and Final Release \\
 \hline\hline
 %%%%%%%%%%%%%%%%%%%%
  Andrew Karnani
-	& 
-	 \begin{packed_itemize} 
+	&
+	 \begin{packed_itemize}
 		\item something
 	\end{packed_itemize}
 \\
 \hline
  Auston Sterling
-	& 
-	 \begin{packed_itemize} 
+	&
+	 \begin{packed_itemize}
 	        \item Wrote Major Features
                 \item Wrote Major Risks
                 \item Wrote Status Report
@@ -358,16 +368,16 @@ Stakeholder Review 2 and Final Release \\
 \\
 \hline
 Jeffrey Rodowicz
-	& 
-	 \begin{packed_itemize} 
+	&
+	 \begin{packed_itemize}
 		\item something
 	\end{packed_itemize}
 \\
 \hline
 Vera Axelrod
-	& 
-	 \begin{packed_itemize} 
-		\item Wrote Executive Summary 
+	&
+	 \begin{packed_itemize}
+		\item Wrote Executive Summary
 		\item Wrote Reggie Star Use Scenario
 		\item Wrote Project Schedule
 		\item Coordinated meetings with Assistant Registrar
