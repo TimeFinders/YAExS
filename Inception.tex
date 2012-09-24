@@ -90,15 +90,25 @@ Currently the Registrar schedules exams over 20 periods (four time periods per d
 
 \subsubsection*{Proposed Solution}
 
-We propose to create an end-to-end solution to streamline and improve the process of scheduling RPI's final exam.  The system would start by providing professors and department schedulers a simple straightforward process to inform the Registrar which classes have final exams.  We envision the system pulling class information from SIS (or perhaps some other source) and presenting faculty with a pre-created list of his classes.  The professors will be able to express any scheduling preferences (specifically day/time and location).  The Registrar's Office can to log into the system and see which professors have responded and which classes have exams.  Once the Registrar feels that there are enough responses they will start the scheduling process.  Upon completion of scheduling the individual who started the scheduling process will be notified.  The Registrar's Office will be able to see the schedule produced and make manual changes, they will also be able to re-run the scheduling process if they receive new responses from professors.  After the Registrar approves the created schedule it will be posted publicly to the web.  The Registrar will also be able to download a CSV file representing the schedule for internal use.
+We propose to create an end-to-end solution to streamline and improve the process of scheduling RPI's final exams.  The system would start by providing professors and department schedulers\footnote{A department scheduler is a faculty or staff member currently responsible for compiling a list of exams that need to be scheduled for his/her academic department.} a simple, straightforward process to inform the Registrar of which classes have final exams.  We envision the system pulling class information from SIS (or perhaps from some other source) and presenting instructors with a pre-created list of his/her classes.  The professors will be able to express scheduling preferences (e.g. morning exam, not in West Hall).  The Registrar's Office would be able to log into the system and see which instructors have responded and which classes have exams.  Once the Registrar feels that there are enough responses they will start the automated scheduling process.  Upon completion of scheduling, the Registrar's office will be notified.  The Registrar's Office will be able to see the schedule produced and make manual changes, they will also be able to re-run the scheduling process if they receive new information.  After the Registrar approves the created schedule it will be posted publicly to the web.  The Registrar will also be able to download a  file representing the schedule for internal use.
 
 \subsubsection*{Competition}
+There have been a few previous attempts to schedule exams automatically at RPI. However, none of these have been successful.  In the words of Assistant Registrar Michael Conroy,  \``I have been meeting with students for a number of years with their final exam projects and this [YAExS] is the first time I have seen something that I want to investigate further."
 
-Mitchell and Max: their program has major issues (see Axelrod and Sebastian).
+The most recent prior effort, by student Michael Maxwell took a similar approach in that he used mathematical optimization to schedule RPI exams. 
+However, his system had a number of downsides. His algorithm could not schedule exams for all students within 24 hours, and because he required all ``common exams" (the big, multiple-section exams like CS 1, Physics I, Calc I, etc.) to meet at 8am, his algorithm would never be able to produce exam schedules with minimal conflicts. His system had a number of other errors, including: no support for cross-listed courses, lack of sensitivity to multiple sections of a course that meet for separate exams (e.g. Prof. Kapila's Numerical Computing MATH 4800/CS4800 has a separate exam every semester from Prof. Lvov's).  Finally, the system was not integrated into any RPI data sources and did not have a user interface. 
 
-Lots of paid things, too expensive!
+Since none of the systems hand-crafted for RPI have been satisfactory to the Registrar's office, the remaining competition is commercial products and open source projects. None of these systems would be ready to use easily with RPI out of the box, they would require time and IT - knowledge to set up, both of which the Registrar's office has in short supply. 
 
-open source projects may be hard to adapt to RPI, or difficult to integrate seamlessly into the RPI system.
+Commercial exam schedulers include Calculix Exam Planner, Schedule Expert, Scientia Exam Scheduler, Edval Timetables, and The Timetabler. Not much information is easily available about these schedulers.  But they can get quite expensive. According to Edval Timetables, ''most timetabling consultants will charge around \$7000 for completing an average school, and dedicated timetable companies usually charge around \$15-\$20 per student," that would translate to the neighborhood of \$100,000 for RPI.
+
+There are some other downsides to these commercial products.
+For example, Schedule Expert has a user interface that is overly complicated and difficult to use, in our opinion.  Also, it does not support Windows 7 which implies that is not well maintained.
+
+Edval Timetables was designed by researchers at Sydney University and so is tuned specifically for that school's requirements. Edval requires a huge upfront time investment, their website reads "we allocate two to three months for initial set up, training for any new school, and up to a month to generate the first solution, but following this, all changes and iterations only around two weeks."  Our approach will take only a few hours to compute schedules, and by working with the Registrar's Office during the development process, the initial set up will require minimal effort on their part. Edval is also bundled with a number of other products that RPI's Registrar's Office has no use for at this time, such as parent-teacher conference scheduling 
+
+The Timetabler does not allow for instructor preferences or any room preferences.
+
 
 
 
@@ -400,7 +410,7 @@ Vera Axelrod
 		\item Wrote Reggie Star Use Scenario
 		\item Wrote Project Schedule
 		\item Coordinated meetings with Assistant Registrar
-		\item Contributed research on competition
+		\item Contributed research  and writing on competition
 	\end{packed_itemize}
 \\
 \hline
@@ -438,6 +448,8 @@ Vera Axelrod
 \hspace{0.25in}Axelrod, Vera and Katie Sebastian. Exam Scheduling. May 17, 2012. Unpublished project report for MATP 6640/ISYE 6770 Linear Programming.
 
 McGinley,  Patton. 2011 Linear Programming Software Survey. ORMS Today, Vol. 38, No. 3.  Accessed Sep 22, 2012. <http://www.orms-today.org/surveys/LP/LP-survey.html>
+
+edval timetables. Accessed Sep 11, 2012. <www.edval.com.au/index.html>
 
 \end{document}
 
