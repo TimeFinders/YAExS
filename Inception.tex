@@ -6,6 +6,7 @@
 \usepackage[none]{hyphenat} %surround text in {} to prevent hyphenation
 \usepackage{multirow}
 \usepackage{array}
+\usepackage{url}
 
 %squeezed itemize for table.
 \newenvironment{packed_itemize}{
@@ -96,20 +97,36 @@ We propose to create an end-to-end solution to streamline and improve the proces
 There have been a few previous attempts to schedule exams automatically at RPI. However, none of these have been successful.  In the words of Assistant Registrar Michael Conroy,  \``I have been meeting with students for a number of years with their final exam projects and this [YAExS] is the first time I have seen something that I want to investigate further."
 
 The most recent prior effort, by student Michael Maxwell took a similar approach in that he used mathematical optimization to schedule RPI exams. 
-However, his system had a number of downsides. His algorithm could not schedule exams for all students within 24 hours, and because he required all ``common exams" (the big, multiple-section exams like CS 1, Physics I, Calc I, etc.) to meet at 8am, his algorithm would never be able to produce exam schedules with minimal conflicts. His system had a number of other errors, including: no support for cross-listed courses, lack of sensitivity to multiple sections of a course that meet for separate exams (e.g. Prof. Kapila's Numerical Computing MATH 4800/CS4800 has a separate exam every semester from Prof. Lvov's).  Finally, the system was not integrated into any RPI data sources and did not have a user interface. 
+However, his system had a number of downsides. 
+His algorithm could not schedule exams for all students within 24 hours, and because he required all ``common exams" (the big, multiple-section exams like CS 1, Physics I, Calc I, etc.) to meet at 8am, his algorithm would never be able to produce exam schedules with minimal conflicts. 
+Maxwell's system had a number of other errors, including: no support for cross-listed courses, lack of sensitivity to multiple sections of a course that meet for separate exams (e.g. Prof. Kapila's Numerical Computing MATH 4800/CS4800 has a separate exam every semester from Prof. Lvov's section).  
+Finally, the system was not integrated into any RPI data sources and did not have a user interface. 
 
-Since none of the systems hand-crafted for RPI have been satisfactory to the Registrar's office, the remaining competition is commercial products and open source projects. None of these systems would be ready to use easily with RPI out of the box, they would require time and IT - knowledge to set up, both of which the Registrar's office has in short supply. 
+Since none of the systems hand-crafted for RPI have been satisfactory to the Registrar's office, the remaining competition is commercial products and open source projects. 
+None of these systems would be ready to use easily with RPI out of the box, they would require time and IT - knowledge to set up, both of which the Registrar's office has in short supply. 
 
-Commercial exam schedulers include Calculix Exam Planner, Schedule Expert, Scientia Exam Scheduler, Edval Timetables, and The Timetabler. Not much information is easily available about these schedulers.  But they can get quite expensive. According to Edval Timetables, ''most timetabling consultants will charge around \$7000 for completing an average school, and dedicated timetable companies usually charge around \$15-\$20 per student," that would translate to the neighborhood of \$100,000 for RPI.
+Commercial exam schedulers include Calculix Exam Planner, Schedule Expert, Scientia Exam Scheduler, and Edval Timetables. Not much information is easily available about these schedulers.  But they can get quite expensive. 
+According to Edval Timetables, ''most timetabling consultants will charge around \$7000 for completing an average school, and dedicated timetable companies usually charge around \$15-\$20 per student," that would translate to the neighborhood of \$100,000 for RPI.
 
 There are some other downsides to these commercial products.
-For example, Schedule Expert has a user interface that is overly complicated and difficult to use, in our opinion.  Also, it does not support Windows 7 which implies that is not well maintained.
+For example, Schedule Expert has a user interface that is overly complicated and difficult to use, in our opinion.  
+Also, it does not support Windows 7 which implies that is not well maintained.
 
-Edval Timetables was designed by researchers at Sydney University and so is tuned specifically for that school's requirements. Edval requires a huge upfront time investment, their website reads "we allocate two to three months for initial set up, training for any new school, and up to a month to generate the first solution, but following this, all changes and iterations only around two weeks."  Our approach will take only a few hours to compute schedules, and by working with the Registrar's Office during the development process, the initial set up will require minimal effort on their part. Edval is also bundled with a number of other products that RPI's Registrar's Office has no use for at this time, such as parent-teacher conference scheduling 
+Edval Timetables was designed by researchers at Sydney University and so is tuned specifically for that school's requirements. 
+Edval requires a huge upfront time investment, their website reads "we allocate two to three months for initial set up, training for any new school, and up to a month to generate the first solution, but following this, all changes and iterations only around two weeks."  
+Our approach will take only a few hours to compute schedules, and by working with the Registrar's Office during the development process, the initial set up will require minimal effort on their part.
+ Edval is also bundled with a number of other products that RPI's Registrar's Office has no use for at this time, such as parent-teacher conference scheduling.
 
-The Timetabler does not allow for instructor preferences or any room preferences.
+The other competition for YAExS is open source schedulers.  Two of the dominant open source exam schedulers are FET (Free Time Tabling Software) and UNI (University Time Tabling).
 
+FET uses a heuristic algorithm, not optimization. While its algorithm is impressively fast (their website claims it can create schedules in under 20 minutes), it is not guaranteed to find an optimal exam schedule.
+ It also requires more help from the user when it gets stuck, which might be difficult for the Registrar's Office without deep knowledge of the algorithm's inner workings. 
 
+UNI is the best exam scheduling software we have found so far. This open source project is being actively developed and its scheduling algorithm has already won two International Timetabling Competitions.  
+UNI is a collaborative effort among dozens of researchers, who have written dozens of papers and even PhD theses on scheduling.
+However, because UNI it is such a complex piece of software,  it would require maintenance and significant customization to work effectively with RPI's Banner RPI.  
+It also provides far more functionality than the Registrar needs  and could prove confusing and overwhelming.
+Because this project is open source and is the result of years of research, we may incorporate some ideas and features from UNI into our custom solution for RPI.
 
 
 \subsection{Project Stakeholders} %Andrew
@@ -445,11 +462,23 @@ Vera Axelrod
 
 \section*{References}
 
-\hspace{0.25in}Axelrod, Vera and Katie Sebastian. Exam Scheduling. May 17, 2012. Unpublished project report for MATP 6640/ISYE 6770 Linear Programming.
+\hspace{0.25in}Axelrod, Vera and Katie Sebastian. Exam Scheduling. May 17, 2012. Unpublished project report for MATP 6640/ISYE 6770 Linear Programming. \\
 
-McGinley,  Patton. 2011 Linear Programming Software Survey. ORMS Today, Vol. 38, No. 3.  Accessed Sep 22, 2012. <http://www.orms-today.org/surveys/LP/LP-survey.html>
+McGinley,  Patton. 2011 Linear Programming Software Survey. ORMS Today, Vol. 38, No. 3.  Accessed Sep 22, 2012. $<$\url{http://www.orms-today.org/surveys/LP/LP-survey.html}$>$. \\
 
-edval timetables. Accessed Sep 11, 2012. <www.edval.com.au/index.html>
+Edval Timetables. Accessed Sep 11, 2012. $<$\url{www.edval.com.au/index.html}$>$. \\
+
+Calculix Exam Planner. Accessed Sep 11, 2012. $<$\url{http://www.examplanner.com/}$>$. \\
+
+Schedule Expert, Final Exam Scheduling Software. Educational Scheduling, Inc. Accessed Sep 11, 2012. $<$\url{http://www.scheduleexpert.com/}$>$. \\
+
+
+Scientia Exam Scheduler. Scientia, Ltd. Accessed Sep 11, 2012.
+$<$\url{http://www.scientia.com/uk/products/scheduling&resourcesallocation/examscheduler/}$>$. \\
+
+FET
+
+UNI: University Timetabling. Accessed Sep 11, 2012.  $<$\url{http://www.unitime.org/}$>$.
 
 \end{document}
 
