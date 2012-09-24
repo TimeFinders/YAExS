@@ -94,47 +94,47 @@ We propose to create an end-to-end solution to streamline and improve the proces
 \subsubsection*{Competition}
 There have been a few previous attempts to schedule exams automatically at RPI. However, none of these have been successful.  In the words of Assistant Registrar Michael Conroy,  ``I have been meeting with students for a number of years with their final exam projects and [YAExS] is the first time I have seen something that I want to investigate further."
 
-The most recent prior effort,  mathematics student Michael Maxwell took a similar approach to us in that he used mathematical optimization to schedule RPI exams. 
-However, his system had a number of downsides. 
-His algorithm took over 24 hours to  schedule exams for all students, and because he required all ``common exams" (the big, multiple-section exams like CS 1, Physics I, Calc I, etc.) to meet at 8am, his algorithm was never be able to produce exam schedules with minimal conflicts. 
+The most recent prior effort,  mathematics student Michael Maxwell took a similar approach to us in that he used mathematical optimization to schedule RPI exams.
+However, his system had a number of downsides.
+His algorithm took over 24 hours to  schedule exams for all students, and because he required all ``common exams" (the big, multiple-section exams like CS 1, Physics I, Calc I, etc.) to meet at 8am, his algorithm was never be able to produce exam schedules with minimal conflicts.
 Maxwell's system had a number of other errors, including: no support for cross-listed courses and lack of sensitivity to multiple sections of a course that meet for separate exams. Thus it could not handle Numerical Computing, which is has two sections taught by different professors who hold separate exams, each of which is crosslisted as MATH 4800 and CSCI4800.
-Finally, Maxwell's system was not integrated into any RPI data sources so it still required manual data collection and did not have a user interface. 
+Finally, Maxwell's system was not integrated into any RPI data sources so it still required manual data collection and did not have a user interface.
 
-Since none of the systems hand-crafted for RPI have been satisfactory to the Registrar's office, the remaining competition is commercial products and open source projects. 
+Since none of the systems hand-crafted for RPI have been satisfactory to the Registrar's office, the remaining competition is commercial products and open source projects.
 None of these systems would be ready to use easily with RPI out of the box, they would require time and IT - knowledge to set up, both of which are in short supply at the Registrar's office.
 
-Commercial exam schedulers include Calculix Exam Planner, Schedule Expert, Scientia Exam Scheduler, and Edval Timetables. Not much information is easily available about these schedulers, but they can get quite expensive. 
+Commercial exam schedulers include Calculix Exam Planner, Schedule Expert, Scientia Exam Scheduler, and Edval Timetables. Not much information is easily available about these schedulers, but they can get quite expensive.
 According to Edval Timetables, ``most timetabling consultants will charge around \$7000 for completing an average school, and dedicated timetable companies usually charge around \$15-\$20 per student," that would translate to the neighborhood of \$100,000 for RPI!
 
 There are some other downsides to these commercial products.
-For example, Schedule Expert has a user interface that is overly complicated and difficult to use, in our opinion.  
+For example, Schedule Expert has a user interface that is overly complicated and difficult to use, in our opinion.
 Also, it does not support Windows 7 which implies that is not well maintained.
 
-But while Schedule Expert is not school specific, 
-Edval Timetables was designed by researchers at Sydney University and so is tuned specifically for that school's requirements. 
-Edval requires a huge upfront time investment, their website reads "we allocate two to three months for initial set up, training for any new school, and up to a month to generate the first solution, but following this, all changes and iterations only around two weeks."  
+But while Schedule Expert is not school specific,
+Edval Timetables was designed by researchers at Sydney University and so is tuned specifically for that school's requirements.
+Edval requires a huge upfront time investment, their website reads "we allocate two to three months for initial set up, training for any new school, and up to a month to generate the first solution, but following this, all changes and iterations only around two weeks."
 Our approach will take only a few hours to compute schedules, and by working with the Registrar's Office during the development process, the initial set up will require minimal effort on their part.
  Edval is also bundled with a number of other products that RPI's Registrar's Office has no use for at this time, such as parent-teacher conference scheduling.
 
 The other competition for YAExS is open source schedulers.  Two of the dominant open source exam schedulers are FET (Free Time Tabling Software) and UNI (University Time Tabling).
 
 FET uses a heuristic algorithm, not optimization. While its algorithm is impressively fast (their website claims it can create schedules in under 20 minutes), it is not guaranteed to find an optimal exam schedule.
- It also requires more help from the user when it gets stuck, which might be difficult for the Registrar's Office without deep knowledge of the algorithm's inner workings. 
+ It also requires more help from the user when it gets stuck, which might be difficult for the Registrar's Office without deep knowledge of the algorithm's inner workings.
 
-UNI is the best exam scheduling software we have found so far. This open source project is being actively developed and its scheduling algorithm has already won two International Timetabling Competitions.  
+UNI is the best exam scheduling software we have found so far. This open source project is being actively developed and its scheduling algorithm has already won two International Timetabling Competitions.
 UNI is a collaborative effort among dozens of researchers, who have written dozens of papers and even PhD theses on scheduling.
-However, because UNI is such a complex piece of software, it would require maintenance and significant customization to work effectively with RPI's Banner.  
+However, because UNI is such a complex piece of software, it would require maintenance and significant customization to work effectively with RPI's Banner.
 It also provides far more functionality than the Registrar needs and could prove confusing and overwhelming.
 Because this project is open source and is the result of years of research, we may incorporate some ideas and features from UNI into our custom solution for RPI.
 
 
 \subsection{Project Stakeholders} %Andrew
 
-TimeFinders (our team) is the primary stakeholder in this project.  We are the primary designers, developers, and testers. 
+TimeFinders (our team) is the primary stakeholder in this project.  We are the primary designers, developers, and testers.
 
-The Office of the Registrar at RPI will be assisting us in determining the use cases, workflows, and specifications for the scheduling application.  In particular Michael Conroy, the Assistant Registrar, will serve as our domain expert. The time invested will ensure that the software produced will effectively solve the problem we are addressing.  
+The Office of the Registrar at RPI will be assisting us in determining the use cases, workflows, and specifications for the scheduling application.  In particular Michael Conroy, the Assistant Registrar, will serve as our domain expert. The time invested will ensure that the software produced will effectively solve the problem we are addressing.
 
-Finally our instructors in Software Design and Documentation: John Sturman, Benno Lee, and Yanan Hao, will invest their time to teach us about software design which will improve our skills and thus allow us to produce a better final product.  
+Finally our instructors in Software Design and Documentation: John Sturman, Benno Lee, and Yanan Hao, will invest their time to teach us about software design which will improve our skills and thus allow us to produce a better final product.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
@@ -201,9 +201,9 @@ Frank would like to:
 \end{enumerate}
 
 \item[Sequence of Steps:]
-During the first week of classes Frank logs on to his YAExS account and sees the courses that he is teaching are listed for him. He selects his CS1 course and chooses the option that it should have an exam, and then he chooses for his Parallel Computing class to have no final. 
+During the first week of classes Frank logs on to his YAExS account and sees the courses that he is teaching are listed for him. He selects his CS1 course and chooses the option that it should have an exam, and then he chooses for his Parallel Computing class to have no final.
 
-While looking at the options for the final exams, he selects that his section of CS1 should be linked to the other section of CS1 taught by another professor and that the exams should happen at the same time. After linking the exams he the selects the prefer morning option in hopes that he will be able to get an 8 am exam slot. Frank then submits his choices through YAExS and waits for the exam schedule to be sent out. 
+While looking at the options for the final exams, he selects that his section of CS1 should be linked to the other section of CS1 taught by another professor and that the exams should happen at the same time. After linking the exams he the selects the prefer morning option in hopes that he will be able to get an 8 am exam slot. Frank then submits his choices through YAExS and waits for the exam schedule to be sent out.
 
 A few days later, Frank is told that the schedule has been made and he may check to see if it is okay. Frank sees that his exam for CS1 is scheduled on the second day of exams at 11:30 in the West Hall auditorium. He is okay with the day and time, but realizes that he would really rather not have his exam in West Hall. He uses YAExS to request a room change for the exam.
 
@@ -410,7 +410,8 @@ Stakeholder Review 2 and Final Release \\
  Andrew Karnani
 	&
 	 \begin{packed_itemize}
-		\item something
+		\item Wrote business case
+    \item Wrote project stakeholders
 	\end{packed_itemize}
 \\
 \hline
@@ -427,7 +428,7 @@ Jeffrey Rodowicz
 	&
 	 \begin{packed_itemize}
 		\item Wrote Frank Teachington Use Scenario
-		\item Reviewed report 
+		\item Reviewed report
 	\end{packed_itemize}
 \\
 \hline
