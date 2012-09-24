@@ -74,8 +74,6 @@ Yet to come are the Project Elaboration, two Project Stakeholder Product Reviews
 %%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Business Case} %Andrew
-\textcolor{blue}{ business case for the project (including a short analysis of the
- competition, market space or similar commercial off the shelf software) (12 points)}
 
 \subsubsection*{The Problem}
 Computing power has improved significantly over the last decade.  Computers are now powerful and flexible enough to solve many problems that previously could only be solved manually by humans.  For example generating directions from a map was previously a job more easily done by people, but today Google maps and personal GPS devices quickly and accurately plan routes between locations separated by five miles or five thousand.  Technology has also evolved enough to allow rapid gathering and dissemination of information via networking.  A letter which used to take 3-5 days to send now takes  3-5 seconds via e-mail.
@@ -83,9 +81,9 @@ Computing power has improved significantly over the last decade.  Computers are 
 \par Presently at RPI, final exam scheduling is done manually by several individuals in the Registrars office including the Assistant Registrar Michael Conroy.  The process involves emailing all faculty on campus to determine which classes/sections actually have final exams, and which classes/sections meet together for their exams.  After gathering all this information, the exam schedule is created.  Currently that process involves much copy and pasting in Excel and even more guess and check work.  After determining a preliminary schedule, rooms are assigned for each exam and the schedule is forwarded to faculty for a final check before being released to the student body.  Right now the Office of the Registrar relies on the students in the Polytechnic student newspaper to help catch conflicts.  Not only is the entire process inefficient but it typically results in a schedule where multiple students have conflicts or more than two exams in a day.  Per RPI policy, any student who is scheduled for more than two exams in one day (and of course for two exams at one time) is eligible to have a make-up exam. Scheduling make-up exams is a headache for the Registrar's Office, the course instructors, and the students, and can lead to unfair exam practices.
 
 \subsubsection*{Project Feasibility}
-\par We believe that using modern computers is possible to streamline this process using a single integrated IT solution.  All of the course and student registration data is already available electronically to the Registrar's Office on the banner system, all that remains in terms of data processing is to collect information from instructors about which exams need to be scheduled.
+\par We believe that using modern computers is possible to streamline this process using a single integrated IT solution.  All of the course and student registration data is already available electronically to the Registrar's Office on the Banner system, all that remains in terms of data processing is to collect information from instructors about which exams need to be scheduled.
 
-Once all the data is integrated into a single system, exams can be scheduled to reduce conflicts using mathematical optimization. Today dozens of commercial and open source optimizers are available that can easily handle a problem of this size on a standard RPI laptop in a matter of hours.
+Once all the data is integrated into a single system, exams can be scheduled to reduce conflicts using mathematical optimization. Today dozens of commercial and open source optimizers are available that can easily handle a problem of this size on a standard RPI laptop in a matter of hours. We will use our knowledge of mathematical programming with one of these optimizers.
 
 Currently the Registrar schedules exams over 20 periods (four time periods per day over five days).  Since there are fewer than 20 non-overlapping periods when the vast majority of RPI classes meet (e.g. Monday/Thursday from 8am-10am) and since the vast majority of students are enrolled in non-overlapping classes, finding an exam schedule with few conflicts should be possible.  In fact, previous work by Axelrod and Sebastian found exam schedules with no conflicts for RPI's Fall 2011 semester.
 
@@ -94,24 +92,25 @@ Currently the Registrar schedules exams over 20 periods (four time periods per d
 We propose to create an end-to-end solution to streamline and improve the process of scheduling RPI's final exams.  The system would start by providing professors and department schedulers\footnote{A department scheduler is a faculty or staff member currently responsible for compiling a list of exams that need to be scheduled for his/her academic department.} a simple, straightforward process to inform the Registrar of which classes have final exams.  We envision the system pulling class information from SIS (or perhaps from some other source) and presenting instructors with a pre-created list of his/her classes.  The professors will be able to express scheduling preferences (e.g. morning exam, not in West Hall).  The Registrar's Office would be able to log into the system and see which instructors have responded and which classes have exams.  Once the Registrar feels that there are enough responses they will start the automated scheduling process.  Upon completion of scheduling, the Registrar's office will be notified.  The Registrar's Office will be able to see the schedule produced and make manual changes, they will also be able to re-run the scheduling process if they receive new information.  After the Registrar approves the created schedule it will be posted publicly to the web.  The Registrar will also be able to download a  file representing the schedule for internal use.
 
 \subsubsection*{Competition}
-There have been a few previous attempts to schedule exams automatically at RPI. However, none of these have been successful.  In the words of Assistant Registrar Michael Conroy,  \``I have been meeting with students for a number of years with their final exam projects and this [YAExS] is the first time I have seen something that I want to investigate further."
+There have been a few previous attempts to schedule exams automatically at RPI. However, none of these have been successful.  In the words of Assistant Registrar Michael Conroy,  ``I have been meeting with students for a number of years with their final exam projects and [YAExS] is the first time I have seen something that I want to investigate further."
 
-The most recent prior effort, by student Michael Maxwell took a similar approach in that he used mathematical optimization to schedule RPI exams. 
+The most recent prior effort,  mathematics student Michael Maxwell took a similar approach to us in that he used mathematical optimization to schedule RPI exams. 
 However, his system had a number of downsides. 
-His algorithm could not schedule exams for all students within 24 hours, and because he required all ``common exams" (the big, multiple-section exams like CS 1, Physics I, Calc I, etc.) to meet at 8am, his algorithm would never be able to produce exam schedules with minimal conflicts. 
-Maxwell's system had a number of other errors, including: no support for cross-listed courses, lack of sensitivity to multiple sections of a course that meet for separate exams (e.g. Prof. Kapila's Numerical Computing MATH 4800/CS4800 has a separate exam every semester from Prof. Lvov's section).  
-Finally, the system was not integrated into any RPI data sources and did not have a user interface. 
+His algorithm took over 24 hours to  schedule exams for all students, and because he required all ``common exams" (the big, multiple-section exams like CS 1, Physics I, Calc I, etc.) to meet at 8am, his algorithm was never be able to produce exam schedules with minimal conflicts. 
+Maxwell's system had a number of other errors, including: no support for cross-listed courses and lack of sensitivity to multiple sections of a course that meet for separate exams. Thus it could not handle Numerical Computing, which is has two sections taught by different professors who hold separate exams, each of which is crosslisted as MATH 4800 and CSCI4800.
+Finally, Maxwell's system was not integrated into any RPI data sources so it still required manual data collection and did not have a user interface. 
 
 Since none of the systems hand-crafted for RPI have been satisfactory to the Registrar's office, the remaining competition is commercial products and open source projects. 
-None of these systems would be ready to use easily with RPI out of the box, they would require time and IT - knowledge to set up, both of which the Registrar's office has in short supply. 
+None of these systems would be ready to use easily with RPI out of the box, they would require time and IT - knowledge to set up, both of which are in short supply at the Registrar's office.
 
-Commercial exam schedulers include Calculix Exam Planner, Schedule Expert, Scientia Exam Scheduler, and Edval Timetables. Not much information is easily available about these schedulers.  But they can get quite expensive. 
-According to Edval Timetables, ''most timetabling consultants will charge around \$7000 for completing an average school, and dedicated timetable companies usually charge around \$15-\$20 per student," that would translate to the neighborhood of \$100,000 for RPI.
+Commercial exam schedulers include Calculix Exam Planner, Schedule Expert, Scientia Exam Scheduler, and Edval Timetables. Not much information is easily available about these schedulers, but they can get quite expensive. 
+According to Edval Timetables, ``most timetabling consultants will charge around \$7000 for completing an average school, and dedicated timetable companies usually charge around \$15-\$20 per student," that would translate to the neighborhood of \$100,000 for RPI!
 
 There are some other downsides to these commercial products.
 For example, Schedule Expert has a user interface that is overly complicated and difficult to use, in our opinion.  
 Also, it does not support Windows 7 which implies that is not well maintained.
 
+But while Schedule Expert is not school specific, 
 Edval Timetables was designed by researchers at Sydney University and so is tuned specifically for that school's requirements. 
 Edval requires a huge upfront time investment, their website reads "we allocate two to three months for initial set up, training for any new school, and up to a month to generate the first solution, but following this, all changes and iterations only around two weeks."  
 Our approach will take only a few hours to compute schedules, and by working with the Registrar's Office during the development process, the initial set up will require minimal effort on their part.
@@ -124,18 +123,18 @@ FET uses a heuristic algorithm, not optimization. While its algorithm is impress
 
 UNI is the best exam scheduling software we have found so far. This open source project is being actively developed and its scheduling algorithm has already won two International Timetabling Competitions.  
 UNI is a collaborative effort among dozens of researchers, who have written dozens of papers and even PhD theses on scheduling.
-However, because UNI it is such a complex piece of software,  it would require maintenance and significant customization to work effectively with RPI's Banner RPI.  
+However, because UNI is such a complex piece of software,  it would require maintenance and significant customization to work effectively with RPI's Banner.  
 It also provides far more functionality than the Registrar needs  and could prove confusing and overwhelming.
 Because this project is open source and is the result of years of research, we may incorporate some ideas and features from UNI into our custom solution for RPI.
 
 
 \subsection{Project Stakeholders} %Andrew
 
-TimeFinders (our team) is the primary stakeholder in this project.  We are the primary designers, developers, and testers.  This is our idea, and our decisions, time invested and cooperation will directly affect the quality of the final product.
+TimeFinders (our team) is the primary stakeholder in this project.  We are the primary designers, developers, and testers. 
 
-The Office of the Registrar at RPI will be assisting us in determining the use cases, workflows, and specifications for the scheduling application.  The time invested will ensure that the software produced will effectively solve the problem we are addressing
+The Office of the Registrar at RPI will be assisting us in determining the use cases, workflows, and specifications for the scheduling application.  In particular Michael Conroy, the Assistant Registrar, will serve as our domain expert. The time invested will ensure that the software produced will effectively solve the problem we are addressing.  
 
-Finally our instructors in Software Design and Documentation, John Sturman; Benno Lee; and Yanan Hao, will invest their time to teach us about software design which will improve our skills and thus allow us to produce a better final product.  In addition they will spend time evaluating our work and giving us direction over the course of the semester.  The additional knowledge and guidance is important to the success of our project
+Finally our instructors in Software Design and Documentation: John Sturman, Benno Lee, and Yanan Hao, will invest their time to teach us about software design which will improve our skills and thus allow us to produce a better final product.  
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
@@ -436,7 +435,6 @@ Vera Axelrod
 
 
 \section{Status Report} %AUSTON
-\textcolor{blue}{Combine the weekly status updates}
 \subsection{Things We've Done}
 \begin{itemize}
 \item Created a Github repository and gained experience with Github in writing the Inception deliverables
@@ -458,6 +456,7 @@ Vera Axelrod
 \item Plan coding strategy and distribute work
 \item Select a mathematical optimization package/framework
 \item Stay in touch with Assistant Registrar
+\item Investigate what we can learn from UNI
 \end{itemize}
 
 \section*{References}
