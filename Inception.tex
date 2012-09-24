@@ -88,6 +88,10 @@ Once all the data is integrated into a single system, exams can be scheduled to 
 
 Currently the Registrar schedules exams over 20 periods (four time periods per day over five days).  Since there are fewer than 20 non-overlapping periods when the vast majority of RPI classes meet (e.g. Monday/Thursday from 8am-10am) and since the vast majority of students are enrolled in non-overlapping classes, finding an exam schedule with few conflicts should be possible.  In fact, previous work by Axelrod and Sebastian found exam schedules with no conflicts for RPI's Fall 2011 semester.
 
+\subsubsection*{Proposed Solution}
+
+We propose to create an end-to-end solution to streamline and improve the process of scheduling RPI's final exam.  The system would start by providing professors and department schedulers a simple straightforward process to inform the Registrar which classes have final exams.  We envision the system pulling class information from SIS (or perhaps some other source) and presenting faculty with a pre-created list of his classes.  The professors will be able to express any scheduling preferences (specifically day/time and location).  The Registrar's Office can to log into the system and see which professors have responded and which classes have exams.  Once the Registrar feels that there are enough responses they will start the scheduling process.  Upon completion of scheduling the individual who started the scheduling process will be notified.  The Registrar's Office will be able to see the schedule produced and make manual changes, they will also be able to re-run the scheduling process if they receive new responses from professors.  After the Registrar approves the created schedule it will be posted publicly to the web.  The Registrar will also be able to download a CSV file representing the schedule for internal use.
+
 \subsubsection*{Competition}
 
 Mitchell and Max: their program has major issues (see Axelrod and Sebastian).
@@ -122,7 +126,7 @@ Team instructors
     \multicolumn{2}{|c|}{\textbf{Interface for the registrar}} \\ \hline
     Ability to start the scheduling program & Must \\ \hline
     Manual control over schedules after generation & Must \\ \hline
-    Post the completed schedule to a public website & Should \\ \hline 
+    Post the completed schedule to a public website & Should \\ \hline
     Set scheduler preferences & Should \\ \hline
     Notify course instructors and department schedulers about deadlines and updates & Could \\ \hline
     Track which instructors have not yet responded & Could \\ \hline
