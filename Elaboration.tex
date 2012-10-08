@@ -4,6 +4,20 @@
 \usepackage{titling}
 \usepackage{color}
 \usepackage{comment}
+\usepackage[none]{hyphenat} %surround text in {} to prevent hyphenation
+\usepackage{multirow} %helps tables
+\usepackage{array} %helps tables
+\usepackage{url}
+
+%squeezed itemize for table.
+\newenvironment{packed_itemize}{
+\begin{itemize}
+ % \setlength{}{0pt}
+  \setlength{\itemsep}{1pt}
+  \setlength{\parskip}{0pt}
+  \setlength{\parsep}{0pt}
+}{\end{itemize}}
+
 
 \title{YAExs Elaboration}
 \author{TimeFinders: Andrew Karnani, Auston Sterling, Jeffrey Rodowicz and Vera Axelrod}
@@ -21,10 +35,98 @@
 \section{Domain Model}
 Diagram
 
+%Our domain model diagram is shown in Figure \ref{fig:Domain}.
+
+% To include the figure just save the Domain Model diagram in the same directory
+% as this tex file, then change {DomainModel.png} to the filename.
+% Reference this figure in the text as \ref{fig:Domain}
+\begin{comment}
+\begin{figure}
+	\centering
+		\includegraphics[width = \textwidth]{DomainModel.png}
+	\caption{Domain Model}
+	\label{fig:Domain}
+\end{figure}
+\end{comment}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Supplemental Specification}
 
+
+\begin{tabular}{|m{1in}|m{0.3in}|m{0.6in}|m{4.5in}|}
+\hline
+\textbf{Category}  & \textbf{ID}  & \textbf{Priority}        & \textbf{Description} \\
+\hline\hline
+%%%%%%%%%%%%%%%%%%%%
+\multirow{3}{*}{Functionality }
+ & F01 & Must
+ & Description \\  \cline{2-4}
+%%%%%
+ & F02 & Should
+ & Description \\  \cline{2-4}
+%%%%%
+ & F03 & Could
+ & Description \\ \hline
+
+%%%%%%%%%%%%%%%%%%%%
+\multirow{3}{*}{Usability }
+ & F04 & Must
+ & Description \\  \cline{2-4}
+%%%%%
+ & F05 & Should
+ & Description \\  \cline{2-4}
+%%%%%
+ & F06 & Could
+ & Description \\ \hline
+
+%%%%%%%%%%%%%%%%%%%%
+\multirow{3}{*}{Reliability }
+ & F07 & Must
+ & Description \\  \cline{2-4}
+%%%%%
+ & F08 & Should
+ & Description \\  \cline{2-4}
+%%%%%
+ & F09 & Could
+ & Description \\ \hline
+
+
+%%%%%%%%%%%%%%%%%%%%
+\multirow{3}{*}{Performance }
+ & F07 & Must
+ & Description \\  \cline{2-4}
+%%%%%
+ & F08 & Should
+ & Description \\  \cline{2-4}
+%%%%%
+ & F09 & Could
+ & Description \\ \hline
+
+%%%%%%%%%%%%%%%%%%%%
+\multirow{3}{*}{Maintainability}
+ & F07 & Must
+ & Description \\  \cline{2-4}
+%%%%%
+ & F08 & Should
+ & Description \\  \cline{2-4}
+%%%%%
+ & F09 & Could
+ & Description \\ \hline
+
+%%%%%%%%%%%%%%%%%%%%
+\multirow{3}{*}{Configurability}
+ & F07 & Must
+ & Description \\  \cline{2-4}
+%%%%%
+ & F08 & Should
+ & Description \\  \cline{2-4}
+%%%%%
+ & F09 & Could
+ & Description \\ \hline
+\end{tabular}
+
+\textcolor{red}{Constraints?}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
