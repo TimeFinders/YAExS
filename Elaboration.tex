@@ -25,15 +25,15 @@
 \newenvironment{usecase}{%
 	%\def\title$$1{  {\Large\bf{Use Case} ##1} \\}
 	\def\title##1{ {\large \bfseries  \scshape {Use Case:} ##1} \\ }
- 	\def\id##1{{\bf Indentifier} ##1\\}
+ 	\def\id##1{{\bf Indentifier:} ##1\\}
 	\def\des##1{ {\bf Description:} ##1\\}
 	\def\actors##1{ {\bf Actors:} ##1\\}
     	\def\pre##1{ {\bf Preconditions:} ##1 \\} %
     	\def\flow##1{ {\bf Flow of Events} ##1}%
-    	\renewenvironment{enumerate}{%
-        	\begin{itemize}[nolistsep]\small}%
-        	{\end{itemize}}
-	\def\post##1{ {\bf Preconditions:} ##1 \\}
+    	\newenvironment{ucenum}{%
+        	\begin{enumerate}[nolistsep]\small}%
+        	{\end{enumerate}}
+	\def\post##1{ {\bf Postconditions:} ##1 \\}
 }{\vspace{.05in}}
 
 \title{YAExs Elaboration}
@@ -167,27 +167,234 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Use Cases}
 
+\subsection{All Users}
+\begin{usecase}
+  \title{LogIn}
+  \id{A01}
+  \des{The LogIn use case models a user logging in to the website.}
+  \actors{Registrar, department scheduler, or student}
+  \pre{The user has navigated to the YAExS website.}
+  \flow{}
+  \begin{ucenum}
+  \item The use case starts when the user navigates to the YAExS website.
+  \item The user is prompted for RCS ID and password.
+  \item If the login information is correct:
+    \begin{ucenum}
+    \item If the user is in the Registrar's office: Show the Regisrar main menu.
+    \item If the user is a department scheduler: show the department scheduler main page
+    \item Else: Display a warning message and prompt for input again.
+    \end{ucenum}
+  \item Else, login information incorrect. Display a warning message and prompt for input agatin
+  \end{ucenum}
+  \post{The user is logged in and switched to the main page.}
+\end{usecase}
 
-        \begin{usecase}
-	\title{Logging in}
-	  \id{S01}
-	\des{This is a test use case}
-	\actors{Some actors}
-	\pre{preconditions!}
-	\flow{}
-            \begin{enumerate}
-                \item User navigates to the YAExS website
-                \item User is prompted for RCS ID and password
-		\item If the login information is correct:
-			\begin{itemize}
-				\item If the user is in the Registrar's office: Show the Regisrar main menu.
-				\item If the user is a department scheduler: show the department scheduler main page
-				\item Else: Display a warning message and prompt for input again.
-		\item Else, login information incorrect. Display a warning message and prompt for input agatin
-			\end{itemize}
-            \end{enumerate}
-	\post{The user is logged in and switched to the main page.}
-        \end{usecase}
+\begin{usecase}
+  \title{ViewPublishedSchedule}
+  \id{A02}
+  \des{The ViewPublishedSchedule use case models a user viewing the posted final exam schedule.}
+  \actors{Registrar, department scheduler, or student}
+  \pre{The user wants to view the final exam schedule.}
+  \flow{}
+  \begin{ucenum}
+  \item The use case starts when the user navigates to the website for viewing the final exam schedule.
+  \item If the final exam schedule has been posted:
+    \begin{ucenum} \item The schedule is retrieved and displayed to the user. \end{ucenum}
+  \item Else:
+    \begin{ucenum} \item The user is notified that the schedule is not yet published. \end{ucenum}
+  \end{ucenum}
+  \post{The output is displayed.}
+\end{usecase}
+
+\subsection{Registrar}
+\begin{usecase}
+  \title{GoToDepartmentResponsePage}
+  \id{R01}
+  \des{The GoToDepartmentResponsePage use case models the Registrar going to the department response page.}
+  \actors{Registrar}
+  \pre{Registrar is logged in and at the Registrar main menu.}
+  \flow{}
+  \begin{ucenum}
+  \item The use case starts when the Registrar selects a menu option to view the department response page.
+  \item The Registrar is sent to the department response page.
+  \end{ucenum}
+  \post{The Registrar is at the department response page.}
+\end{usecase}
+
+\begin{usecase}
+  \title{ReturnToMainMenu}
+  \id{R02}
+  \des{The ReturnToMainMenu use case models the Registrar returning to the Registrar main menu from another page.}
+  \pre{Registrar is logged in and at a page other than the main menu.}
+  \actors{Registrar}
+  \flow{}
+  \begin{ucenum}
+  \item The use case starts when the Registrar selects an option to go back to the main menu.
+  \item The Registrar is sent to the main menu.
+  \end{ucenum}
+  \post{The Registrar is at the Registrar main menu}
+\end{usecase}
+
+\begin{usecase}
+  \title{GoToSchedulerConfigPage}
+  \id{R03}
+  \des{The GoToSchedulerConfigPage use case models the Registrar going from the main menu to the scheduler configuration page.}
+  \actors{Registrar}
+  \pre{Registrar is logged in and at the Registrar main menu.}
+  \flow{}
+  \begin{ucenum}
+  \item The use case starts when the Registrar selects a menu option to view the scheduler configuration page.
+  \item The Registrar is sent to the scheduler configuration page.
+  \end{ucenum}
+  \post{The Registrar is at the scheduler configuration page.}
+\end{usecase}
+
+\begin{usecase}
+  \title{SetSchedulerPreferences}
+  \id{R04}
+  \des{The SetSchedulerPreferences use case models the Registrar modifying the scheduler preferences.}
+  \actors{Registrar}
+  \pre{Registrar is logged in and at the scheduler configuration page.}
+  \flow{}
+  \begin{ucenum}
+  \item The use case starts when the Registrar wants to modify scheduler settings.
+  \item Old settings are retrieved and displayed.
+  \item The Registrar modifies a form of settings.
+  \item The Registrar submits the modified settings.
+  \end{ucenum}
+  \post{The settings are saved}
+\end{usecase}
+
+\begin{usecase}
+  \title{StartScheduler}
+  \id{R05}
+  \des{The StartScheduler use case models the Registrar starting the scheduling program.}
+  \actors{Registrar}
+  \pre{Registrar is logged in and at the scheduler configuration page.}
+  \flow{}
+  \begin{ucenum}
+  \item The use case starts when the Registrar selects an option to start the scheduler.
+  \item The Registrar is notified about the startup.
+  \end{ucenum}
+  \post{The Registrar is at the Registrar main menu and scheduling has begun.}
+\end{usecase}
+
+\begin{usecase}
+  \title{GoToCoursePreferenceRequestPage}
+  \id{R06}
+  \des{The GoToCoursePreferenceRequestPage use case models the Registrar going from the main menu to the course preference request page.}
+  \actors{Registrar}
+  \pre{Registrar is logged in and at the Registrar main menu.}
+  \flow{}
+  \begin{ucenum}
+  \item The use case starts when the Registrar selects a menu option to view the course preference request page.
+  \item The Registrar is sent to the course preference request page.
+  \end{ucenum}
+  \post{The Registrar is at the course preference request page.}
+\end{usecase}
+
+\begin{usecase}
+  \title{RequestCoursePreferences}
+  \id{R07}
+  \des{The RequestCoursePreferences use case models the Registrar requesting course preferences from the department schedulers}
+  \actors{Registrar}
+  \pre{Registrar is logged in and at the course preference request page.}
+  \flow{}
+  \begin{ucenum}
+  \item The use case starts when the Registrar wants to request course preferences from department schedulers.
+  \item The Registrar is prompted for RCS IDs of department schedulers and their departments.
+  \item The Registrar submits the input.
+  \end{ucenum}
+  \post{The choices are stored, and the Registrar is redirected to the main menu.}
+\end{usecase}
+
+\begin{usecase}
+  \title{GoToScheduleManagementPage}
+  \id{R08}
+  \des{The GoToScheduleManagementPage use case models the Registrar going from the main menu to the schedule management page.}
+  \actors{Registrar}
+  \pre{Registrar is logged in and at the Registrar main menu.}
+  \flow{}
+  \begin{ucenum}
+  \item The use case starts when the Registrar selects a menu option to view the schedule management page.
+  \item The Registrar is sent to the schedule management page.
+  \item If the scheduler has been run:
+    \begin{ucenum} \item Potential final exam schedules are displayed. \end{ucenum}
+  \item Else:
+    \begin{ucenum}
+    \item The Registrar is notified that the scheduler must first be run.
+    \item The Registrar is redirected to the Registrar main menu.
+    \end{ucenum}
+  \end{ucenum}
+  \post{The Registrar is at the schedule management page or main menu.}
+\end{usecase}
+
+\begin{usecase}
+  \title{SelectFinalExamSchedule}
+  \id{R09}
+  \des{The SelectFinalExamSchedule use case models the Registrar selecting a final exam.}
+  \actors{Registrar}
+  \pre{Registrar is logged in and at the schedule management page.}
+  \flow{}
+  \begin{ucenum}
+  \item The use case starts when the Registrar selects a schedule.
+  \item The selection is recorded, and the Registrar is able to manually move exams around the schedule.
+  \item The Registrar selects an option to save the modifications.
+  \end{ucenum}
+  \post{A final exam schedule is saved and the Registrar is returned to the schedule management page.}
+\end{usecase}
+
+\begin{usecase}
+  \title{PostFinalExamSchedule}
+  \id{R10}
+  \des{The PostFinalExamSchedule use case models the Registrar posting a selected final exam schedule for public viewing}
+  \actors{Registrar}
+  \pre{Registrar is logged in, at the schedule management page, and has a saved schedule.}
+  \flow{}
+  \begin{ucenum}
+  \item The use case starts when the Registrar selects an option to publish the saved final exam schedule.
+  \item The Registrar is asked to confirm the schedule posting.
+  \item If the Registrar confirms it:
+    \begin{ucenum} \item The schedule is saved for access by the public. \end{ucenum}
+  \item Else:
+    \begin{ucenum} \item The Registrar is returned to the schedule management page. \end{ucenum}
+  \end{ucenum}
+  \post{The schedule is posted for others to access through the ViewPublishedSchedule use case.}
+\end{usecase}
+
+\begin{usecase}
+  \title{TakeDownFinalExamSchedule}
+  \id{R11}
+  \des{The TakeDownFinalExamSchedule use case models the Registrar removing a posted final exam schedule from public view.}
+  \actors{Registrar}
+  \pre{Registrar is logged in, at the schedule management page, and has a schedule posted.}
+  \flow{}
+  \begin{ucenum}
+  \item The use case begins when the Registrar selects an option to take down the posted exam schedule.
+  \item The Registrar is asked for confirmation.
+  \item If the Registrar confirms it:
+    \begin{ucenum} \item The saved schedule is denied public access. \end{ucenum}
+  \item Else:
+    \begin{ucenum} \item The Registrar is returned to the schedule management page. \end{ucenum}
+  \end{ucenum}
+  \post{The schedule is no longer accessible through the ViewPublishedSchedule use case.}
+\end{usecase}
+
+\subsection{Department Scheduler}
+\begin{usecase}
+  \title{SelectAndSubmitCoursePreferences}
+  \id{DS01}
+  \des{The SelectAndSubmitCoursePreferences use case models a department scheduler selecting and submitting preferences for courses in his department.}
+  \actors{Department scheduler}
+  \pre{Department scheduler is logged in.}
+  \flow{}
+  \begin{ucenum}
+  \item The use case starts when the department scheduler wants to select course final exam preferences.
+  \item The department scheduler selects a course and chooses some preferences.
+  \item The department scheduler submits the input.
+  \end{ucenum}
+  \post{The choices are stored and the department scheduler stays at the department scheduler main screen.}
+\end{usecase}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
