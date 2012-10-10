@@ -8,6 +8,8 @@
 \usepackage{multirow} %helps tables
 \usepackage{array} %helps tables
 \usepackage{url}
+\usepackage{enumitem}
+\usepackage{bold-extra} %allows using small caps and bold series in the same time (use case)
 
 %squeezed itemize for table.
 \newenvironment{packed_itemize}{
@@ -19,6 +21,21 @@
 }{\end{itemize}}
 
 
+
+\newenvironment{usecase}{%
+	%\def\title$$1{  {\Large\bf{Use Case} ##1} \\}
+	\def\title##1{ {\Large \bfseries  \scshape {Use Case:} ##1} \\ }
+ 	\def\id##1{{\bf Indentifier} ##1\\}
+	\def\des##1{ {\bf Description:} ##1\\}
+	\def\actors##1{ {\bf Actors:} ##1\\}
+    	\def\pre##1{ {\bf Preconditions:} ##1 \\} %
+    	\def\flow##1{ {\bf Flow of Events} ##1}%
+    	\renewenvironment{enumerate}{%
+        	\begin{itemize}[nolistsep]\small}%
+        	{\end{itemize}}
+	\def\post##1{ {\bf Preconditions:} ##1 \\}
+}{\vspace{.05in}}
+	
 \title{YAExs Elaboration}
 \author{TimeFinders: Andrew Karnani, Auston Sterling, Jeffrey Rodowicz and Vera Axelrod}
 \date{October 11, 2012}
@@ -29,6 +46,7 @@
 \vspace{0.2in}
 \hrule
 \vspace{1in}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -149,93 +167,28 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Use Cases}
-\textcolor{red}{These look totally different in the sample Elaboration. Vera is a 
-big confused about what we need to do here.}
-
-\subsection{Department Scheduler}
-\begin{description}
-\item[Name:] Debby Schedson
-\item[Age:] 32
-\item[Occupation:] Undergraduate Coordinator, PPI Mathematical Sciences
-\item[Background:]  Debby  attended Sage College before becoming an administrative assistant,
-and later taking on the role of Undergraduate Coordinator  of the RPI Math department.  She handles
-
-..
-...
 
 
-
-\item[Goals:]
-\begin{enumerate}
-\item  
-\item
-\item
-\end{enumerate}
-
-\item[Sequence of Steps:]
-
-\end{description}
-
-
-\footnote{After conversing with RPI administrators Michael Conroy and Jeff Miner, we
-decided to change our use case from individual professors to department schedulers.}
-
-\subsection{Registrar}
-\textcolor{red}{NEEDS TO BE MORE SPECIFIC}
-\begin{description}
-\item[Name:] Reggie Star
-\item[Age:]  65
-\item[Occupation:] Assistant Registrar, RPI 
-\item[Background:] Reggie came to RPI in 1984 when he  back moved from
- Chicago to raise his children in the capital area where he was raised.
-He worked in various offices of the administration before becoming
- the Assistant Registrar in 1997.  As the Assistant Registrar, he is in charge of planning RPI's academic calendar, scheduling classes, overseeing student course registration and scheduling final exams.
-
-He has used web-based applications in the past, but it takes him some
-time to get accustomed to new interfaces.
-He uses Microsoft Excel often but has never written his own code
- and has never used Excel’s optimization capabilities.
-
-\item[Goals:]
-Reggie would like to:
-\begin{enumerate}
-\item Reduce the number of make-up exams for students with two exams scheduled at the same time or with multiple exams in one day.
-\item Speed up the exam scheduling process.
-\item Keep his email inbox clear of schedule change requests from RPI instructors.
-\item Reduce the effort he spends supervising work study students handcrafting lists of cross-listed courses at the beginning of each semester.
-\item Minimize errors made by those work study students.
-\item Update final exam schedule to accommodate last minute requests
-from professors.
-\end{enumerate}
-
-\item[Sequence of Steps]
-During the second week of classes Reggie logs on to his YAExS account and
- sees that all instructors have already logged in and input their
- exam preferences.
-Reggie selects “instructor preference summary” to see an overview of
- the data from instructors. He sees how many courses need to have exams
- scheduled, and how many of those are made up of multiple sections.
-He sees that a number of professors have indicated that they do not
-want exams on the last day, and a few would prefer not to have evening exams.
-
-Next, Reggie inputs his configuration settings and schedule exam.
-He marks his preference as "reduce evening exams" since he has had many professors
-in the past complain when their exams were scheduled in the evening,
-even if they didn't express that preference ahead of time.
-He then prompts the system to schedule exams.
-
-The next day, Reggie returns to check on his exam schedule.
-When he logs in, he sees that an exam schedule has been computed.
-He chooses "exam schedule summary" and sees that
-the exam schedule has no exam conflicts, uses few evening slots,
-and respects all the professor preferences.
-
-Satisfied with this schedule, Reggie downloads the exam schedule
- and sends it to all department heads for a final review.
-
-
-\end{description}
-
+        \begin{usecase}
+	\title{Logging in}
+	  \id{S01}
+	\des{This is a test use case}
+	\actors{Some actors}
+	\pre{preconditions!}
+	\flow{}
+            \begin{enumerate}
+                \item User navigates to the YAExS website
+                \item User is prompted for RCS ID and password
+		\item If the login information is correct:
+			\begin{itemize}
+				\item If the user is in the Registrar's office: Show the Regisrar main menu.
+				\item If the user is a department scheduler: show the department scheduler main page
+				\item Else: Display a warning message and prompt for input again.
+		\item Else, login information incorrect. Display a warning message and prompt for input agatin
+			\end{itemize}
+            \end{enumerate}
+	\post{The user is logged in and switched to the main page.}
+        \end{usecase}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -246,7 +199,7 @@ Satisfied with this schedule, Reggie downloads the exam schedule
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Project Schedule}
+\section{Project Schedule}  %Vera
 
 
 \textcolor{red}{HERE IS THE OLD SCHEDULE}
@@ -415,7 +368,7 @@ Vera Axelrod
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Status Report}
+\section{Status Report} 
 
 \subsection{Things We've Done}
 \begin{itemize}
