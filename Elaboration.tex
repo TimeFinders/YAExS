@@ -203,50 +203,8 @@ Our domain model diagram is shown in Figure \ref{fig:Domain}.  Students take exa
 
 \subsection{Registrar}
 \begin{usecase}
-  \title{GoToDepartmentResponsePage}
-  \id{R01}
-  \des{The GoToDepartmentResponsePage use case models the Registrar going to the department response page.}
-  \actors{Registrar}
-  \pre{Registrar is logged in and at the Registrar main menu.}
-  \flow{}
-  \begin{ucenum}
-  \item The use case starts when the Registrar selects a menu option to view the department response page.
-  \item The Registrar is sent to the department response page.
-  \end{ucenum}
-  \post{The Registrar is at the department response page.}
-\end{usecase}
-
-\begin{usecase}
-  \title{ReturnToMainMenu}
-  \id{R02}
-  \des{The ReturnToMainMenu use case models the Registrar returning to the Registrar main menu from another page.}
-  \pre{Registrar is logged in and at a page other than the main menu.}
-  \actors{Registrar}
-  \flow{}
-  \begin{ucenum}
-  \item The use case starts when the Registrar selects an option to go back to the main menu.
-  \item The Registrar is sent to the main menu.
-  \end{ucenum}
-  \post{The Registrar is at the Registrar main menu}
-\end{usecase}
-
-\begin{usecase}
-  \title{GoToSchedulerConfigPage}
-  \id{R03}
-  \des{The GoToSchedulerConfigPage use case models the Registrar going from the main menu to the scheduler configuration page.}
-  \actors{Registrar}
-  \pre{Registrar is logged in and at the Registrar main menu.}
-  \flow{}
-  \begin{ucenum}
-  \item The use case starts when the Registrar selects a menu option to view the scheduler configuration page.
-  \item The Registrar is sent to the scheduler configuration page.
-  \end{ucenum}
-  \post{The Registrar is at the scheduler configuration page.}
-\end{usecase}
-
-\begin{usecase}
   \title{SetSchedulerPreferences}
-  \id{R04}
+  \id{R01}
   \des{The SetSchedulerPreferences use case models the Registrar modifying the scheduler preferences.}
   \actors{Registrar}
   \pre{Registrar is logged in and at the scheduler configuration page.}
@@ -262,7 +220,7 @@ Our domain model diagram is shown in Figure \ref{fig:Domain}.  Students take exa
 
 \begin{usecase}
   \title{StartScheduler}
-  \id{R05}
+  \id{R02}
   \des{The StartScheduler use case models the Registrar starting the scheduling program.}
   \actors{Registrar}
   \pre{Registrar is logged in and at the scheduler configuration page.}
@@ -275,22 +233,8 @@ Our domain model diagram is shown in Figure \ref{fig:Domain}.  Students take exa
 \end{usecase}
 
 \begin{usecase}
-  \title{GoToCoursePreferenceRequestPage}
-  \id{R06}
-  \des{The GoToCoursePreferenceRequestPage use case models the Registrar going from the main menu to the course preference request page.}
-  \actors{Registrar}
-  \pre{Registrar is logged in and at the Registrar main menu.}
-  \flow{}
-  \begin{ucenum}
-  \item The use case starts when the Registrar selects a menu option to view the course preference request page.
-  \item The Registrar is sent to the course preference request page.
-  \end{ucenum}
-  \post{The Registrar is at the course preference request page.}
-\end{usecase}
-
-\begin{usecase}
   \title{RequestCoursePreferences}
-  \id{R07}
+  \id{R03}
   \des{The RequestCoursePreferences use case models the Registrar requesting course preferences from the department schedulers}
   \actors{Registrar}
   \pre{Registrar is logged in and at the course preference request page.}
@@ -299,35 +243,18 @@ Our domain model diagram is shown in Figure \ref{fig:Domain}.  Students take exa
   \item The use case starts when the Registrar wants to request course preferences from department schedulers.
   \item The Registrar is prompted for RCS IDs of department schedulers and their departments.
   \item The Registrar submits the input.
+  \item If the RCS IDs are all found:
+    \begin{ucenum} \item The Registrar is notified that the choices are stored. \end{ucenum}
+  \item Else:
+    \begin{ucenum} \item The Registrar is notified which input was incorrect. \end{ucenum}
   \end{ucenum}
   \post{The choices are stored, and the Registrar is redirected to the main menu.}
 \end{usecase}
 
 \begin{usecase}
-  \title{GoToScheduleManagementPage}
-  \id{R08}
-  \des{The GoToScheduleManagementPage use case models the Registrar going from the main menu to the schedule management page.}
-  \actors{Registrar}
-  \pre{Registrar is logged in and at the Registrar main menu.}
-  \flow{}
-  \begin{ucenum}
-  \item The use case starts when the Registrar selects a menu option to view the schedule management page.
-  \item The Registrar is sent to the schedule management page.
-  \item If the scheduler has been run:
-    \begin{ucenum} \item Potential final exam schedules are displayed. \end{ucenum}
-  \item Else:
-    \begin{ucenum}
-    \item The Registrar is notified that the scheduler must first be run.
-    \item The Registrar is redirected to the Registrar main menu.
-    \end{ucenum}
-  \end{ucenum}
-  \post{The Registrar is at the schedule management page or main menu.}
-\end{usecase}
-
-\begin{usecase}
   \title{SelectFinalExamSchedule}
-  \id{R09}
-  \des{The SelectFinalExamSchedule use case models the Registrar selecting a final exam.}
+  \id{R04}
+  \des{The SelectFinalExamSchedule use case models the Registrar selecting a final exam schedule.}
   \actors{Registrar}
   \pre{Registrar is logged in and at the schedule management page.}
   \flow{}
@@ -340,8 +267,23 @@ Our domain model diagram is shown in Figure \ref{fig:Domain}.  Students take exa
 \end{usecase}
 
 \begin{usecase}
+  \title{ModifyFinalExamSchedule}
+  \id{R05}
+  \des{The SelectFinalExamSchedule use case models the Registrar modifying a selected final exam schedule.}
+  \actors{Registrar}
+  \pre{Registrar is logged in, at the schedule management page, and a schedule is selected}
+  \flow{}
+  \begin{ucenum}
+  \item The use case starts when the Registrar chooses to modify the selected schedule.
+  \item The Registrar is able to manually move exam times around the schedule, mark classes as duplicates, or change other settings.
+  \item The Registrar selects an option to save the modifications.
+  \end{ucenum}
+  \post{The modified final exam schedule is saved and the Registrar is returned to the schedule management page.}
+\end{usecase}
+
+\begin{usecase}
   \title{PostFinalExamSchedule}
-  \id{R10}
+  \id{R06}
   \des{The PostFinalExamSchedule use case models the Registrar posting a selected final exam schedule for public viewing}
   \actors{Registrar}
   \pre{Registrar is logged in, at the schedule management page, and has a saved schedule.}
@@ -359,7 +301,7 @@ Our domain model diagram is shown in Figure \ref{fig:Domain}.  Students take exa
 
 \begin{usecase}
   \title{TakeDownFinalExamSchedule}
-  \id{R11}
+  \id{R07}
   \des{The TakeDownFinalExamSchedule use case models the Registrar removing a posted final exam schedule from public view.}
   \actors{Registrar}
   \pre{Registrar is logged in, at the schedule management page, and has a schedule posted.}
