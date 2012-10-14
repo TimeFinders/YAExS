@@ -47,7 +47,6 @@
 \hrule
 \vspace{1in}
 
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Domain Model Diagram} %VERA
@@ -152,6 +151,10 @@ Our deployment diagram is shown in Figure \ref{fig:Deploy}.
 	\caption{Deployment Diagram}
 	\label{fig:Deploy}
 \end{figure}
+
+YAExS will be a web based application, therefore, the client for the application will be a web browser.  A users's web browser will contact the server via a TCP/IP socket (handled by the browser).  The incoming HTTP request will be handled by Django.  Django will be responsible for gathering information from users and inserting that information into the database.  Django will also interface with Banner (RPI's ERP) to gather information about classes.
+
+The C++ scheduling engine will read from the database via a library called libpq++.  This information will be parsed and formatted so that SCIP will be able to use the information to schedule exams.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -484,7 +487,7 @@ Stakeholder Review 2 and Final Release \\
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Contribution Summary} 
+\section{Contribution Summary}
 
 \begin{tabular}{|m{1.4in}|m{4in}|}
 \hline
