@@ -197,6 +197,25 @@ Our deployment diagram is shown in Figure \ref{fig:Deploy}.
   \post{The output is displayed.}
 \end{usecase}
 
+\begin{usecase}
+  \title{LogOut}
+  \id{A03}
+  \des{The LogOut use case models a user logging out of the website.}
+  \actors{Registrar or department scheduler}
+  \pre{The user is logged in.}
+  \flow{}
+  \begin{ucenum}
+  \item The use case starts when the user selects an option to log out.
+  \item The user is asked to comfirm the action.
+  \item If the user confirms the action:
+    \begin{ucenum}
+    \item The user is logged out and returned to the login screen.
+    \end{ucenum}
+  \item Else, user stays on the current page.
+  \end{ucenum}
+  \post{The user is logged out and switched to the login page.}
+\end{usecase}
+
 \subsection{Registrar}
 \begin{usecase}
   \title{SetSchedulerPreferences}
