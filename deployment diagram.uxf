@@ -117,7 +117,7 @@ Django RDO</panel_attributes>
       <h>70</h>
     </coordinates>
     <panel_attributes>lt=-
-libpq++</panel_attributes>
+libpqxx</panel_attributes>
     <additional_attributes>30;50;160;50</additional_attributes>
   </element>
   <element>
