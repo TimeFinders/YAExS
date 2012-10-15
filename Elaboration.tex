@@ -104,36 +104,55 @@ Our domain model diagram is shown in Figure \ref{fig:Domain}.  Students take exa
  &Department Schedulers can specify which courses have final exams. \\  \cline{2-4}
 %%%%%
  & F\arabic{id}\stepcounter{id} & Must
+ &Department Schedulers cannot access any part of the scheduling preferences or modification tools . \\  \cline{2-4}
+%%%%%
+ & F\arabic{id}\stepcounter{id} & Must
  &Department Schedulers can specify which courses have final exams that meet together. \\  \cline{2-4}
 %%%%%
  & F\arabic{id}\stepcounter{id} & Should
  &Department Schedulers can specify preferences  for exam rooms, dates and times.\\  \cline{2-4}
 %%%%%
+ &F\arabic{id}\stepcounter{id} & Should
+ & Department schedulers can enter exam information about multiple exams at once.  \\  \cline{2-4}
+%%%%%
+
  & F\arabic{id}\stepcounter{id} & Should
  &  Students can access schedule posted on the website.\\  \hline\hline
 %%%%%
 
 %%%%%%%%%%%%%%%%%%%%
-\multirow{3}{*}{Usability }
+\multirow{3}{*}{Security }
  & F\arabic{id}\stepcounter{id} & Must
- & Description \\  \cline{2-4}
+ & Only approved department schedulers can use the department scheduling system. \\  \cline{2-4}
+%%%%%
+ &F\arabic{id}\stepcounter{id} & Must
+ & Only approved administrators in the Registrar's office can use the Registrar scheduling system. \\  \cline{2-4}
 %%%%%
  &F\arabic{id}\stepcounter{id} & Should
- & Description \\  \cline{2-4}
+ & Registrar can submit sensitive information using nontrivial cryptographic security. \\  \hline\hline
+
+
+%%%%%%%%%%%%%%%%%%%%
+\multirow{3}{*}{Usability }
+ & F\arabic{id}\stepcounter{id} & Must
+ & Any user can access the program through a modern standards compliant web browser. \\  \cline{2-4}
 %%%%%
- & F\arabic{id}\stepcounter{id} & Could
- & Description \\ \hline
+ &F\arabic{id}\stepcounter{id} & Should
+ & The interface for department schedulers does not require navigation through menus. \\  \cline{2-4}
+%%%%%
+ & F\arabic{id}\stepcounter{id} & Should
+ & Registrar can see status of a running scheduler. \\ \hline\hline
 
 %%%%%%%%%%%%%%%%%%%%
 \multirow{3}{*}{Reliability }
+ & F\arabic{id}\stepcounter{id} & Should
+ & Web interface exits gracefully in the case of errors. \\  \cline{2-4}
+%%%%%
+ &F\arabic{id}\stepcounter{id} & Must
+ & Scheduler reports outcome of successful and unsuccessful runs. \\  \cline{2-4}
+%%%%%
  & F\arabic{id}\stepcounter{id} & Must
- & Description \\  \cline{2-4}
-%%%%%
- &F\arabic{id}\stepcounter{id} & Should
- & Description \\  \cline{2-4}
-%%%%%
- & F\arabic{id}\stepcounter{id} & Could
- & Description \\ \hline
+ & Submission of preferences reports success or failure. \\ \hline\hline
 
 %%%%%%%%%%%%%%%%%%%%
 \multirow{3}{*}{Performance }
@@ -144,7 +163,7 @@ Our domain model diagram is shown in Figure \ref{fig:Domain}.  Students take exa
  & Description \\  \cline{2-4}
 %%%%%
  & F\arabic{id}\stepcounter{id} & Could
- & Description \\ \hline
+ & Description \\ \hline\hline
 
 %%%%%%%%%%%%%%%%%%%%
 \multirow{3}{*}{Maintainability}
@@ -156,6 +175,7 @@ Our domain model diagram is shown in Figure \ref{fig:Domain}.  Students take exa
 %%%%%
  & F\arabic{id}\stepcounter{id} & Could
  & Description \\ \hline
+\hline
 
 %%%%%%%%%%%%%%%%%%%%
 \multirow{3}{*}{Configurability}
@@ -166,7 +186,7 @@ Our domain model diagram is shown in Figure \ref{fig:Domain}.  Students take exa
  & Description \\  \cline{2-4}
 %%%%%
  & F\arabic{id}\stepcounter{id} & Could
- & Description \\ \hline
+ & Description \\ \hline\hline
 \end{tabular}
 
 \textcolor{red}{Constraints?}
