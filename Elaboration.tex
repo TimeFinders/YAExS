@@ -72,26 +72,45 @@ Our domain model diagram is shown in Figure \ref{fig:Domain}.  Students take exa
 \textbf{Category}  & \textbf{ID}  & \textbf{Priority}        & \textbf{Description} \\
 \hline\hline
 %%%%%%%%%%%%%%%%%%%%
-\multirow{3}{*}{Functionality }
- &  F\arabic{id}\stepcounter{id} & Should
- & All users authenticated through CAS \\  \cline{2-4}
-%%%%%
+\multirow{15}{*}{Functionality }
  &F\arabic{id}\stepcounter{id} & Must
  & Registrar can start scheduling \\  \cline{2-4}
 %%%%%
  & F\arabic{id}\stepcounter{id} & Must
- & Registrar can modify scheduler settings \\ \hline
+ & Registrar can upload information about student course registrations. \\  \cline{2-4}
 %%%%%
  & F\arabic{id}\stepcounter{id} & Must
- & Registrar can start scheduling \\  \cline{2-4}
+ & Registrar can modify produced schedules manually \\  \cline{2-4}
 %%%%%
+ & F\arabic{id}\stepcounter{id} & Should
+ & Registrar can modify scheduler settings \\ \cline{2-4}
+%%%%%
+ &  F\arabic{id}\stepcounter{id} & Should
+ & All users authenticated through CAS \\  \cline{2-4}
+%%%%%
+ & F\arabic{id}\stepcounter{id} & Should
+ & Registrar can select from multiple generated schedules \\  \cline{2-4}
+%%%%%
+ & F\arabic{id}\stepcounter{id} & Could
+ & Registrar can notify department schedulers about deadlines and updates through the program. \\  \cline{2-4}
+%%%%%
+ & F\arabic{id}\stepcounter{id} & Could
+ & Registrar can see which courses do not have any preferences set. \\  \cline{2-4}
+%%%%%
+ & F\arabic{id}\stepcounter{id} & Could
+ & Registrar can publish a schedule to a publicly accessible website  \\  \cline{2-4}
 %%%%%
  & F\arabic{id}\stepcounter{id} & Must
- & Registrar can start scheduling \\  \cline{2-4}
-%%%%%
+ &Department Schedulers can specify which courses have final exams. \\  \cline{2-4}
 %%%%%
  & F\arabic{id}\stepcounter{id} & Must
- & Registrar can start scheduling \\  \cline{2-4}
+ &Department Schedulers can specify which courses have final exams that meet together. \\  \cline{2-4}
+%%%%%
+ & F\arabic{id}\stepcounter{id} & Should
+ &Department Schedulers can specify preferences  for exam rooms, dates and times.\\  \cline{2-4}
+%%%%%
+ & F\arabic{id}\stepcounter{id} & Should
+ &  Students can access schedule posted on the website.\\  \hline\hline
 %%%%%
 
 %%%%%%%%%%%%%%%%%%%%
