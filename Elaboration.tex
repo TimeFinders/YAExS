@@ -406,12 +406,115 @@ The C++ scheduling engine will read from the database via a library called libpq
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\clearpage
 \section{Work Breakdown} %JEFF
 
 \begin{enumerate}
-\item 
+\item Initial Setup
+\begin{enumerate} 
+\item Website
 \begin{enumerate}
-\item 
+\item Build website framework
+\item Set up basic configurations
+\item Connect framework to database (all future pages are now connected to the database)
+\end{enumerate} 
+\item Database
+\begin{enumerate}
+\item Build initial database framework
+\end{enumerate} 
+\item Scheduler program
+\begin{enumerate}
+\item Build scheduler framework
+\item Connect scheduler to SCIP
+\item Connect scheduler to database
+\item Write code to get student data fram database
+\item Write code to get course data from database
+\item Write code to input student data into SCIP
+\item Write code to input course data into SCIP
+\item Write code to get final schedule data from SCIP
+\item Write code to upload the final schedule data to the database
+\end{enumerate} 
+\item SCIP
+\begin{enumerate} 
+\item Build SCIP framework
+\item Create a model for our constraints and ojectives
+\end{enumerate}
+\end{enumerate}
+
+\item Use Cases
+\begin{enumerate} 
+\item LogIn
+\begin{enumerate}
+\item Create page framework
+\item Map URL for page
+\item Interface this page with CASS
+\item Write code for the user to log in
+\end{enumerate}
+\item ViewPublishedSchedule
+\begin{enumerate}
+\item Create page framework
+\item Map URL for page
+\item Write code for the user to view the schedule
+\end{enumerate}
+\item LogOut
+\begin{enumerate}
+\item Create page framework
+\item Map URL for page
+\item Write code for the user to logout
+\item Interface this page with CASS
+\end{enumerate} 
+\item SetSchedulerPreferences
+ \begin{enumerate} 
+\item Create page framework
+\item Map URL for page
+\item Write code so the Registrar can manage the scheduler settings
+\end{enumerate} 
+\item StartScheduler
+\begin{enumerate}
+\item Create page framework
+\item Map URL for page
+\item Write code the Registrar can use to start the scheduler
+\item Interface this page with the schedule starting program
+\end{enumerate} 
+\item RequestCoursePreferences
+\begin{enumerate} 
+\item Create page framework
+\item Map URL for page
+\item Write code so the Registrar can request the course preferences from the department 
+schedulers
+\end{enumerate} 
+\item SelectFinalExamSchedule
+\begin{enumerate} 
+\item Create page framework
+\item Map URL for page
+\item Write code so the Registrar can look at the options for final exam schedules and select 
+one
+\end{enumerate}
+\item ModifyFinalExamSchedule
+ \begin{enumerate} 
+\item Create page framework
+\item Map URL for page
+\item Write code so the Registrar can modify the options for final exam schedules
+\end{enumerate}
+\item PostFinalExamSchedule
+ \begin{enumerate}
+\item Create page framework
+\item Map URL for page
+\item Write code so the Registrar can post the selected final exam schedule
+\end{enumerate}
+\item TakeDownFinalExamSchedule
+ \begin{enumerate} 
+\item Create page framework
+\item Map URL for page
+\item Write code so the Registrar can take down the final exam schedule
+\end{enumerate} 
+\item SelectAndSubmitCoursePreferences
+\begin{enumerate} 
+\item Create page framework
+\item Map URL for page
+\item Write code so the Department Schedulers can submit their preferences for the final exams 
+done by their department
+\end{enumerate} 
 \end{enumerate}
 \end{enumerate}
 
