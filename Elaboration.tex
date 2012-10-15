@@ -10,6 +10,8 @@
 \usepackage{url}
 \usepackage{enumitem}
 \usepackage{bold-extra} %allows using small caps and bold series in the same time (use case)
+\newcounter{id}
+\stepcounter{id}
 
 %squeezed itemize for table.
 \newenvironment{packed_itemize}{
@@ -41,6 +43,7 @@
 \date{October 11, 2012}
 
 \begin{document}
+
 \maketitle
 \tableofcontents
 \vspace{0.2in}
@@ -70,69 +73,80 @@ Our domain model diagram is shown in Figure \ref{fig:Domain}.  Students take exa
 \hline\hline
 %%%%%%%%%%%%%%%%%%%%
 \multirow{3}{*}{Functionality }
- & F01 & Must
- & Description \\  \cline{2-4}
+ &  F\arabic{id}\stepcounter{id} & Should
+ & All users authenticated through CAS \\  \cline{2-4}
 %%%%%
- & F02 & Should
- & Description \\  \cline{2-4}
+ &F\arabic{id}\stepcounter{id} & Must
+ & Registrar can start scheduling \\  \cline{2-4}
 %%%%%
- & F03 & Could
- & Description \\ \hline
+ & F\arabic{id}\stepcounter{id} & Must
+ & Registrar can modify scheduler settings \\ \hline
+%%%%%
+ & F\arabic{id}\stepcounter{id} & Must
+ & Registrar can start scheduling \\  \cline{2-4}
+%%%%%
+%%%%%
+ & F\arabic{id}\stepcounter{id} & Must
+ & Registrar can start scheduling \\  \cline{2-4}
+%%%%%
+%%%%%
+ & F\arabic{id}\stepcounter{id} & Must
+ & Registrar can start scheduling \\  \cline{2-4}
+%%%%%
 
 %%%%%%%%%%%%%%%%%%%%
 \multirow{3}{*}{Usability }
- & F04 & Must
+ & F\arabic{id}\stepcounter{id} & Must
  & Description \\  \cline{2-4}
 %%%%%
- & F05 & Should
+ &F\arabic{id}\stepcounter{id} & Should
  & Description \\  \cline{2-4}
 %%%%%
- & F06 & Could
+ & F\arabic{id}\stepcounter{id} & Could
  & Description \\ \hline
 
 %%%%%%%%%%%%%%%%%%%%
 \multirow{3}{*}{Reliability }
- & F07 & Must
+ & F\arabic{id}\stepcounter{id} & Must
  & Description \\  \cline{2-4}
 %%%%%
- & F08 & Should
+ &F\arabic{id}\stepcounter{id} & Should
  & Description \\  \cline{2-4}
 %%%%%
- & F09 & Could
+ & F\arabic{id}\stepcounter{id} & Could
  & Description \\ \hline
-
 
 %%%%%%%%%%%%%%%%%%%%
 \multirow{3}{*}{Performance }
- & F07 & Must
+ & F\arabic{id}\stepcounter{id} & Must
  & Description \\  \cline{2-4}
 %%%%%
- & F08 & Should
+ &F\arabic{id}\stepcounter{id} & Should
  & Description \\  \cline{2-4}
 %%%%%
- & F09 & Could
+ & F\arabic{id}\stepcounter{id} & Could
  & Description \\ \hline
 
 %%%%%%%%%%%%%%%%%%%%
 \multirow{3}{*}{Maintainability}
- & F07 & Must
+ & F\arabic{id}\stepcounter{id} & Must
  & Description \\  \cline{2-4}
 %%%%%
- & F08 & Should
+ &F\arabic{id}\stepcounter{id} & Should
  & Description \\  \cline{2-4}
 %%%%%
- & F09 & Could
+ & F\arabic{id}\stepcounter{id} & Could
  & Description \\ \hline
 
 %%%%%%%%%%%%%%%%%%%%
 \multirow{3}{*}{Configurability}
- & F07 & Must
+ & F\arabic{id}\stepcounter{id} & Must
  & Description \\  \cline{2-4}
 %%%%%
- & F08 & Should
+ &F\arabic{id}\stepcounter{id} & Should
  & Description \\  \cline{2-4}
 %%%%%
- & F09 & Could
+ & F\arabic{id}\stepcounter{id} & Could
  & Description \\ \hline
 \end{tabular}
 
@@ -526,10 +540,11 @@ Jeffrey Rodowicz
 Vera Axelrod
 	&
 	 \begin{packed_itemize}
-		 \item Updated Project Scheduler
+		 \item Updated Project Schedule
 		\item Created Domain Model Diagram
 		\item Wrote Contribution Summary
 		\item Updated Status Report
+		\item Minor Contributions on Supplemental Specifications
 	\end{packed_itemize}
 \\
 \hline
