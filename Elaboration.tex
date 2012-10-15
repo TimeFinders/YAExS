@@ -49,10 +49,8 @@
 
 \maketitle
 \tableofcontents
-\vspace{0.2in}
-\hrule
-\vspace{1in}
 
+\clearpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Domain Model Diagram} %VERA
@@ -154,14 +152,15 @@ Our domain model diagram is shown in Figure \ref{fig:Domain}.  Students take exa
 
 %%%%%%%%%%%%%%%%%%%%
 \multirow{3}{*}{Reliability }
- & F\specid & Should
- & Web interface exits gracefully in the case of errors. \\  \cline{2-4}
-%%%%%
+
  &F\specid & Must
  & Scheduler reports outcome of successful and unsuccessful runs. \\  \cline{2-4}
 %%%%%
  & F\specid & Must
- & Submission of preferences reports success or failure. \\ \hline\hline
+ & Submission of preferences reports success or failure. \\\cline{2-4}
+ & F\specid & Should
+ & Web interface exits gracefully in the case of errors. \\   \hline \hline
+%%%%% \hline\hline
 
 %%%%%%%%%%%%%%%%%%%%
 \multirow{3}{*}{Performance }
@@ -172,7 +171,7 @@ Our domain model diagram is shown in Figure \ref{fig:Domain}.  Students take exa
  & Web pages render in under 100 ms on the server. \\  \cline{2-4}
 %%%%%
  & F\specid & Could
- & Web pages utilize ajax to reduce apparent network latency. \\ \hline\hline
+ & Web pages utilize Ajax to reduce apparent network latency. \\ \hline\hline
 
 %%%%%%%%%%%%%%%%%%%%
 \multirow{3}{*}{Maintainability}
@@ -180,7 +179,7 @@ Our domain model diagram is shown in Figure \ref{fig:Domain}.  Students take exa
  &  Elements are loosely coupled so dotCIO components can be easily replaced (e.g. Banner).\\  \cline{2-4}
 %%%%%
  &F\specid & Should
- & Utilize un-modified open source software so that non-api-breaking releases can easily be dropped into the system. \\  \cline{2-4}
+ & Use open source software without modifications so that non-API-breaking releases can easily be dropped into the system. \\  \cline{2-4}
 %%%%%
  & F\specid & Could
  & Web interface shows system status, and allows easy upgrade of various components. \\ \hline
@@ -215,7 +214,6 @@ Our domain model diagram is shown in Figure \ref{fig:Domain}.  Students take exa
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\clearpage
 \section{Deployment Diagram} %ANDREW
 
 Our deployment diagram is shown in Figure \ref{fig:Deploy}.
