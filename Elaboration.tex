@@ -8,6 +8,7 @@
 \usepackage{multirow} %helps tables
 \usepackage{array} %helps tables
 \usepackage{url}
+\usepackage{longtable}
 \usepackage{enumitem}
 \usepackage{bold-extra} %allows using small caps and bold series in the same time (use case)
 \newcounter{id}
@@ -63,150 +64,154 @@ Our domain model diagram is shown in Figure \ref{fig:Domain}.  Students take exa
 	\label{fig:Domain}
 \end{figure}
 
+\cleardoublepage
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Supplemental Specification} %AUSTON  and ANDREW
 %need to make sure everything is connected to a use case
 
 
-\begin{tabular}{|m{1in}|m{0.3in}|m{0.6in}|m{4.5in}|}
+\begin{longtable}{|m{1in}|m{0.3in}|m{0.6in}|m{4.5in}|}
 \hline
 \textbf{Category}  & \textbf{ID}  & \textbf{Priority}        & \textbf{Description} \\
 \hline\hline
+\endhead
+
+\hline
+\endfoot
 %%%%%%%%%%%%%%%%%%%%
 \multirow{15}{*}{Functionality }
- &F\arabic{id}\stepcounter{id} & Must
+ &F\specid & Must
  & Registrar can start scheduling \\  \cline{2-4}
 %%%%%
- & F\arabic{id}\stepcounter{id} & Must
+ & F\specid & Must
  & Registrar can upload information about student course registrations. \\  \cline{2-4}
 %%%%%
- & F\arabic{id}\stepcounter{id} & Must
+ & F\specid & Must
  & Registrar can modify produced schedules manually \\  \cline{2-4}
 %%%%%
- & F\arabic{id}\stepcounter{id} & Should
+ & F\specid & Should
  & Registrar can modify scheduler settings \\ \cline{2-4}
 %%%%%
- &  F\arabic{id}\stepcounter{id} & Should
+ &  F\specid & Should
  & All users authenticated through CAS \\  \cline{2-4}
 %%%%%
- & F\arabic{id}\stepcounter{id} & Should
+ & F\specid & Should
  & Registrar can select from multiple generated schedules \\  \cline{2-4}
 %%%%%
- & F\arabic{id}\stepcounter{id} & Could
+ & F\specid & Could
  & Registrar can notify department schedulers about deadlines and updates through the program. \\  \cline{2-4}
 %%%%%
- & F\arabic{id}\stepcounter{id} & Could
+ & F\specid & Could
  & Registrar can see which courses do not have any preferences set. \\  \cline{2-4}
 %%%%%
- & F\arabic{id}\stepcounter{id} & Could
+ & F\specid & Could
  & Registrar can publish a schedule to a publicly accessible website  \\  \cline{2-4}
 %%%%%
- & F\arabic{id}\stepcounter{id} & Must
+ & F\specid & Must
  &Department Schedulers can specify which courses have final exams. \\  \cline{2-4}
 %%%%%
- & F\arabic{id}\stepcounter{id} & Must
+ & F\specid & Must
  &Department Schedulers cannot access any part of the scheduling preferences or modification tools . \\  \cline{2-4}
 %%%%%
- & F\arabic{id}\stepcounter{id} & Must
+ & F\specid & Must
  &Department Schedulers can specify which courses have final exams that meet together. \\  \cline{2-4}
 %%%%%
- & F\arabic{id}\stepcounter{id} & Should
+ & F\specid & Should
  &Department Schedulers can specify preferences  for exam rooms, dates and times.\\  \cline{2-4}
 %%%%%
- &F\arabic{id}\stepcounter{id} & Should
+ &F\specid & Should
  & Department schedulers can enter exam information about multiple exams at once.  \\  \cline{2-4}
 %%%%%
 
- & F\arabic{id}\stepcounter{id} & Should
+ & F\specid & Should
  &  Students can access schedule posted on the website.\\  \hline\hline
 %%%%%
 
 %%%%%%%%%%%%%%%%%%%%
 \multirow{3}{*}{Security }
- & F\arabic{id}\stepcounter{id} & Must
+ & F\specid & Must
  & Only approved department schedulers can use the department scheduling system. \\  \cline{2-4}
 %%%%%
- &F\arabic{id}\stepcounter{id} & Must
+ &F\specid & Must
  & Only approved administrators in the Registrar's office can use the Registrar scheduling system. \\  \cline{2-4}
 %%%%%
- &F\arabic{id}\stepcounter{id} & Should
+ &F\specid & Should
  & Registrar can submit sensitive information using nontrivial cryptographic security. \\  \hline\hline
 
 
 %%%%%%%%%%%%%%%%%%%%
 \multirow{3}{*}{Usability }
- & F\arabic{id}\stepcounter{id} & Must
+ & F\specid & Must
  & Any user can access the program through a modern standards compliant web browser. \\  \cline{2-4}
 %%%%%
- &F\arabic{id}\stepcounter{id} & Should
+ &F\specid & Should
  & The interface for department schedulers does not require navigation through menus. \\  \cline{2-4}
 %%%%%
- & F\arabic{id}\stepcounter{id} & Should
+ & F\specid & Should
  & Registrar can see status of a running scheduler. \\ \hline\hline
 
 %%%%%%%%%%%%%%%%%%%%
 \multirow{3}{*}{Reliability }
- & F\arabic{id}\stepcounter{id} & Should
+ & F\specid & Should
  & Web interface exits gracefully in the case of errors. \\  \cline{2-4}
 %%%%%
- &F\arabic{id}\stepcounter{id} & Must
+ &F\specid & Must
  & Scheduler reports outcome of successful and unsuccessful runs. \\  \cline{2-4}
 %%%%%
- & F\arabic{id}\stepcounter{id} & Must
+ & F\specid & Must
  & Submission of preferences reports success or failure. \\ \hline\hline
 
 %%%%%%%%%%%%%%%%%%%%
 \multirow{3}{*}{Performance }
- & F\arabic{id}\stepcounter{id} & Must
- & Description \\  \cline{2-4}
+ & F\specid & Must
+ & Scheduling should run in less than 12 hours (overnight). \\  \cline{2-4}
 %%%%%
- &F\arabic{id}\stepcounter{id} & Should
- & Description \\  \cline{2-4}
+ &F\specid & Must
+ & Web pages render in under 100 ms on the server. \\  \cline{2-4}
 %%%%%
- & F\arabic{id}\stepcounter{id} & Could
- & Description \\ \hline\hline
+ & F\specid & Could
+ & Web pages utilize ajax to reduce apparent network latency. \\ \hline\hline
 
 %%%%%%%%%%%%%%%%%%%%
 \multirow{3}{*}{Maintainability}
- & F\arabic{id}\stepcounter{id} & Must
- & Description \\  \cline{2-4}
+ & F\specid & Must
+ &  Elements are loosely coupled so dotCIO components can be easily replaced (e.g. Banner).\\  \cline{2-4}
 %%%%%
- &F\arabic{id}\stepcounter{id} & Should
- & Description \\  \cline{2-4}
+ &F\specid & Should
+ & Utilize un-modified open source software so that non-api-breaking releases can easily be dropped into the system. \\  \cline{2-4}
 %%%%%
- & F\arabic{id}\stepcounter{id} & Could
- & Description \\ \hline
-\hline
+ & F\specid & Could
+ & Web interface shows system status, and allows easy upgrade of various components. \\ \hline
 
+\pagebreak
 %%%%%%%%%%%%%%%%%%%%
 \multirow{3}{*}{Configurability}
- & F\arabic{id}\stepcounter{id} & Must
- & Description \\  \cline{2-4}
+ & F\specid & Must
+ & All configuration options are gathered into a configuration file not hard coded. \\*  \cline{2-4}
 %%%%%
- &F\arabic{id}\stepcounter{id} & Should
- & Description \\  \cline{2-4}
+ &F\specid & Should
+ & Most configuration changes do not require a server restart. \\* \cline{2-4}
 %%%%%
- & F\arabic{id}\stepcounter{id} & Could
- & Description \\ \hline\hline
-  \multirow{3}{*}{Constraints}
+ & F\specid & Could
+ & All settings are configurable through a web interface. \\* \hline
+ \multirow{3}{*}{Constraints}
  &F\specid & Must
- &  System utilizes object oriented desgin.\\ \cline{2-4}
+ &  System utilizes object oriented desgin.\\* \cline{2-4}
 %%%%%%%%%%%
  &F\specid & Must
- &  The development period is 13 weeks.\\ \cline{2-4})
+ &  The development period is 13 weeks.\\* \cline{2-4}
  %%%%%%%%%%%
  &F\specid & Must
- &  The web interface back-end is written in Python/Django.\\ \cline{2-4})
+ &  The web interface back-end is written in Python/Django.\\* \cline{2-4}
  %%%%%%%%%%%
  &F\specid & Must
- &  The scheduling is done in C++\\ \cline{2-4})
+ &  The scheduling is done in C++\\* \cline{2-4}
  %%%%%%%%%%%
  &F\specid & Must
- &  SCIP is used as the optimization engine.\\ \cline{2-4})
-\end{tabular}
-
-\textcolor{red}{Constraints?}
+ &  SCIP is used as the optimization engine.\\*
+\end{longtable}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
