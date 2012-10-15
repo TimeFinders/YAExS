@@ -13,6 +13,8 @@
 \newcounter{id}
 \stepcounter{id}
 
+\newcommand{\specid}{\arabic{id}\stepcounter{id}}
+
 %squeezed itemize for table.
 \newenvironment{packed_itemize}{
 \begin{itemize}
@@ -406,7 +408,6 @@ The C++ scheduling engine will read from the database via a library called libpq
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\clearpage
 \section{Work Breakdown} %JEFF
 
 \begin{enumerate}
