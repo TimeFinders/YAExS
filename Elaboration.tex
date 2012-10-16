@@ -79,21 +79,24 @@ Our domain model diagram is shown in Figure \ref{fig:Domain}.  Students take exa
 \hline
 \endfoot
 %%%%%%%%%%%%%%%%%%%%
-\multirow{15}{*}{Functionality }
+\multirow{16}{*}{Functionality }
  &F\specid & Must
  & Registrar can start scheduling \\  \cline{2-4}
 %%%%%
  & F\specid & Must
  & Registrar can upload information about student course registrations. \\  \cline{2-4}
-%%%%%
+ %%%%%
  & F\specid & Must
+ & Registrar can download human-readable version of exam schedule. \\  \cline{2-4}
+ %%%%%
+ &  F\specid & Must
+ & All users authenticated through CAS \\  \cline{2-4}
+%%%%%
+ & F\specid & Should
  & Registrar can modify produced schedules manually \\  \cline{2-4}
 %%%%%
  & F\specid & Should
  & Registrar can modify scheduler settings \\ \cline{2-4}
-%%%%%
- &  F\specid & Should
- & All users authenticated through CAS \\  \cline{2-4}
 %%%%%
  & F\specid & Should
  & Registrar can select from multiple generated schedules \\  \cline{2-4}
@@ -111,9 +114,6 @@ Our domain model diagram is shown in Figure \ref{fig:Domain}.  Students take exa
  &Department Schedulers can specify which courses have final exams. \\  \cline{2-4}
 %%%%%
  & F\specid & Must
- &Department Schedulers cannot access any part of the scheduling preferences or modification tools . \\  \cline{2-4}
-%%%%%
- & F\specid & Must
  &Department Schedulers can specify which courses have final exams that meet together. \\  \cline{2-4}
 %%%%%
  & F\specid & Should
@@ -128,9 +128,12 @@ Our domain model diagram is shown in Figure \ref{fig:Domain}.  Students take exa
 %%%%%
 
 %%%%%%%%%%%%%%%%%%%%
-\multirow{3}{*}{Security }
+\multirow{4}{*}{Security }
  & F\specid & Must
  & Only approved department schedulers can use the department scheduling system. \\  \cline{2-4}
+%%%%%
+ & F\specid & Must
+ &Department Schedulers cannot access any part of the scheduling preferences or modification tools . \\  \cline{2-4}
 %%%%%
  &F\specid & Must
  & Only approved administrators in the Registrar's office can use the Registrar scheduling system. \\  \cline{2-4}
@@ -142,10 +145,7 @@ Our domain model diagram is shown in Figure \ref{fig:Domain}.  Students take exa
 %%%%%%%%%%%%%%%%%%%%
 \multirow{3}{*}{Usability }
  & F\specid & Must
- & Any user can access the program through a modern standards compliant web browser. \\  \cline{2-4}
-%%%%%
- &F\specid & Should
- & The interface for department schedulers does not require navigation through menus. \\  \cline{2-4}
+ & Any user can access the program through a modern standards compliant web browser which supports CSS3, jQuery and other modern web technologies (e.g. Chrome, Firefox, or Safari). \\  \cline{2-4}
 %%%%%
  & F\specid & Should
  & Registrar can see status of a running scheduler. \\ \hline\hline
