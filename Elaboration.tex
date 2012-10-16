@@ -194,10 +194,10 @@ Our domain model diagram is shown in Figure \ref{fig:Domain}.  Students take exa
  & Most configuration changes do not require a server restart. \\* \cline{2-4}
 %%%%%
  & F\specid & Could
- & All settings are configurable through a web interface. \\* \hline
+ & All settings are configurable through a web interface. \\* \hline\hline
  \multirow{3}{*}{Constraints}
  &F\specid & Must
- &  System utilizes object oriented desgin.\\* \cline{2-4}
+ &  System utilizes object oriented design.\\* \cline{2-4}
 %%%%%%%%%%%
  &F\specid & Must
  &  The development period is 13 weeks.\\* \cline{2-4}
@@ -225,7 +225,7 @@ Our deployment diagram is shown in Figure \ref{fig:Deploy}.
 	\label{fig:Deploy}
 \end{figure}
 
-YAExS will be a web based application, therefore, the client for the application will be a web browser.  A users's web browser will contact the server via a TCP/IP socket (handled by the browser).  The incoming HTTP request will be handled by Django.  Django will be responsible for gathering information from users and inserting that information into the database.  Django will also interface with Banner (RPI's ERP) to gather information about classes.
+YAExS will be a web based application, therefore, the client for the application will be a web browser.  A user's web browser will contact the server via a TCP/IP socket (handled by the browser).  The incoming HTTP request will be handled by Django.  Django will be responsible for gathering information from users and inserting that information into the database.  Django will also interface with Banner (RPI's ERP) to gather information about classes.
 
 The C++ scheduling engine will read from the database via a library called libpq++.  This information will be parsed and formatted so that SCIP will be able to use the information to schedule exams.
 
@@ -247,7 +247,7 @@ The C++ scheduling engine will read from the database via a library called libpq
   \item The user is prompted for RCS ID and password.
   \item If the login information is correct:
     \begin{ucenum}
-    \item If the user is in the Registrar's office: Show the Regisrar main menu.
+    \item If the user is in the Registrar's office: Show the Registrar main menu.
     \item If the user is a department scheduler: show the department scheduler main page
     \item Else: Display a warning message and prompt for input again.
     \end{ucenum}
@@ -282,7 +282,7 @@ The C++ scheduling engine will read from the database via a library called libpq
   \flow{}
   \begin{ucenum}
   \item The use case starts when the user selects an option to log out.
-  \item The user is asked to comfirm the action.
+  \item The user is asked to confirm the action.
   \item If the user confirms the action:
     \begin{ucenum}
     \item The user is logged out and returned to the login screen.
@@ -449,7 +449,7 @@ The C++ scheduling engine will read from the database via a library called libpq
 \item Build scheduler framework
 \item Connect scheduler to SCIP
 \item Connect scheduler to database
-\item Write code to get student data fram database
+\item Write code to get student data from database
 \item Write code to get course data from database
 \item Write code to input student data into SCIP
 \item Write code to input course data into SCIP
@@ -459,7 +459,7 @@ The C++ scheduling engine will read from the database via a library called libpq
 \item SCIP
 \begin{enumerate}
 \item Build SCIP framework
-\item Create a model for our constraints and ojectives
+\item Create a model for our constraints and objectives
 \end{enumerate}
 \end{enumerate}
 
