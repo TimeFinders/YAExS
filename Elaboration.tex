@@ -48,6 +48,7 @@
 \begin{document}
 
 \maketitle
+\vspace{1in}
 \tableofcontents
 
 \clearpage
@@ -88,9 +89,6 @@ Our domain model diagram is shown in Figure \ref{fig:Domain}.  Students take exa
  %%%%%
  & F\specid & Must
  & Registrar can download human-readable version of exam schedule. \\  \cline{2-4}
- %%%%%
- &  F\specid & Must
- & All users authenticated through CAS \\  \cline{2-4}
 %%%%%
  & F\specid & Should
  & Registrar can modify produced schedules manually \\  \cline{2-4}
@@ -129,6 +127,9 @@ Our domain model diagram is shown in Figure \ref{fig:Domain}.  Students take exa
 
 %%%%%%%%%%%%%%%%%%%%
 \multirow{4}{*}{Security }
+ &  F\specid & Must
+ & All users authenticated through CAS \\  \cline{2-4}
+ %%%%%
  & F\specid & Must
  & Only approved department schedulers can use the department scheduling system. \\  \cline{2-4}
 %%%%%
