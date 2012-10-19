@@ -1,6 +1,7 @@
 # Django settings for YAExS project.
 
 DEBUG = True
+COMPRESS_ENABLED = True
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
@@ -118,6 +119,8 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'compressor',
+    'YAExS',
+    'Accounts',
     # Uncomment the next line to enable the admin:
     # 'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
