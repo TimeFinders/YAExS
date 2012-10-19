@@ -1,12 +1,13 @@
 \documentclass[11pt]{article}
-\usepackage{fullpage}% bigger margins
+
+\usepackage{fullpage}% reasonable margins
 \usepackage{array} % makes tables nicer
+\usepackage{multirow} %tables
+\usepackage{comment} %block comments
+\usepackage{color} %colored text
+\usepackage{graphicx} %images
 \usepackage{enumerate}
-\usepackage{comment}
-\usepackage{color}
-\usepackage{multirow}
-\usepackage{enumitem}
-\usepackage{graphicx}
+\usepackage{enumitem} 
 
 %squeezed itemize for table.
 \newenvironment{packed_itemize}{
@@ -25,35 +26,57 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%
-\section*{Demonstration}
+\section*{Demonstration} % ANDREW + AUSTON %
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 \textcolor{red}{
-The team must present a demo that shows the feature implementation of the list of features promised during Elaboration from their schedule.}
+The team must present a demo that shows the feature implementation of the list of features promised during Elaboration from their schedule.
+Vera: I'm not sure if we need to write anything for this.}
 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%
-\section*{Sequence Diagrams 15}
+\section*{Sequence Diagrams} % VERA %
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 \textcolor{red}{
 Interaction diagrams showing how a specific Use Case is realized within the beta version of the software. The diagrams must use correct UML notation.  Check for proper UML, and makes sense.}
 
+\begin{figure}
+	\centering
+%		\includegraphics[width = \textwidth]{seqDiagram1.png}
+	\caption{}
+	\label{fig:seqDiagram1}
+\end{figure}
+
+\begin{figure}
+	\centering
+%		\includegraphics[width = \textwidth]{seqDiagram2.png}
+	\caption{}
+	\label{fig:seqDiagram2}
+\end{figure}
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%
-\section*{Static Class Diagrams}
+\section*{Static Class Diagrams}  % VERA %
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 \textcolor{red}{
 A static class diagram of the project's internal software structure. The diagram must be valid UML and accurately depict the software.  Check for proper UML, and makes sense.}
 
 
 
+\begin{figure}
+	\centering
+%		\includegraphics[width = \textwidth]{staticClassDiagram.png}
+	\caption{Static Class Diagram}
+	\label{fig:staticDiagram}
+\end{figure}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%
-\section*{ Design Approach}
+\section*{ Design Approach}  % JEFF? %
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 \textcolor{red}{
 Submit your design approach (**must be object-oriented) and any design patterns you plan on using in your code. Approach should be clearly articulated and mention at least one design pattern.}
@@ -61,10 +84,10 @@ Submit your design approach (**must be object-oriented) and any design patterns 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Contribution Summary}
+\section{Contribution Summary} % ALL %
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{tabular}{|m{1.4in}|m{4in}|}
-\hline
+\hline 
 \textbf{\large Name}     & \textbf{\large Contributions} \\
 \hline\hline
 
@@ -81,7 +104,7 @@ Submit your design approach (**must be object-oriented) and any design patterns 
 	&
 	 \begin{packed_itemize}
 	        \item Created Scheduler Code Skeleton
-		  \item Set up SCIP
+		  \item Set Up SCIP
 	\end{packed_itemize}
 \\
 \hline
@@ -105,7 +128,7 @@ Vera Axelrod
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%
-\section*{Status Report}
+\section*{Status Report} % VERA %
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Things We've Done}
 \begin{itemize}
