@@ -6,6 +6,8 @@ from django.conf.urls import patterns, include, url
 
 urlpatterns = patterns('',
     url(r'^$', 'Accounts.views.home'),
+    (r'^login/$', 'django_cas.views.login'),
+    (r'^logout/$', 'django_cas.views.logout'),
     # Examples:
     # url(r'^$', 'YAExS.views.home', name='home'),
     # url(r'^YAExS/', include('YAExS.foo.urls')),
