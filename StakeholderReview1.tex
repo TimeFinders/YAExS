@@ -1,0 +1,135 @@
+\documentclass[11pt]{article}
+\usepackage{fullpage}% bigger margins
+\usepackage{array} % makes tables nicer
+\usepackage{enumerate}
+\usepackage{comment}
+\usepackage{color}
+\usepackage{multirow}
+\usepackage{enumitem}
+\usepackage{graphicx}
+
+%squeezed itemize for table.
+\newenvironment{packed_itemize}{
+\begin{itemize}
+  \setlength{\itemsep}{1pt}
+  \setlength{\parskip}{0pt}
+  \setlength{\parsep}{0pt}
+}{\end{itemize}}
+
+\title{\bf YAExS Stakeholder Review 1}
+\author{TimeFinders: Andrew Karnani, Auston Sterling, Jeffrey Rodowicz, Vera Axelrod}
+\date{October 29, 2012}
+
+\begin{document}
+\maketitle
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{Demonstration}
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+\textcolor{red}{
+The team must present a demo that shows the feature implementation of the list of features promised during Elaboration from their schedule.}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{Sequence Diagrams 15}
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+\textcolor{red}{
+Interaction diagrams showing how a specific Use Case is realized within the beta version of the software. The diagrams must use correct UML notation.  Check for proper UML, and makes sense.}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{Static Class Diagrams}
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+\textcolor{red}{
+A static class diagram of the project's internal software structure. The diagram must be valid UML and accurately depict the software.  Check for proper UML, and makes sense.}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{ Design Approach}
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+\textcolor{red}{
+Submit your design approach (**must be object-oriented) and any design patterns you plan on using in your code. Approach should be clearly articulated and mention at least one design pattern.}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Contribution Summary}
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{tabular}{|m{1.4in}|m{4in}|}
+\hline
+\textbf{\large Name}     & \textbf{\large Contributions} \\
+\hline\hline
+
+ Andrew Karnani
+	&
+	 \begin{packed_itemize}
+		\item Created Database Skeleton
+		\item Designed Website User Interface Prototypes
+		\item Tested CAS Authentication
+	\end{packed_itemize}
+\\
+\hline
+ Auston Sterling
+	&
+	 \begin{packed_itemize}
+	        \item Created Scheduler Code Skeleton
+		  \item Set up SCIP
+	\end{packed_itemize}
+\\
+\hline
+Jeffrey Rodowicz
+	&
+	 \begin{packed_itemize}
+		\item 
+	\end{packed_itemize}
+\\
+\hline
+Vera Axelrod
+	&
+	 \begin{packed_itemize}
+		\item Created Sequence Diagrams
+		\item Wrote Contribution Summary
+		\item Updated Status Report
+	\end{packed_itemize}
+\\
+\hline
+\end{tabular}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{Status Report}
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Things We've Done}
+\begin{itemize}
+	\item Created static class diagrams.
+	\item Created sequence diagrams.
+	\item Implemented a demonstration of the department scheduler web interface.
+	\item Set up SCIP  all dependencies.
+\end{itemize}
+
+\subsection{Challenges}
+\begin{itemize}
+	\item Delays in obtaining data from RPI Administration may cause future delays in our delivery.
+	\item Need to set up and test a server for our program. The RPI Administration has not yet made it clear whether we will be able to run our program on an official RPI server in the future.
+	\item \textcolor{red}{support for internet explorer?}
+\end{itemize}
+
+\subsection{Upcoming Plans}
+\begin{itemize}
+	\item Learn about warm starting the scheduling in SCIP.
+	\item Fully define data formats with Registrar
+	\item Course reference course detection
+	\item Room scheduling
+	\item Create interface to display exam schedules 
+	\item Object Calisthenics sample code
+\end{itemize}
+
+\end{document}
