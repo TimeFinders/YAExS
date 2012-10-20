@@ -1,4 +1,63 @@
 body
 {
-    background-color: red;
+    background-color: #424242;
+    font-family: sans-serif, Verdana;
 }
+
+#content
+{
+    width: 960px;
+    margin: 15px auto;
+    border-top: red 8px solid;
+    border-bottom: red 8px solid;
+
+    #header
+    {
+        background-color: #2E2C27;
+        text-align: center;
+        color: white;
+        padding: 10px;
+        overflow: hidden;
+        position: relative;
+
+        #logo
+        {
+            float: left;
+            display: block;
+            background-image: url("/static/i/logo.png");
+            width: 340px;
+            height: 60px;
+        }
+
+        #login
+        {
+            float: right;
+            position: absolute;
+            //width: 90px;
+            top: 50%;
+            margin-top: -22px;
+            right: 10px;
+            font-size: 30px;
+            border: red 2px solid;
+            border-radius: 5px;
+
+            padding: 5px;
+
+            background-color: #2E2C27;
+            text-decoration: none;
+            color: #FFF;
+        }
+
+        #login:hover
+        {
+            color: #F00;
+        }
+    }
+
+    #body
+    {
+        padding: 20px 5px;
+        background-color: #FFF;
+    }
+}
+

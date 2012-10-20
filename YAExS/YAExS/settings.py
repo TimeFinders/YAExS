@@ -1,7 +1,7 @@
 # Django settings for YAExS project.
 
 DEBUG = True
-COMPRESS_ENABLED = True
+#COMPRESS_ENABLED = True
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
@@ -166,4 +166,6 @@ AUTHENTICATION_BACKENDS = (
 )
 
 CAS_SERVER_URL = "https://cas-auth.rpi.edu/cas/"
-LOGIN_URL="login/"
+CAS_IGNORE_REFERER = True
+CAS_LOGOUT_COMPLETELY = False
+LOGIN_URL="/login/"
