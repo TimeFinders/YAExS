@@ -121,6 +121,8 @@ INSTALLED_APPS = (
     'compressor',
     'YAExS',
     'Accounts',
+    'courses',
+    'south',
     # Uncomment the next line to enable the admin:
     # 'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
@@ -169,3 +171,6 @@ CAS_SERVER_URL = "https://cas-auth.rpi.edu/cas/"
 CAS_IGNORE_REFERER = True
 CAS_LOGOUT_COMPLETELY = False
 LOGIN_URL="/login/"
+
+
+COURSES_COLLEGE_PARSER = 'courses.bridge.rpi.import_data'
