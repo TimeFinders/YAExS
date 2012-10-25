@@ -4,5 +4,11 @@ from django.http import HttpRequest, HttpResponse
 
 
 @login_required
-def home(request):
-    return render(request, 'accounts/home.html', {'user':request.user})
+def main(request):
+    user = request.user
+
+    if user.is_staff:
+        return render(request, 'accounts/registrar.html')
+
+    else:
+        return render(request, 'accounts/scheduler.html')
