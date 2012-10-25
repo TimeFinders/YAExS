@@ -11,4 +11,4 @@ def main(request):
         return render(request, 'accounts/registrar.html')
 
     else:
-        return render(request, 'accounts/scheduler.html')
+        return render(request, 'accounts/scheduler.html', {'depts': ('ARCH','MECH', 'MATH', 'CSCI', 'ITWS')})

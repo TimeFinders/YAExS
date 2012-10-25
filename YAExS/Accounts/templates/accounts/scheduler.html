@@ -1,6 +1,32 @@
 {% extends "base.html" %}
 
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript">
+
+    $(document).ready(function(){
+        $(".name").click(function(){
+            alert("hi");
+            return false;
+        });
+    });
+
+    </script>
+{% endblock js %}
+
+{% block css %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/less" href="{{STATIC_URL}}accounts/c/schedule.less" />
+{% endblock css %}
+
 {% block body %}
-   <p> Welcome to YAExS - You are authorized as a Deptartment Scheduler! </p>
-   <p>    You have not yet signed up for any exams. </p>
+    Please select your department:
+
+    {% for dept in depts %}
+        <div class="dept">
+            <a class="name" href="#">{{dept}}</a>
+
+            <div class="courses">Courses would be here!</div>
+        </div>
+    {% endfor %}
 {% endblock body %}
