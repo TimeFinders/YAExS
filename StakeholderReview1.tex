@@ -95,6 +95,8 @@ A static class diagram of the project's internal software structure. The diagram
 \textcolor{red}{
 Submit your design approach (**must be object-oriented) and any design patterns you plan on using in your code. Approach should be clearly articulated and mention at least one design pattern.}
 
+Our team broke our project into two main sections, our website, including our database, and the scheduler itself. The main design pattern that we are implementing will be the Model–view–controller pattern. Our model being the database and the final exam schedule that will be produced, the view being what the website shows to the end user, and the controller being the user interface of the website and the scheduling program. We have created a framework for communication between the scheduling program and SCIP, our schedule solver. We have created a Postgres database that will be storing all of our data centrally, and are working on creating a standard for the data that will be contained, which depends on the data that we are able to obtain from the registrar. Both our website and our scheduling program are being designed in a modular way, which will enable us to implement one case at a time and is conducive to the iterative approach that we are taking.
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%
