@@ -26,23 +26,12 @@
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>801</x>
+      <x>657</x>
       <y>117</y>
       <w>117</w>
       <h>27</h>
     </coordinates>
     <panel_attributes>ScheduleDatabase</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <type>com.umlet.element.Class</type>
-    <coordinates>
-      <x>630</x>
-      <y>117</y>
-      <w>90</w>
-      <h>27</h>
-    </coordinates>
-    <panel_attributes>SocketServer</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
@@ -59,21 +48,10 @@
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>846</x>
+      <x>702</x>
       <y>153</y>
       <w>18</w>
       <h>450</h>
-    </coordinates>
-    <panel_attributes/>
-    <additional_attributes/>
-  </element>
-  <element>
-    <type>com.umlet.element.Class</type>
-    <coordinates>
-      <x>675</x>
-      <y>225</y>
-      <w>18</w>
-      <h>324</h>
     </coordinates>
     <panel_attributes/>
     <additional_attributes/>
@@ -128,14 +106,14 @@ getSchedule</panel_attributes>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>666</x>
+      <x>495</x>
       <y>396</y>
-      <w>197</w>
+      <w>224</w>
       <h>63</h>
     </coordinates>
     <panel_attributes>lt=&gt;&gt;
 schedule</panel_attributes>
-    <additional_attributes>180;45;27;45</additional_attributes>
+    <additional_attributes>207;45;27;45</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Relation</type>
@@ -152,17 +130,6 @@ displaySchedule</panel_attributes>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>657</x>
-      <y>117</y>
-      <w>44</w>
-      <h>125</h>
-    </coordinates>
-    <panel_attributes>lt=.</panel_attributes>
-    <additional_attributes>27;108;27;27</additional_attributes>
-  </element>
-  <element>
-    <type>com.umlet.element.Relation</type>
-    <coordinates>
       <x>243</x>
       <y>117</y>
       <w>44</w>
@@ -174,14 +141,14 @@ displaySchedule</panel_attributes>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>666</x>
+      <x>495</x>
       <y>288</y>
-      <w>197</w>
+      <w>224</w>
       <h>63</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-
 getSchedule</panel_attributes>
-    <additional_attributes>180;45;27;45</additional_attributes>
+    <additional_attributes>207;45;27;45</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Class</type>
@@ -191,7 +158,7 @@ getSchedule</panel_attributes>
       <w>90</w>
       <h>27</h>
     </coordinates>
-    <panel_attributes>SocketClient</panel_attributes>
+    <panel_attributes>Django RDO</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
@@ -219,42 +186,7 @@ getSchedule</panel_attributes>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>495</x>
-      <y>279</y>
-      <w>197</w>
-      <h>63</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;&lt;-
-sendData</panel_attributes>
-    <additional_attributes>180;45;27;45</additional_attributes>
-  </element>
-  <element>
-    <type>com.umlet.element.Relation</type>
-    <coordinates>
-      <x>495</x>
-      <y>405</y>
-      <w>197</w>
-      <h>63</h>
-    </coordinates>
-    <panel_attributes>lt=&gt;&gt;
-sendData</panel_attributes>
-    <additional_attributes>180;45;27;45</additional_attributes>
-  </element>
-  <element>
-    <type>com.umlet.element.Relation</type>
-    <coordinates>
       <x>486</x>
-      <y>522</y>
-      <w>44</w>
-      <h>98</h>
-    </coordinates>
-    <panel_attributes>lt=.</panel_attributes>
-    <additional_attributes>27;81;27;27</additional_attributes>
-  </element>
-  <element>
-    <type>com.umlet.element.Relation</type>
-    <coordinates>
-      <x>657</x>
       <y>522</y>
       <w>44</w>
       <h>98</h>

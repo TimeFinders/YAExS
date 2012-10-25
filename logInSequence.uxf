@@ -26,7 +26,7 @@
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>837</x>
+      <x>756</x>
       <y>126</y>
       <w>117</w>
       <h>27</h>
@@ -35,20 +35,9 @@
     <additional_attributes/>
   </element>
   <element>
-    <type>com.umlet.element.Class</type>
-    <coordinates>
-      <x>675</x>
-      <y>126</y>
-      <w>90</w>
-      <h>27</h>
-    </coordinates>
-    <panel_attributes>SocketServer</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>864</x>
+      <x>783</x>
       <y>126</y>
       <w>44</w>
       <h>71</h>
@@ -70,21 +59,10 @@
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>882</x>
+      <x>801</x>
       <y>180</y>
       <w>18</w>
       <h>432</h>
-    </coordinates>
-    <panel_attributes/>
-    <additional_attributes/>
-  </element>
-  <element>
-    <type>com.umlet.element.Class</type>
-    <coordinates>
-      <x>711</x>
-      <y>414</y>
-      <w>18</w>
-      <h>135</h>
     </coordinates>
     <panel_attributes/>
     <additional_attributes/>
@@ -174,14 +152,14 @@ sendData(loginSuccess, userRCSID)</panel_attributes>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>702</x>
+      <x>603</x>
       <y>468</y>
-      <w>197</w>
+      <w>215</w>
       <h>63</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-
 typeOfUser</panel_attributes>
-    <additional_attributes>27;45;180;45</additional_attributes>
+    <additional_attributes>27;45;198;45</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Relation</type>
@@ -210,14 +188,14 @@ redirectToCAS</panel_attributes>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>702</x>
+      <x>603</x>
       <y>441</y>
-      <w>197</w>
+      <w>215</w>
       <h>63</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;
 userInDatabase(RCSID)</panel_attributes>
-    <additional_attributes>180;45;27;45</additional_attributes>
+    <additional_attributes>198;45;27;45</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Relation</type>
@@ -230,17 +208,6 @@ userInDatabase(RCSID)</panel_attributes>
     <panel_attributes>lt=&gt;&gt;
 displayUserPage</panel_attributes>
     <additional_attributes>27;27;108;27;108;63;27;63</additional_attributes>
-  </element>
-  <element>
-    <type>com.umlet.element.Relation</type>
-    <coordinates>
-      <x>693</x>
-      <y>126</y>
-      <w>44</w>
-      <h>305</h>
-    </coordinates>
-    <panel_attributes>lt=.</panel_attributes>
-    <additional_attributes>27;288;27;27</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Relation</type>
@@ -283,8 +250,7 @@ displayUserPage</panel_attributes>
       <w>90</w>
       <h>27</h>
     </coordinates>
-    <panel_attributes>SocketClient
-</panel_attributes>
+    <panel_attributes>Django RDO</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
@@ -319,40 +285,5 @@ displayUserPage</panel_attributes>
     </coordinates>
     <panel_attributes>lt=.</panel_attributes>
     <additional_attributes>27;90;27;27</additional_attributes>
-  </element>
-  <element>
-    <type>com.umlet.element.Relation</type>
-    <coordinates>
-      <x>693</x>
-      <y>522</y>
-      <w>44</w>
-      <h>107</h>
-    </coordinates>
-    <panel_attributes>lt=.</panel_attributes>
-    <additional_attributes>27;90;27;27</additional_attributes>
-  </element>
-  <element>
-    <type>com.umlet.element.Relation</type>
-    <coordinates>
-      <x>603</x>
-      <y>432</y>
-      <w>125</w>
-      <h>63</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;&lt;-
-sendData</panel_attributes>
-    <additional_attributes>108;45;27;45</additional_attributes>
-  </element>
-  <element>
-    <type>com.umlet.element.Relation</type>
-    <coordinates>
-      <x>603</x>
-      <y>477</y>
-      <w>125</w>
-      <h>63</h>
-    </coordinates>
-    <panel_attributes>lt=&gt;&gt;-
-sendData</panel_attributes>
-    <additional_attributes>108;45;27;45</additional_attributes>
   </element>
 </diagram>
