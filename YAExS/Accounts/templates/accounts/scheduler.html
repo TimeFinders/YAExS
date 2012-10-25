@@ -24,9 +24,14 @@
 
     {% for dept in depts %}
         <div class="dept">
-            <a class="name" href="#">{{dept}}</a>
+            <a class="name" href="#">{{dept.code}} - {{dept.name}}</a>
 
-            <div class="courses">Courses would be here!</div>
+            <div class="courses">
+                {% for course in dept.courses.all %}
+                    <p>{{course.name}}</p>
+                {% endfor %}
+
+            </div>
         </div>
     {% endfor %}
 {% endblock body %}

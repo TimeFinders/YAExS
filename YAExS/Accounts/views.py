@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.http import HttpRequest, HttpResponse
+from courses.models import Department
 
 
 @login_required
@@ -11,4 +12,5 @@ def main(request):
         return render(request, 'accounts/registrar.html')
 
     else:
-        return render(request, 'accounts/scheduler.html', {'depts': ('ARCH','MECH', 'MATH', 'CSCI', 'ITWS')})
+        depts = Department.objects.all()
+        return render(request, 'accounts/scheduler.html', {'depts': depts})

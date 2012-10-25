@@ -1,3 +1,13 @@
+import sys
+import os
+
+
+def relative_path(*path):
+    return os.path.abspath(os.path.join(os.path.dirname(__file__), '..', *path))
+
+sys.path.insert(0, relative_path('lib'))
+
+
 # Django settings for YAExS project.
 
 DEBUG = True
@@ -20,6 +30,7 @@ DATABASES = {
         'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
     }
 }
+
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -121,8 +132,8 @@ INSTALLED_APPS = (
     'compressor',
     'YAExS',
     'Accounts',
-    #'courses',
-    #'south',
+    'courses',
+    'south',
     # Uncomment the next line to enable the admin:
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
@@ -156,6 +167,8 @@ LOGGING = {
         },
     }
 }
+
+FROM_EMAIL="blah@blah.com"
 
 COMPRESS_PRECOMPILERS = (
    ('text/less', 'lessc {infile} {outfile}'),
