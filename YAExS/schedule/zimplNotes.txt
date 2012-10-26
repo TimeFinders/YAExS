@@ -1,0 +1,43 @@
+/*
+
+ZIMPL NOTES
+
+http://zimpl.zib.de/download/zimpl.pdf
+
+
+zimpl is a LGPL modeling language. You build a model model.zpl file, a data file data.zpl, then run zimpl to convert this to MPS or LP format.
+
+A typical invocation of ZIMPL is for example:
+zimpl -o solveme -t mps data.zpl model.zpl
+
+Creates solve.mps and solveme.tbl. The tbl is a table file which lists all variable and constraint names used in the model and their corresponding names in the problem file
+
+Each ZPL file consists of six types of statements:
+◮ Sets
+◮ Parameters
+◮ Variables
+◮ Objective
+◮ Constraints
+◮ Function definitions
+
+sum over a set: sum(s in S) e(s)
+ord(A,n,c) takes the c-th component of the n-th element of set A.
+
+combinations of boolean expressions with and or and xor and negation are NOT possible
+
+a tuple is an ordered vector of fixed dimension where each component is either a number or a string. defintion is enclosed in angle brackets, e.g. <1,2,"x">
+a set consists of tuples. each tuple is unique within a set.
+set A = {1,2,3};
+<1,b> in S will only get those tuples whose first component is 1 (b is a variable?)
+set D:= A cross B;
+set E:= {6 to 9} union A without {2,3};
+etc.
+set F:= { <i,j> in Q with i>j and i < 5}
+you can also index sets.
+
+load the values for a set or a parameter from a file
+read filename as templace [skip n] [use n] [match s] [comment s]
+
+# I've read to page 12
+
+*/
