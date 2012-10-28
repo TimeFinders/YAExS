@@ -2,12 +2,10 @@
 
 \usepackage{fullpage}% reasonable margins
 \usepackage{array} % makes tables nicer
-\usepackage{multirow} %tables
 \usepackage{comment} %block comments
 \usepackage{color} %colored text
 \usepackage{graphicx} %images
-\usepackage{enumerate}
-\usepackage{enumitem} 
+
 
 %squeezed itemize for table.
 \newenvironment{packed_itemize}{
@@ -23,7 +21,9 @@
 
 \begin{document}
 \maketitle
-
+\hrule
+\vspace{0.03in}
+\hrule
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 %\section*{Demonstration} % ANDREW + AUSTON %
@@ -32,7 +32,7 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%
-\section*{Sequence Diagrams} % VERA %
+\section{Sequence Diagrams} % VERA %
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{comment}
 \textcolor{red}{
@@ -45,15 +45,15 @@ use case.  We have also included a sequence diagram for the ``could" implement f
 
 \begin{figure}
 	\centering
-		\includegraphics[width = \textwidth]{logInSequence.png}
-	\caption{Log-In Sequence Diagram}
+		\includegraphics[width = 0.9\textwidth]{logInSequence.png}
+	\caption{\textbf{Log-In Sequence Diagram}}
 	\label{fig:logInSeq}
-\end{figure}
-
-\begin{figure}
-	\centering
-		\includegraphics[width = \textwidth]{startSchedulingSequence.png}
-	\caption{Start Scheduling Sequence Diagram}
+%\end{figure}
+\vspace{0.4in}
+%\begin{figure}
+%	\centering
+		\includegraphics[width = .9\textwidth]{startSchedulingSequence.png}
+	\caption{\bf Start Scheduling Sequence Diagram}
 	\label{fig:startSeq}
 \end{figure}
 
@@ -61,7 +61,7 @@ use case.  We have also included a sequence diagram for the ``could" implement f
 \begin{figure}
 	\centering
 		\includegraphics[width = \textwidth]{viewScheduleSequence.png}
-	\caption{View Schedule Sequence Diagram}
+	\caption{\bf View Schedule Sequence Diagram}
 	\label{fig:viewSeq}
 \end{figure}
 
@@ -69,36 +69,39 @@ use case.  We have also included a sequence diagram for the ``could" implement f
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%
-\section*{Static Class Diagrams}  % VERA %
+\section{Static Class Diagram}  % JEFF %
 %%%%%%%%%%%%%%%%%%%%%%%%%%
-\textcolor{red}{
-A static class diagram of the project's internal software structure. The diagram must be valid UML and accurately depict the software.  Check for proper UML, and makes sense.}
+%\textcolor{red}{A static class diagram of the project's internal software structure. The diagram must be valid UML and accurately depict the software.  Check for proper UML, and makes sense.}
+Our static class diagram is shown in figure \ref{fig:staticDiagram}.
 
-
-
+% @JEFF: Simply uncomment the \includegraphics line below, change the name of the graphics file to be the static class diagram file you made.
 \begin{figure}
 	\centering
 %		\includegraphics[width = \textwidth]{staticClassDiagram.png}
-	\caption{Static Class Diagram}
+	\caption{\bf Static Class Diagram}
 	\label{fig:staticDiagram}
 \end{figure}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%
-\section*{ Design Approach}  % JEFF? %
+\section{ Design Approach}  % JEFF? %
 %%%%%%%%%%%%%%%%%%%%%%%%%%
-\textcolor{red}{
-Submit your design approach (**must be object-oriented) and any design patterns you plan on using in your code. Approach should be clearly articulated and mention at least one design pattern.}
 
-Our team broke our project into two main sections, our website, including our database, and the scheduler itself. The main design pattern that we are implementing will be the Model–view–controller pattern. Our model being the database and the final exam schedule that will be produced, the view being what the website shows to the end user, and the controller being the user interface of the website and the scheduling program. We have created a framework for communication between the scheduling program and SCIP, our schedule solver. We have created a Postgres database that will be storing all of our data centrally, and are working on creating a standard for the data that will be contained, which depends on the data that we are able to obtain from the registrar. Both our website and our scheduling program are being designed in a modular way, which will enable us to implement one case at a time and is conducive to the iterative approach that we are taking.
+Our team broke our project into two main sections: 1) our website, including our database, and 2) the scheduler itself. The main design pattern that we are implementing will be the 
+Model–-view–-controller  % you need double dashes to show the hyphens
+pattern. Our model is the database and the final exam schedule, the view is what the website shows to the end user, and the controller is the user interface of the website . 
+
+ We have also created a Postgres database that will store all of our data centrally, and are we are working on creating a standard for the data.  The standard will depend on the data that we are able to obtain from the Registrar.  We have also created a framework for communication between the website and database and SCIP, our schedule solver. This will use the mediator design pattern to handle the interaction. 
+
+Both our website and our scheduling program are being designed in a modular way, which will enable us to implement one piece at a time and is conducive to the iterative approach that we are taking.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Contribution Summary} % ALL %
 %%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{tabular}{|m{1.4in}|m{4in}|}
+\begin{tabular}{|m{1.4in}|m{4.4in}|}
 \hline 
 \textbf{\large Name}     & \textbf{\large Contributions} \\
 \hline\hline
@@ -142,7 +145,7 @@ Vera Axelrod
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%
-\section*{Status Report} % VERA %
+\section{Status Report} % VERA %
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Things We've Done}
 \begin{itemize}
@@ -163,11 +166,11 @@ Vera Axelrod
 \subsection{Upcoming Plans}
 \begin{itemize}
 	\item Learn about warm starting the scheduling in SCIP.
-	\item Fully define data formats with Registrar
-	\item Cross-reference course detection
-	\item Room scheduling
-	\item Create interface to display exam schedules 
-	\item Object Calisthenics sample code
+	\item Fully define data formats with Registrar.
+	\item Develop a way to detect and handle cross-referenced courses.
+	\item Design and implement an algorithm to assign rooms to scheduled exams.
+	\item Create an interface to display exam schedules. 
+	\item Write object calisthenics sample code.
 \end{itemize}
 
 \end{document}
