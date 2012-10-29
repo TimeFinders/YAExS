@@ -4,6 +4,10 @@ Fabric==1.4.3
 Pygments==1.5
 RPICourses==1.0.5
 South==0.7.5
+distribute==0.6.28
+django-appconf==0.5
+django-cas==2.1.1
+django-compressor==1.2
 django-debug-toolbar==0.9.4
 django-devserver==0.3.2
 django-extensions==0.8
@@ -16,10 +20,6 @@ nose==1.1.2
 pep8==1.1
 pyPdf==1.12
 pyconstraints==1.0.1
-pycrypto==2.6
 python-dateutil==1.5
 pytz==2011c
-six==1.1.0
-sqlparse==0.1.4
-ssh==1.7.14
 wsgiref==0.1.2
