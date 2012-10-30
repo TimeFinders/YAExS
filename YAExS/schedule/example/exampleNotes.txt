@@ -1,0 +1,9 @@
+This code is from when I used to do final exam scheduling in CPLEX. It uses an MPS format problem, which SCIP can read (see reader_mps.h http://scip.zib.de/doc/html/reader__mps_8h.shtml).  Note that we can use ZIMPL in the SCIP Suite to translate a ZPL file into an mps file without having to go through AMPL (see reader_zpl.h http://scip.zib.de/doc/html/reader__zpl_8h.shtml)
+
+
+I used to solve via the following steps
+1) Write model file for AMPL (.mod) which gives the objectives and constraints.
+2) Write the data file for AMPL (.dat) which gives the values of the variables for the model file (using python).
+3) Use AMPL to translate the information into an MPS file. I also asked AMPL to create auxiliary .row and .col files so that I could understand the variable names in the MPS file. These are not used in CPLEX.
+4) Create an MST file that held the warm starting values (using python).
+5) Run CPLEX on the MPS and MST files (using the mipopt command).
