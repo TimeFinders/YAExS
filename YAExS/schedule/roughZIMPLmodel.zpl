@@ -14,24 +14,30 @@ set PEOPLE := read "PEOPLE.dat" as "<1s>" comment "#";
 # this may be unnecessary if we do some sort of logical indexing on the set of all people,
 # if the instructor string identifiers are somehow different.
 
-set EXAMS {PEOPLE} ordered;
+set EXAMS[PEOPLE] := read "EXAMS.dat" as "<1s>" comment "#";
 # For each member p of PEOPLE, there is a set of exams the person has (gives/takes)
 
-set TOTALEX=union {p in PEOPLE} EXAMS[p];          # All exams offered
+set ALL_EXAMS := union {p in PEOPLE} EXAMS[p];
+# All exams offered. Not sure if this is valid union syntax
 
-set TSLOT ordered;         		# All timeslots available for exams (e.g. 5 days at 4 per day = 20 tslots)
+set TSLOT := {1..20};         		
+# All timeslots available for exams (e.g. 5 days at 4 per day = 20 tslots)
 
-set DAYS;          		 	 	# All days available to schedule exams (e.g. 5)
+set DAYS := { 1..5 };          		 	 	
+# All days available to schedule exams (e.g. 1 to 5)
+# we should actually read these in from a file
 
-set DAYSLOT {DAYS};   			# For each day, lists the timeslots. (e.g. 4 per day)
-
+set DAYSLOT [DAYS] := <1> {1..4}, <2> {5..8}, 
+					 <3> {9..12}, <4> {13..16}, <5> {17..20};
+# For each day, lists the timeslots. (e.g. 4 per day)
+# we should actually read these in from a file or do some logic.
 
 
 ###############
 #  VARIABLES  #
 ###############
 
-var examIsAt [e in TOTALEX,t in TSLOT] binary;      # Binary variable, equals 1 if exam e is at time t, 0 otherwise.
+var examIsAt [e in ALL_EXAMS,t in TSLOT] binary;      # Binary variable, equals 1 if exam e is at time t, 0 otherwise.
 
 var twoPlus [p in PEOPLE] binary; 			  # Binary variable, equals 1 if person p has TWO OR MORE exams on any day, 0 otherwise.
 
@@ -56,7 +62,7 @@ minimize badConflicts:
 #  CONSTRAINTS  #
 #################
 
-subjto time: forall <i> in TOTALEX:
+subjto time: forall <e> in ALL_EXAMS:
 	sum<t> in TSLOT : examIsAt [e,t] = 1;     
 
 # Each exam must use exactly one time slot.

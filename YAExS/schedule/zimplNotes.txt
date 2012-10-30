@@ -36,8 +36,24 @@ set F:= { <i,j> in Q with i>j and i < 5}
 you can also index sets.
 
 load the values for a set or a parameter from a file
-read filename as templace [skip n] [use n] [match s] [comment s]
+read filename as template [skip n] [use n] [match s] [comment s
 
-# I've read to page 12
+Filename is the name of the file to read. template is a string with a template for the
+tuples to generate. Each input line from the file is split into fields. The splitting is done
+according to the following rules: Whenever a space, tab, comma, semicolon or colon is
+encountered a new field is started. Text that is enclosed in double quotes is not split
+and the quotes are always removed. When a field is split all space and tab 
+charactersaround the splitting point are removed. If the split is due to a comma, semicolon or
+colon, each occurrence of these characters starts a new field.
+
+example:
+ param a[{1..4}*{1..3}] := read "matrix.dat" as "n+" comment "#";
+
+# more examples on page 12
+
+
+WARM STARTING:
+It is possible to specify initial values for integer variables by use of the startval keyword. Furthermore, the branching priority can be given using the priority keyword. Currently these values are written to a CPLEXord branching order file if the -r command line switch is given.
+
 
 */

@@ -26,7 +26,9 @@ class Optimizer
   //Setup functions. Pretty much all placeholders while we figure out what's needed
   void setupTimeSlots(int days, int slotsPerDay);
   void addStudent(int id, std::vector<int> classid);
+  void addInstructor(int id, std::vector<int> classid);
   void addClass(int id, int meetingTime);
+  //void addPreference();
 
   //Runs the solver
   void schedule();

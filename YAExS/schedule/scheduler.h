@@ -22,11 +22,13 @@ class Scheduler
   //Setup functions
   bool loadClasses();
   bool loadStudents();
+  bool loadInstructors();
 
   //Scheduling functions
   bool startScheduling();
   std::string status();
   bool stopScheduling();
+
  private:
   //Pointer to a DBReader
   DBReader* db_;
