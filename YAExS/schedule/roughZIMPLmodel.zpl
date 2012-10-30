@@ -6,15 +6,19 @@
 #   SETS   #
 ############
 
-set PEOPLE := read "PEOPLE.dat" as "<1s>" comment "#";
+set PEOPLE := {"Andrew", "Auston", "Jeff", "Vera", "John", "Fengyan", "Sikdar"};
+#set PEOPLE := read "PEOPLE.dat" as "<1s>" comment "#";
 # List of students AND INSTRUCTORS. String identifiers.
 
+set INSTRUCTORS := {"John"};
 # set INSTRUCTORS := read "INSTRUCTORS.dat" as "<1s>" comment "#";
 # List of instructors, a subset of PEOPLE
 # this may be unnecessary if we do some sort of logical indexing on the set of all people,
 # if the instructor string identifiers are somehow different.
 
-set EXAMS[PEOPLE] := read "EXAMS.dat" as "<1s>" comment "#";
+set EXAMS[PEOPLE] := { <"Andrew"> {"SDD", "CCN"}, <"Auston"> {"SDD"}, <Jeff> {"SDD", "CCN"}, <"Vera"> {"SDD", "CLA"}, <"John">,{"SDD"} };
+
+#set EXAMS[PEOPLE] := read "EXAMS.dat" as "<1s>" comment "#";
 # For each member p of PEOPLE, there is a set of exams the person has (gives/takes)
 
 set ALL_EXAMS := union {p in PEOPLE} EXAMS[p];
