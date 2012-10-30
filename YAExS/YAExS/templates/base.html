@@ -5,6 +5,7 @@
         {% compress js %}
             {% block js %}
                 <script src="{{STATIC_URL}}j/jquery-1.8.2.min.js" type="text/javascript"></script>
+                <script src="{{STATIC_URL}}j/jquery-ui-1.9.1.custom.js" type="text/javascript"></script>
             {% endblock js %}
         {% endcompress %}
 
@@ -31,7 +32,7 @@
 
                   <p> The final exam schedule is not yet available. If you are a department scheduler or other authorized user, please select log in above.</p>
                 {% endblock body %}
-            </div> 
+            </div>
             <div id="footer">
                 {% block footer %}
 

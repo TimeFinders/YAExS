@@ -11,7 +11,7 @@ sys.path.insert(0, relative_path('lib'))
 # Django settings for YAExS project.
 
 DEBUG = True
-COMPRESS_ENABLED = True
+COMPRESS_ENABLED = False
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
