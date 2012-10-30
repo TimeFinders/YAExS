@@ -7,6 +7,7 @@ admin.autodiscover()
 urlpatterns = patterns('',
     url(r'^$', 'YAExS.views.home'),
     url(r'^accounts/', include('Accounts.urls')),
+    url(r'^exam/', include('Exams.urls')),
     url(r'^login/$', 'django_cas.views.login'),
     url(r'^logout/$', 'django_cas.views.logout'),
     # Examples:

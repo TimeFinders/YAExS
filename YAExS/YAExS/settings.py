@@ -132,6 +132,7 @@ INSTALLED_APPS = (
     'compressor',
     'YAExS',
     'Accounts',
+    'Exams',
     'courses',
     'south',
     # Uncomment the next line to enable the admin:
