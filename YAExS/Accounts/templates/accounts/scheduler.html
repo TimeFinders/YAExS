@@ -5,8 +5,12 @@
     <script type="text/javascript">
 
     $(document).ready(function(){
+
+        $(".exams").sortable({axis:"x", connectWith:".exams", receive: function(event,ui){
+            console.log(event,ui);
+        }});
         $(".name").click(function(){
-            $(this).next(".courses").slideToggle();
+            $(this).siblings(".courses").slideToggle();
             return false;
         });
     });
@@ -25,12 +29,23 @@
     {% for dept in depts %}
         <div class="dept">
             <a class="name" href="#">{{dept.code}} - {{dept.name}}</a>
-
             <div class="courses">
-                {% for course in dept.courses.all %}
-                    <p>{{course.name}}</p>
-                {% endfor %}
-
+                <div class="container">
+                    <h3>No Exam</h3>
+                    <ul class="noexam exams"></ul>
+                </div>
+                <div class="container">
+                    <h3>Unkown</h3>
+                    <ul class="unknown exams">
+                        {% for course in dept.courses.all %}
+                            <li>{{course.name}}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="container">
+                    <h3>Has Exam</h3>
+                    <ul class="hasexam exams"></ul>
+                </div>
             </div>
         </div>
     {% endfor %}
