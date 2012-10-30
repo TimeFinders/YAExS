@@ -313,6 +313,8 @@ class Course(models.Model):
     is_comm_intense = models.BooleanField('Communication Intensive')
     objects = managers.QuerySetManager(managers.CourseQuerySet)
 
+    ordering=['number']
+
     class Meta:
         ordering = ['department__code', 'number']
 
