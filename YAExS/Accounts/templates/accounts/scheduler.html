@@ -9,15 +9,16 @@
         $(".exams").sortable({connectWith:".exams"});
 
         $(".noexam").sortable("option", "receive", function(event, ui){
-            console.log(ui.item.attr("id") + " has no exam!");
+            $.post('/exam/noexam/', {id : ui.item.attr('id')})
+
         });
 
         $(".unknown").sortable("option", "receive", function(event, ui){
-            console.log(ui.item.html() + " is unknown.");
+            $.post('/exam/unknown/', {id : ui.item.attr('id')})
         });
 
         $(".hasexam").sortable("option", "receive", function(event, ui){
-            console.log(ui.item.html() + " has an exam :(");
+            $.post('/exam/hasexam/', {id : ui.item.attr('id')})
         });
         $(".name").click(function(){
             $(this).siblings(".courses").slideToggle();
@@ -38,7 +39,7 @@
 
     {% for dept in depts %}
         <div class="dept">
-            <a class="name" href="#">{{dept.code}} - {{dept.name}}</a>
+            <div class="name">{{dept.code}} - {{dept.name}}</div>
             <div class="courses">
                 <div class="container">
                     <span class="title">No Exam</title>
