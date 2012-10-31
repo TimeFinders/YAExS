@@ -88,6 +88,15 @@ class Department(models.Model):
             return u"%s (%s)" % (self.name, self.code)
         return self.code
 
+    def unknown(self):
+        return self.courses.filter(status="unknown")
+
+    def noexam(self):
+        return self.courses.filter(status="noexam")
+
+    def hasexam(self):
+        return self.courses.filter(status="hasexam")
+
     def toJSON(self, select_related=()):
         json = {
             'name': self.name,
@@ -313,7 +322,8 @@ class Course(models.Model):
     is_comm_intense = models.BooleanField('Communication Intensive')
     objects = managers.QuerySetManager(managers.CourseQuerySet)
 
-    ordering=['number']
+
+    status = models.CharField(max_length=100, default='unknown')
 
     class Meta:
         ordering = ['department__code', 'number']
@@ -353,6 +363,7 @@ class Course(models.Model):
         if has_prefetched(self, 'sections'):
             values['sections'] = [s.toJSON() for s in self.sections.all()]
         return values
+
 
     @property
     def code(self):

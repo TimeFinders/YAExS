@@ -9,7 +9,7 @@
         $(".exams").sortable({connectWith:".exams"});
 
         $(".noexam").sortable("option", "receive", function(event, ui){
-            console.log(ui.item.html() + " has no exam!");
+            console.log(ui.item.attr("id") + " has no exam!");
         });
 
         $(".unknown").sortable("option", "receive", function(event, ui){
@@ -42,19 +42,27 @@
             <div class="courses">
                 <div class="container">
                     <span class="title">No Exam</title>
-                    <ul class="noexam exams"></ul>
+                    <ul class="noexam exams">
+                        {% for course in dept.noexam %}
+                            <li id="{{course.id}}">{{course.number}} - {{course.name}}</li>
+                        {% endfor %}
+                    </ul>
                 </div>
                 <div class="container">
                     <span class="title">Unknown</title>
                     <ul class="unknown exams">
-                        {% for course in dept.courses.all %}
+                        {% for course in dept.unknown %}
                             <li id="{{course.id}}">{{course.number}} - {{course.name}}</li>
                         {% endfor %}
                     </ul>
                 </div>
                 <div class="container">
                     <span class="title">Has Exam</title>
-                    <ul class="hasexam exams"></ul>
+                    <ul class="hasexam exams">
+                        {% for course in dept.hasexam %}
+                            <li id="{{course.id}}">{{course.number}} - {{course.name}}</li>
+                        {% endfor %}
+                    </ul>
                 </div>
             </div>
         </div>

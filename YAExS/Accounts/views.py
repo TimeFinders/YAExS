@@ -13,4 +13,6 @@ def main(request):
 
     else:
         depts = Department.objects.all()
+
+
         return render(request, 'accounts/scheduler.html', {'depts': depts})
