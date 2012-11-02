@@ -1,5 +1,8 @@
-# This is Vera's Rough attempt at making a ZIMPL Model
-# see http://zimpl.zib.de/download/zimpl.pdf for more info on ZIMPL
+# First go at a ZIMPL Model.
+# 
+# To translate this into a .lp or .mps file
+# zimpl roughZIMPLmodel.zpl
+# zimpl -t mps roughZIMPLmodel.zpl
 
 
 ############
