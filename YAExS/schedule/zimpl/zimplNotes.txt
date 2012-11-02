@@ -15,7 +15,7 @@ zimpl -t mps roughZIMPLmodel.zpl
 
 Creates solve.mps and solveme.tbl. The tbl is a table file which lists all variable and constraint names used in the model and their corresponding names in the problem file.
 
-ZIMPL can make mps or lp files. lp files tend to be smaller and more readable.
+ZIMPL can make mps or lp files. lp files tend to be smaller and more readable but there may be a problem with them not noting that variables must be binary and/or integer.
 
 
 to use a zimpl model directly in scip

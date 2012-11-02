@@ -9,8 +9,6 @@
 
 set STDNT;         # List of students
 set EXAMS {STDNT} ordered;  # For each member s of STDNT, there is a set of exams the STDNT takes
-set ANTISYMSTUD within STDNT;  # one student taking a lot of common exams,
-                               # used to do some symmetry-breaking
 set TOTALEX=union {i in STDNT} EXAMS[i];          # All exams offered
 set TSLOT ordered;          # All timeslots available for exams
 set DAYS;           # All days available to schedule exams
