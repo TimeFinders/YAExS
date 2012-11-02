@@ -12,8 +12,8 @@
 #include <iostream>
 
 #include <scip/scip.h>
-#include <scip/scip/scipdefplugins.h>
-#include <scip/scip/reader_zpl.h>
+#include <scip/scipdefplugins.h>
+#include <scip/reader_zpl.h>
 
 class Optimizer
 {
