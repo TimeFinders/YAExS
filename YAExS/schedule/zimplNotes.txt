@@ -10,9 +10,18 @@ zimpl is a LGPL modeling language. You build a model model.zpl file, a data file
 A typical invocation of ZIMPL is for example:
 zimpl -o solveme -t mps data.zpl model.zpl
 
-Creates solve.mps and solveme.tbl. The tbl is a table file which lists all variable and constraint names used in the model and their corresponding names in the problem file
+or
+zimpl -t mps roughZIMPLmodel.zpl
 
-Each ZPL file consists of six types of statements:
+Creates solve.mps and solveme.tbl. The tbl is a table file which lists all variable and constraint names used in the model and their corresponding names in the problem file.
+
+ZIMPL can make mps or lp files. lp files tend to be smaller and more readable.
+
+
+
+
+#
+Each ZPL file can consists of six types of statements:
 ◮ Sets
 ◮ Parameters
 ◮ Variables
