@@ -29,7 +29,6 @@ set EXAMS[PEOPLE] := <"Andrew"> {read "exams.dat" as "<s+>" use 1 comment "#"},
 	<"John"> 	{read "exams.dat" as "<s+>" skip 4 use 1 comment "#"},
 	<"Fengyan"> {read "exams.dat" as "<s+>" skip 5 use 1 comment "#"},
 	<"Sikdar">	{read "exams.dat" as "<s+>" skip 6 use 1 comment "#"};
-
 #set EXAMS[PEOPLE] :=  <"Andrew"> {"SDD", "CCN"}, 
 #	 <"Auston"> {"SDD"},
 #	 <"Jeff"> {"SDD", "CCN", "Bio"}, 
@@ -51,17 +50,32 @@ param numDays := read "parameters.dat" as "1n" skip 1 use 1 comment "#";
 set DAYS := { 1..numDays };          		 	 	
 # All days available to schedule exams (e.g. 1 to 5)
 
-#set DAYSLOT[DAYS] := { read "dayslots.dat" as "<1n> 2n" comment "#"};
 set DAYSLOT [DAYS] := <1> {1..2};
-#					 <2> {5..8},
+#					 <1> {1..4}, <2> {5..8},
 #					 <3> {9..12}, <4> {13..16}, <5> {17..20};
 # For each day, lists the timeslots. (e.g. 4 per day)
 # we should actually read these in from a file or do some logic.
 # but I'm not sure how to do this.
 
-#time requirements
+# negative time PREFERENCES
+# times when we prefer not to have this exam meet
 set dontMeetAt[ALL_EXAMS] :=  <"SDD"> {1,2}, <"CLA"> {1}, <"CCN"> {}, <"Bio"> {};
 #I'm not sure how to read this in from a file.
+
+# positive time PREFERENCES
+#times when we would like this exam to meet
+set pleaseMeetAt[ALL_EXAMS] := <"SDD"> {}, <"CLA">{}, <"CCN">{}, <"Bio"> {1};
+
+# negative time REQUIREMENTS
+# times when this eam cannot meet.
+set cantMeetAt[ALL_EXAMS] := <"SDD"> {}, <"CLA"> {}, <"CCN"> {1}, <"Bio"> {};
+
+# positive time REQUIREMENTS
+# time this exam must meet. Should only at most one time per exam.
+# Handling the empty case is a bit tricky. 
+# We could alternatively make this a group of parameters.
+set mustMeetAt[ALL_EXAMS] := <"SDD"> {}, <"CLA"> {}, <"CCN"> {}, <"Bio"> {2};
+
 
 ###############
 #  VARIABLES  #
@@ -89,10 +103,12 @@ minimize clashes:
     sum <p> in PEOPLE : threePlus[p]
  +  sum <t> in TSLOT : (sum<p> in PEOPLE : conflict[t,p])
  +  (1/5) * sum <e> in ALL_EXAMS : ( sum <t> in dontMeetAt[e] : examIsAt[e,t] ) 
+ - (1/10) * sum <e> in ALL_EXAMS : ( sum <t> in pleaseMeetAt[e] : examIsAt[e,t] )
  + (1/10) * sum<p> in PEOPLE : twoPlus[p];
 
-#  time preferences (dontMeetAt) are weighted 1/5 as much as conflicts and 
-# three exams in one day
+#  time preferences (dontMeetAt) are weighted 1/5 as much as conflicts
+#  two exams in one day (twoPlus) are weigt 1/10 as much as conflicts
+#  you get a (1/10) boost (negative) if you have exams meet at preferenced times (pleaseMeetAt)
 
 
 #################
@@ -127,6 +143,26 @@ subto overload:
 # No person is allowed to have four exams on one day.
 
 
-#subto instructorTimeConstraints:
-#	forall <i,e> in INSTRUCTORS cross EXAMS do
-#		examIsAt[e,t] #something 
+subto NegativeTimeRequirements:
+	forall <e> in ALL_EXAMS  do
+		sum <t> in cantMeetAt[e] : examIsAt[e,t] == 0;
+# Do not allow exam e to meet at any time t that is in the list of e's cantMeetAt times
+
+
+subto PostitiveTimeRequirements:
+	forall <e> in ALL_EXAMS do
+		sum<t> in mustMeetAt[e] : examIsAt[e,t]  >= card(mustMeetAt[e]);
+	# Force exam e to meet at the time that it is required to meet at
+
+	# card is the size of the set. So if there are no times that e must meet at, then this constraint
+	# is always satifisfied, otherwise there should only be ONE time that you have to meet at, 
+	# so we should be summing over one element and card(mustMeetAt[e]) should be one.
+	# this is decidedly awkward and should be replaced by something like:
+		
+	#	if (card(mustMeetAt[e]) == 1) 
+	#		THEN sum <t> in mustMeetAt[e] : examIsAt[e,t] == 1;
+	#	end
+
+	# but I can't get that to work yet.
+
+
