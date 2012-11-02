@@ -11,33 +11,33 @@
 
 class Scheduler
 {
- public:
-  //Constructors
-  Scheduler();
-  Scheduler(DBReader* dbIn, Optimizer* optIn);
+public:
+    //Constructors
+    Scheduler();
+    Scheduler(DBReader* dbIn, Optimizer* optIn);
 
-  //Destructor
-  ~Scheduler();
+    //Destructor
+    ~Scheduler();
 
-  //Setup functions
-  bool loadClasses();
-  bool loadStudents();
-  bool loadInstructors();
+    //Setup functions
+    bool loadClasses();
+    bool loadStudents();
+    bool loadInstructors();
 
-  //Scheduling functions
-  bool startScheduling();
-  std::string status();
-  bool stopScheduling();
+    //Scheduling functions
+    bool startScheduling();
+    std::string status();
+    bool stopScheduling();
 
- private:
-  //Pointer to a DBReader
-  DBReader* db_;
+private:
+    //Pointer to a DBReader
+    DBReader* db_;
 
-  //Pointer to an Optimizer
-  Optimizer* optimizer_;
+    //Pointer to an Optimizer
+    Optimizer* optimizer_;
 
-  //Current state of the scheduling process
-  std::string state_;
+    //Current state of the scheduling process
+    std::string state_;
 }
 
 #endif
