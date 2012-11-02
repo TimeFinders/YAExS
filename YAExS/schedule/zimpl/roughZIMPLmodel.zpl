@@ -22,15 +22,26 @@ set INSTRUCTORS := { read "instructors.dat" as "<1s>" comment "#"};
 # this may be unnecessary if we do some sort of logical indexing on the set of all people,
 # if the instructor string identifiers are somehow different.
 
-set EXAMS[PEOPLE] :=  <"Andrew"> {"SDD", "CCN"}, <"Auston"> {"SDD"},
-	 <"Jeff"> {"SDD", "CCN"}, <"Vera"> {"SDD", "CLA"}, <"John"> {"SDD"}, 
-	 <"Fengyan"> {"CLA"}, <"Sikdar"> {"CCN"} ;
+set EXAMS[PEOPLE] := <"Andrew"> {read "exams.dat" as "<s+>" use 1 comment "#"},
+	<"Auston"> 	{read "exams.dat" as "<s+>" skip 1 use 1 comment "#"},
+	<"Jeff"> 	{read "exams.dat" as "<s+>" skip 2 use 1 comment "#"},
+	<"Vera"> 	{read "exams.dat" as "<s+>" skip 3 use 1 comment "#"},
+	<"John"> 	{read "exams.dat" as "<s+>" skip 4 use 1 comment "#"},
+	<"Fengyan"> {read "exams.dat" as "<s+>" skip 5 use 1 comment "#"},
+	<"Sikdar">	{read "exams.dat" as "<s+>" skip 6 use 1 comment "#"};
 
-#set EXAMS[PEOPLE] := {read "EXAMS.dat" as "<1s>" comment "#"};
+#set EXAMS[PEOPLE] :=  <"Andrew"> {"SDD", "CCN"}, 
+#	 <"Auston"> {"SDD"},
+#	 <"Jeff"> {"SDD", "CCN", "Bio"}, 
+#	 <"Vera"> {"SDD", "CLA", "Bio"},
+#	 <"John"> {"SDD", "Bio"}, 
+#	 <"Fengyan"> {"CLA"},
+#	 <"Sikdar"> {"CCN"} ;
 # For each member p of PEOPLE, there is a set of exams the person has (gives/takes)
+# I'm not sure how to read this in from a file in a better way
 
 set ALL_EXAMS := union <p> in PEOPLE : EXAMS[p];
-# All exams offered. Not sure if this is valid union syntax
+# All exams offered. Dont need to have an explicit list, just union over peoples exams.
 
 param numSlots := read "parameters.dat" as "1n" use 1 comment "#";
 set TSLOT := { 1..numSlots };         		
@@ -39,14 +50,18 @@ set TSLOT := { 1..numSlots };
 param numDays := read "parameters.dat" as "1n" skip 1 use 1 comment "#";
 set DAYS := { 1..numDays };          		 	 	
 # All days available to schedule exams (e.g. 1 to 5)
-# we should actually read these in from a file
 
-set DAYSLOT [DAYS] := <1> {1..4}, <2> {5..8};
+#set DAYSLOT[DAYS] := { read "dayslots.dat" as "<1n> 2n" comment "#"};
+set DAYSLOT [DAYS] := <1> {1..2};
+#					 <2> {5..8},
 #					 <3> {9..12}, <4> {13..16}, <5> {17..20};
 # For each day, lists the timeslots. (e.g. 4 per day)
 # we should actually read these in from a file or do some logic.
 # but I'm not sure how to do this.
 
+#time requirements
+set dontMeetAt[ALL_EXAMS] :=  <"SDD"> {1,2}, <"CLA"> {1}, <"CCN"> {}, <"Bio"> {};
+#I'm not sure how to read this in from a file.
 
 ###############
 #  VARIABLES  #
@@ -70,11 +85,14 @@ var conflict [<t,p> in TSLOT cross PEOPLE] >= 0;  # conflict[t,p]=0 if person p 
 #  OBJECTIVE  #
 ###############
 
-minimize badConflicts: 
+minimize clashes: 
     sum <p> in PEOPLE : threePlus[p]
- +  sum <t> in TSLOT : (sum<p> in PEOPLE : conflict[t,p]); 
+ +  sum <t> in TSLOT : (sum<p> in PEOPLE : conflict[t,p])
+ +  (1/5) * sum <e> in ALL_EXAMS : ( sum <t> in dontMeetAt[e] : examIsAt[e,t] ) 
+ + (1/10) * sum<p> in PEOPLE : twoPlus[p];
 
-# need to add in instructor PREFERENCES
+#  time preferences (dontMeetAt) are weighted 1/5 as much as conflicts and 
+# three exams in one day
 
 
 #################
