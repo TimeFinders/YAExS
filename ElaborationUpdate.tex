@@ -1,0 +1,748 @@
+\documentclass[11pt]{article}
+\usepackage[margin=0.7in]{geometry}
+\usepackage{graphicx} %figures
+\usepackage{titling}
+\usepackage{color}
+\usepackage{comment}
+\usepackage[none]{hyphenat} %surround text in {} to prevent hyphenation
+\usepackage{multirow} %helps tables
+\usepackage{array} %helps tables
+\usepackage{url}
+\usepackage{longtable}
+\usepackage{enumitem}
+\usepackage{bold-extra} %allows using small caps and bold series in the same time (use case)
+\newcounter{id}
+\stepcounter{id}
+
+\newcommand{\specid}{\arabic{id}\stepcounter{id}}
+
+%squeezed itemize for table.
+\newenvironment{packed_itemize}{
+\begin{itemize}
+ % \setlength{}{0pt}
+  \setlength{\itemsep}{1pt}
+  \setlength{\parskip}{0pt}
+  \setlength{\parsep}{0pt}
+}{\end{itemize}}
+
+
+
+\newenvironment{usecase}{%
+	%\def\title$$1{  {\Large\bf{Use Case} ##1} \\}
+	\def\title##1{ {\large \bfseries  \scshape {Use Case:} ##1} \\ }
+ 	\def\id##1{{\bf Indentifier:} ##1\\}
+	\def\des##1{ {\bf Description:} ##1\\}
+	\def\actors##1{ {\bf Actors:} ##1\\}
+    	\def\pre##1{ {\bf Preconditions:} ##1 \\} %
+    	\def\flow##1{ {\bf Flow of Events} ##1}%
+    	\newenvironment{ucenum}{%
+        	\begin{enumerate}[nolistsep]\small}%
+        	{\end{enumerate}}
+	\def\post##1{ {\bf Postconditions:} ##1 \\}
+}{\vspace{.05in}}
+
+\title{YAExs Elaboration}
+\author{TimeFinders: Andrew Karnani, Auston Sterling, Jeffrey Rodowicz and Vera Axelrod}
+\date{October 11, 2012}
+
+\begin{document}
+
+\maketitle
+\vspace{1in}
+\tableofcontents
+
+\clearpage
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Domain Model Diagram} %VERA
+Our domain model diagram is shown in Figure \ref{fig:Domain}.  Students take exams in rooms. Exams are scheduled by the Registrar, which takes requests for exams from department schedulers, who in turn collect exam preferences from the instructors who give the exams. At RPI each academic department has an administrator known as a  department scheduler is an administrator who works with the Registrar to coordinate exams.
+\begin{figure}
+	\centering
+		\includegraphics[width = \textwidth]{domainDiagram.pdf}
+	\caption{Domain Model}
+	\label{fig:Domain}
+\end{figure}
+
+\cleardoublepage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Supplemental Specification} %AUSTON  and ANDREW
+%need to make sure everything is connected to a use case
+
+
+\begin{longtable}{|m{1in}|m{0.3in}|m{0.6in}|m{4.5in}|}
+\hline
+\textbf{Category}  & \textbf{ID}  & \textbf{Priority}        & \textbf{Description} \\
+\hline\hline
+\endhead
+
+\hline
+\endfoot
+%%%%%%%%%%%%%%%%%%%%
+\multirow{16}{*}{Functionality }
+ &F\specid & Must
+ & Registrar can start scheduling \\  \cline{2-4}
+%%%%%
+ & F\specid & Must
+ & Registrar can upload information about student course registrations. \\  \cline{2-4}
+ %%%%%
+ & F\specid & Must
+ & Registrar can download human-readable version of exam schedule. \\  \cline{2-4}
+%%%%%
+ & F\specid & Should
+ & Registrar can modify produced schedules manually \\  \cline{2-4}
+%%%%%
+ & F\specid & Should
+ & Registrar can modify scheduler settings \\ \cline{2-4}
+%%%%%
+ & F\specid & Should
+ & Registrar can select from multiple generated schedules \\  \cline{2-4}
+%%%%%
+ & F\specid & Could
+ & Registrar can notify department schedulers about deadlines and updates through the program. \\  \cline{2-4}
+%%%%%
+ & F\specid & Could
+ & Registrar can see which courses do not have any preferences set. \\  \cline{2-4}
+%%%%%
+ & F\specid & Could
+ & Registrar can publish a schedule to a publicly accessible website  \\  \cline{2-4}
+%%%%%
+ & F\specid & Must
+ &Department Schedulers can specify which courses have final exams. \\  \cline{2-4}
+%%%%%
+ & F\specid & Must
+ &Department Schedulers can specify which courses have final exams that meet together. \\  \cline{2-4}
+%%%%%
+ & F\specid & Should
+ &Department Schedulers can specify preferences  for exam rooms, dates and times.\\  \cline{2-4}
+%%%%%
+ &F\specid & Should
+ & Department schedulers can enter exam information about multiple exams at once.  \\  \cline{2-4}
+%%%%%
+
+ & F\specid & Should
+ &  Students can access schedule posted on the website.\\  \hline\hline
+%%%%%
+
+%%%%%%%%%%%%%%%%%%%%
+\multirow{4}{*}{Security }
+ &  F\specid & Must
+ & All users authenticated through CAS \\  \cline{2-4}
+ %%%%%
+ & F\specid & Must
+ & Only approved department schedulers can use the department scheduling system. \\  \cline{2-4}
+%%%%%
+ & F\specid & Must
+ &Department Schedulers cannot access any part of the scheduling preferences or modification tools . \\  \cline{2-4}
+%%%%%
+ &F\specid & Must
+ & Only approved administrators in the Registrar's office can use the Registrar scheduling system. \\  \cline{2-4}
+%%%%%
+ &F\specid & Should
+ & Registrar can submit sensitive information using nontrivial cryptographic security. \\  \hline\hline
+
+
+%%%%%%%%%%%%%%%%%%%%
+\multirow{3}{*}{Usability }
+ & F\specid & Must
+ & Any user can access the program through a modern standards compliant web browser which supports CSS3, jQuery and other modern web technologies (e.g. Chrome, Firefox, or Safari). \\  \cline{2-4}
+%%%%%
+ & F\specid & Should
+ & Registrar can see status of a running scheduler. \\ \hline\hline
+
+%%%%%%%%%%%%%%%%%%%%
+\multirow{3}{*}{Reliability }
+
+ &F\specid & Must
+ & Scheduler reports outcome of successful and unsuccessful runs. \\  \cline{2-4}
+%%%%%
+ & F\specid & Must
+ & Submission of preferences reports success or failure. \\\cline{2-4}
+ & F\specid & Should
+ & Web interface exits gracefully in the case of errors. \\   \hline \hline
+%%%%% \hline\hline
+
+%%%%%%%%%%%%%%%%%%%%
+\multirow{3}{*}{Performance }
+ & F\specid & Must
+ & Scheduling should run in less than 12 hours (overnight). \\  \cline{2-4}
+%%%%%
+ &F\specid & Must
+ & Web pages render in under 100 ms on the server. \\  \cline{2-4}
+%%%%%
+ & F\specid & Could
+ & Web pages utilize Ajax to reduce apparent network latency. \\ \hline\hline
+
+%%%%%%%%%%%%%%%%%%%%
+\multirow{3}{*}{Maintainability}
+ & F\specid & Must
+ &  Elements are loosely coupled so dotCIO components can be easily replaced (e.g. Banner).\\  \cline{2-4}
+%%%%%
+ &F\specid & Should
+ & Use open source software without modifications so that non-API-breaking releases can easily be dropped into the system. \\  \cline{2-4}
+%%%%%
+ & F\specid & Could
+ & Web interface shows system status, and allows easy upgrade of various components. \\ \hline
+
+\pagebreak
+%%%%%%%%%%%%%%%%%%%%
+\multirow{3}{*}{Configurability}
+ & F\specid & Must
+ & All configuration options are gathered into a configuration file not hard coded. \\*  \cline{2-4}
+%%%%%
+ &F\specid & Should
+ & Most configuration changes do not require a server restart. \\* \cline{2-4}
+%%%%%
+ & F\specid & Could
+ & All settings are configurable through a web interface. \\* \hline\hline
+ \multirow{3}{*}{Constraints}
+ &F\specid & Must
+ &  System utilizes object oriented design.\\* \cline{2-4}
+%%%%%%%%%%%
+ &F\specid & Must
+ &  The development period is 13 weeks.\\* \cline{2-4}
+ %%%%%%%%%%%
+ &F\specid & Must
+ &  The web interface back-end is written in Python/Django.\\* \cline{2-4}
+ %%%%%%%%%%%
+ &F\specid & Must
+ &  The scheduling is done in C++\\* \cline{2-4}
+ %%%%%%%%%%%
+ &F\specid & Must
+ &  SCIP is used as the optimization engine.\\*
+\end{longtable}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Deployment Diagram} %ANDREW
+
+Our deployment diagram is shown in Figure \ref{fig:Deploy}.
+
+\begin{figure}[ht]
+	\centering
+		\includegraphics[width = \textwidth]{deploymentdiagram.pdf}
+	\caption{Deployment Diagram}
+	\label{fig:Deploy}
+\end{figure}
+
+YAExS will be a web based application, therefore, the client for the application will be a web browser.  A user's web browser will contact the server via a TCP/IP socket (handled by the browser).  The incoming HTTP request will be handled by Django.  Django will be responsible for gathering information from users and inserting that information into the database.  Django will also interface with Banner (RPI's ERP) to gather information about classes.
+
+The C++ scheduling engine will read from the database via a library called libpq++.  This information will be parsed and formatted so that SCIP will be able to use the information to schedule exams.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Use Cases} %AUSTON
+
+\subsection{All Users}
+\begin{usecase}
+  \title{LogIn}
+  \id{A01}
+  \des{The LogIn use case models a user logging in to the website.}
+  \actors{Registrar, department scheduler, or student}
+  \pre{The user has navigated to the YAExS website.}
+  \flow{}
+  \begin{ucenum}
+  \item The use case starts when the user navigates to the YAExS website.
+  \item The user is prompted for RCS ID and password.
+  \item If the login information is correct:
+    \begin{ucenum}
+    \item If the user is in the Registrar's office: Show the Registrar main menu.
+    \item If the user is a department scheduler: show the department scheduler main page
+    \item Else: Display a warning message and prompt for input again.
+    \end{ucenum}
+  \item Else, login information incorrect. Display a warning message and prompt for input agatin
+  \end{ucenum}
+  \post{The user is logged in and switched to the main page.}
+\end{usecase}
+
+\begin{usecase}
+  \title{ViewPublishedSchedule}
+  \id{A02}
+  \des{The ViewPublishedSchedule use case models a user viewing the posted final exam schedule.}
+  \actors{Registrar, department scheduler, or student}
+  \pre{The user wants to view the final exam schedule.}
+  \flow{}
+  \begin{ucenum}
+  \item The use case starts when the user navigates to the website for viewing the final exam schedule.
+  \item If the final exam schedule has been posted:
+    \begin{ucenum} \item The schedule is retrieved and displayed to the user. \end{ucenum}
+  \item Else:
+    \begin{ucenum} \item The user is notified that the schedule is not yet published. \end{ucenum}
+  \end{ucenum}
+  \post{The output is displayed.}
+\end{usecase}
+
+\begin{usecase}
+  \title{LogOut}
+  \id{A03}
+  \des{The LogOut use case models a user logging out of the website.}
+  \actors{Registrar or department scheduler}
+  \pre{The user is logged in.}
+  \flow{}
+  \begin{ucenum}
+  \item The use case starts when the user selects an option to log out.
+  \item The user is asked to confirm the action.
+  \item If the user confirms the action:
+    \begin{ucenum}
+    \item The user is logged out and returned to the login screen.
+    \end{ucenum}
+  \item Else, user stays on the current page.
+  \end{ucenum}
+  \post{The user is logged out and switched to the login page.}
+\end{usecase}
+
+\subsection{Registrar}
+\begin{usecase}
+  \title{SetSchedulerPreferences}
+  \id{R01}
+  \des{The SetSchedulerPreferences use case models the Registrar modifying the scheduler preferences.}
+  \actors{Registrar}
+  \pre{Registrar is logged in and at the scheduler configuration page.}
+  \flow{}
+  \begin{ucenum}
+  \item The use case starts when the Registrar wants to modify scheduler settings.
+  \item Old settings are retrieved and displayed.
+  \item The Registrar modifies a form of settings.
+  \item The Registrar submits the modified settings.
+  \end{ucenum}
+  \post{The settings are saved}
+\end{usecase}
+
+\begin{usecase}
+  \title{StartScheduler}
+  \id{R02}
+  \des{The StartScheduler use case models the Registrar starting the scheduling program.}
+  \actors{Registrar}
+  \pre{Registrar is logged in and at the scheduler configuration page.}
+  \flow{}
+  \begin{ucenum}
+  \item The use case starts when the Registrar selects an option to start the scheduler.
+  \item The Registrar is notified about the startup.
+  \end{ucenum}
+  \post{The Registrar is at the Registrar main menu and scheduling has begun.}
+\end{usecase}
+
+\begin{usecase}
+  \title{RequestCoursePreferences}
+  \id{R03}
+  \des{The RequestCoursePreferences use case models the Registrar requesting course preferences from the department schedulers}
+  \actors{Registrar}
+  \pre{Registrar is logged in and at the course preference request page.}
+  \flow{}
+  \begin{ucenum}
+  \item The use case starts when the Registrar wants to request course preferences from department schedulers.
+  \item The Registrar is prompted for RCS IDs of department schedulers and their departments.
+  \item The Registrar submits the input.
+  \item If the RCS IDs are all found:
+    \begin{ucenum} \item The Registrar is notified that the choices are stored. \end{ucenum}
+  \item Else:
+    \begin{ucenum} \item The Registrar is notified which input was incorrect. \end{ucenum}
+  \end{ucenum}
+  \post{The choices are stored, and the Registrar is redirected to the main menu.}
+\end{usecase}
+
+\begin{usecase}
+  \title{SelectFinalExamSchedule}
+  \id{R04}
+  \des{The SelectFinalExamSchedule use case models the Registrar selecting a final exam schedule.}
+  \actors{Registrar}
+  \pre{Registrar is logged in and at the schedule management page.}
+  \flow{}
+  \begin{ucenum}
+  \item The use case starts when the Registrar selects a schedule.
+  \item The selection is recorded, and the Registrar is able to manually move exams around the schedule.
+  \item The Registrar selects an option to save the modifications.
+  \end{ucenum}
+  \post{A final exam schedule is saved and the Registrar is returned to the schedule management page.}
+\end{usecase}
+
+\begin{usecase}
+  \title{ModifyFinalExamSchedule}
+  \id{R05}
+  \des{The SelectFinalExamSchedule use case models the Registrar modifying a selected final exam schedule.}
+  \actors{Registrar}
+  \pre{Registrar is logged in, at the schedule management page, and a schedule is selected}
+  \flow{}
+  \begin{ucenum}
+  \item The use case starts when the Registrar chooses to modify the selected schedule.
+  \item The Registrar is able to manually move exam times around the schedule, mark classes as duplicates, or change other settings.
+  \item The Registrar selects an option to save the modifications.
+  \end{ucenum}
+  \post{The modified final exam schedule is saved and the Registrar is returned to the schedule management page.}
+\end{usecase}
+
+\begin{usecase}
+  \title{PostFinalExamSchedule}
+  \id{R06}
+  \des{The PostFinalExamSchedule use case models the Registrar posting a selected final exam schedule for public viewing}
+  \actors{Registrar}
+  \pre{Registrar is logged in, at the schedule management page, and has a saved schedule.}
+  \flow{}
+  \begin{ucenum}
+  \item The use case starts when the Registrar selects an option to publish the saved final exam schedule.
+  \item The Registrar is asked to confirm the schedule posting.
+  \item If the Registrar confirms it:
+    \begin{ucenum} \item The schedule is saved for access by the public. \end{ucenum}
+  \item Else:
+    \begin{ucenum} \item The Registrar is returned to the schedule management page. \end{ucenum}
+  \end{ucenum}
+  \post{The schedule is posted for others to access through the ViewPublishedSchedule use case.}
+\end{usecase}
+
+\begin{usecase}
+  \title{TakeDownFinalExamSchedule}
+  \id{R07}
+  \des{The TakeDownFinalExamSchedule use case models the Registrar removing a posted final exam schedule from public view.}
+  \actors{Registrar}
+  \pre{Registrar is logged in, at the schedule management page, and has a schedule posted.}
+  \flow{}
+  \begin{ucenum}
+  \item The use case begins when the Registrar selects an option to take down the posted exam schedule.
+  \item The Registrar is asked for confirmation.
+  \item If the Registrar confirms it:
+    \begin{ucenum} \item The saved schedule is denied public access. \end{ucenum}
+  \item Else:
+    \begin{ucenum} \item The Registrar is returned to the schedule management page. \end{ucenum}
+  \end{ucenum}
+  \post{The schedule is no longer accessible through the ViewPublishedSchedule use case.}
+\end{usecase}
+
+\subsection{Department Scheduler}
+\begin{usecase}
+  \title{SelectAndSubmitCoursePreferences}
+  \id{DS01}
+  \des{The SelectAndSubmitCoursePreferences use case models a department scheduler selecting and submitting preferences for courses in his department.}
+  \actors{Department scheduler}
+  \pre{Department scheduler is logged in.}
+  \flow{}
+  \begin{ucenum}
+  \item The use case starts when the department scheduler wants to select course final exam preferences.
+  \item The department scheduler selects a course and chooses some preferences.
+  \item The department scheduler submits the input.
+  \end{ucenum}
+  \post{The choices are stored and the department scheduler stays at the department scheduler main screen.}
+\end{usecase}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Work Breakdown} %JEFF
+
+\begin{enumerate}
+\item Initial Setup
+\begin{enumerate}
+\item Website
+\begin{enumerate}
+\item Build website framework
+\item Set up basic configurations
+\item Connect framework to database (all future pages are now connected to the database)
+\end{enumerate}
+\item Database
+\begin{enumerate}
+\item Build initial database framework
+\item Populate database with initial student data
+\item Populate database with initial class data
+\item Populate database with old final exam schedule data
+\end{enumerate}
+\item Scheduler program
+\begin{enumerate}
+\item Build scheduler framework
+\item Connect scheduler to SCIP
+\item Connect scheduler to database
+\item Write code to get student data from database
+\item Write code to get course data from database
+\item Write code to input student data into SCIP
+\item Write code to input course data into SCIP
+\item Write code to get final schedule data from SCIP
+\item Write code to upload the final schedule data to the database
+\end{enumerate}
+\item SCIP
+\begin{enumerate}
+\item Build SCIP framework
+\item Create a model for our constraints and objectives
+\end{enumerate}
+\end{enumerate}
+
+\item Use Cases
+\begin{enumerate}
+\item LogIn
+\begin{enumerate}
+\item Create page framework
+\item Map URL for page
+\item Interface this page with CAS
+\item Write code for the user to log in
+\end{enumerate}
+\item ViewPublishedSchedule
+\begin{enumerate}
+\item Create page framework
+\item Map URL for page
+\item Write code for the user to view the schedule
+\end{enumerate}
+\item LogOut
+\begin{enumerate}
+\item Create page framework
+\item Map URL for page
+\item Write code for the user to logout
+\item Interface this page with CAS
+\end{enumerate}
+\item SetSchedulerPreferences
+ \begin{enumerate}
+\item Create page framework
+\item Map URL for page
+\item Write code so the Registrar can manage the scheduler settings
+\end{enumerate}
+\item StartScheduler
+\begin{enumerate}
+\item Create page framework
+\item Map URL for page
+\item Write code the Registrar can use to start the scheduler
+\item Interface this page with the schedule starting program
+\end{enumerate}
+\item RequestCoursePreferences
+\begin{enumerate}
+\item Create page framework
+\item Map URL for page
+\item Write code so the Registrar can request the course preferences from the department
+schedulers
+\end{enumerate}
+\item SelectFinalExamSchedule
+\begin{enumerate}
+\item Create page framework
+\item Map URL for page
+\item Write code so the Registrar can look at the options for final exam schedules and select
+one
+\end{enumerate}
+\item ModifyFinalExamSchedule
+ \begin{enumerate}
+\item Create page framework
+\item Map URL for page
+\item Write code so the Registrar can modify the options for final exam schedules
+\end{enumerate}
+\item PostFinalExamSchedule
+ \begin{enumerate}
+\item Create page framework
+\item Map URL for page
+\item Write code so the Registrar can post the selected final exam schedule
+\end{enumerate}
+\item TakeDownFinalExamSchedule
+ \begin{enumerate}
+\item Create page framework
+\item Map URL for page
+\item Write code so the Registrar can take down the final exam schedule
+\end{enumerate}
+\item SelectAndSubmitCoursePreferences
+\begin{enumerate}
+\item Create page framework
+\item Map URL for page
+\item Write code so the Department Schedulers can submit their preferences for the final exams
+done by their department
+\end{enumerate}
+\end{enumerate}
+\end{enumerate}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\clearpage
+\section{Project Schedule}  %Vera
+
+\begin{tabular}{|m{0.9in}|m{0.9in}|m{4in}|m{.8in}|}
+\hline
+\textbf{Phases}  & \textbf{Iterations}  & \textbf{Tasks}        & \textbf{Milestones} \\
+\hline\hline
+%%%%%%%%%%%%%%%%%%%%
+Inception 09/06 - 09/24 &
+Iteration I 09/06 - 09/24 & \vspace{0.1in}
+Inception Deliverables:
+	 \begin{packed_itemize}
+	\vspace{-0.15in}
+		\item Vision Statement
+		\item Use Scenarios
+		\item Project Schedule
+	\vspace{-0.15in}
+	\end{packed_itemize}
+	& Inception Complete\\
+\hline
+%%%%%%%%%%%%%%%%%%%%
+Elaboration 09/24-10/11&
+Iteration II 09/24 - 10/11&  \vspace{0.1in}
+Elaboration Deliverables:
+	 \begin{packed_itemize}
+	\vspace{-0.15in}
+		\item Domain Model Diagram
+		\item Supplemental Specification
+		\item Deployment Diagram
+		\item Use Cases
+		\item Work Breakdown Structure
+		\item Updated Project Schedule
+   \end{packed_itemize}
+
+
+Select the Optimization Software
+
+Determine Data Formats with Registrar and IACS
+& Elaboration Complete
+\\
+\hline
+
+%%%%%%%%%%%%%%%%%%%%
+\multirow{10}{*}{Construction }
+ &
+ Iteration III 10/12 - 10/25 & \vspace{0.1in}
+ Design of System:
+	\begin{packed_itemize}
+		\vspace{-0.15in}
+		\item Static Class Diagram
+		\item Design Approach
+	\end{packed_itemize}
+
+ Design of Functions:
+	\begin{packed_itemize}
+		\vspace{-0.15in}
+		\item Sequence Diagram
+		\item  Design Pattern
+	\end{packed_itemize}
+
+ Implementation \# 1
+	\begin{packed_itemize}
+	\vspace{-0.15in}
+	\item Instructor and Registrar User Interface Prototype
+		\item Code and Database Skeleton
+		\item Major Classes
+	\vspace{-0.15in}
+	\end{packed_itemize}
+ & Design Complete \\  \cline{2-4}
+%%%%%
+&
+ Iteration IV 10/25 - 11/05 & \vspace{0.1in}
+ Implementation \# 2:
+\emph{Must} features:
+	\begin{packed_itemize}
+	\vspace{-0.15in}
+		\item Cross-reference course detection
+		\item Schedule exams and assign rooms
+		\item Interface to display exam schedule
+	\end{packed_itemize}
+
+
+ & Iterative Release 
+and Stakeholder Review \#1 \\  \cline{2-4}
+%%%%%
+ &
+ Iteration V 11/05 - 11/19 & \vspace{0.1in}
+ Implementation \# 3: Additional Features
+	\begin{packed_itemize}
+	\vspace{-0.15in}
+		\item Instructor exam sign-up website
+		\item Registrar exam schedule creation website
+		\item Warm start the exam scheduling process
+	\end{packed_itemize}
+
+Sprint \# 2 Deliverables:
+	\begin{packed_itemize}
+		\item Testing Documents, Code Review
+		\item Object Calisthenics Sample Code 
+	\end{packed_itemize}
+ &
+Stakeholder Review 2 and
+Beta Release \\ \hline
+%%%%%%%%%%%%%%%%%%%%
+Transition  11/19 - 12/06 &
+Iteration VI 11/19 - 12/06 & \vspace{0.1in}
+Implementation \#4:
+	\begin{packed_itemize}
+		\vspace{-0.15in}
+		\item Coordination of features
+		\item Integrate entire system
+	\end{packed_itemize}
+Final Test Results
+
+Final Deliverables:
+	\begin{packed_itemize}
+	\vspace{-0.15in}
+		\item Evidence of Best Practices
+		\item Peer Reviews
+	\vspace{-0.15in}
+	\end{packed_itemize}
+&
+ Final Release \\
+\hline
+\end{tabular}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Contribution Summary}
+
+\begin{tabular}{|m{1.4in}|m{4in}|}
+\hline
+\textbf{\large Name}     & \textbf{\large Contributions} \\
+\hline\hline
+%%%%%%%%%%%%%%%%%%%%
+ Andrew Karnani
+	&
+	 \begin{packed_itemize}
+		\item Created Deployment Diagram
+		\item Worked on Supplemental Specifications
+	\end{packed_itemize}
+\\
+\hline
+ Auston Sterling
+	&
+	 \begin{packed_itemize}
+	        \item Worked on Supplemental Specifications
+		\item Wrote Use Cases
+	\end{packed_itemize}
+\\
+\hline
+Jeffrey Rodowicz
+	&
+	 \begin{packed_itemize}
+		\item Created Work Breakdown Structure
+		\item Contributed to Status Report
+	\end{packed_itemize}
+\\
+\hline
+Vera Axelrod
+	&
+	 \begin{packed_itemize}
+		 \item Updated Project Schedule
+		\item Created Domain Model Diagram
+		\item Wrote Contribution Summary
+		\item Updated Status Report
+		\item Minor Contributions on Supplemental Specifications
+	\end{packed_itemize}
+\\
+\hline
+\end{tabular}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Status Report}
+
+\subsection{Things We've Done}
+\begin{itemize}
+\item Met with Jeff Minor (CIO's Office) to discuss data access.
+\item Met with Michael Conroy and Suzanne Dunn (Registrar's Office) to discuss data access.
+\item Selected SCIP as Optimization Software
+\item Created Domain Model and Deployment Diagrams
+\item Created a Work Break-down Structure
+\item Designed Use Cases
+\item Wrote Supplemental Feature Specifications
+
+\end{itemize}
+
+\subsection{Challenges}
+\begin{itemize}
+\item Delays in obtaining data from RPI Administration may cause future delays in our delivery.
+\item Need to set up and test a server for our program. The RPI Administration has not yet made it clear whether we will be able to run our program on an official RPI server in the future.
+\end{itemize}
+
+\subsection{Upcoming Plans}
+\begin{itemize}
+\item Create Website Prototypes
+\item Create Static Class Digram
+\item Create a Database Skeleton
+\end{itemize}
+\end{document}
