@@ -1,21 +1,23 @@
 # First go at a ZIMPL Model.
+# Next steps:
+#   Read in data from a file
+#   Exam Preferences
+#
 # 
-# To translate this into a .lp or .mps file
-# zimpl roughZIMPLmodel.zpl
-# zimpl -t mps roughZIMPLmodel.zpl
-
+# To use in SCIP
+# SCIP > read roughZIMPLmodel.zpl
+# SCIP > optimize
 
 ############
 #   SETS   #
 ############
 
-set PEOPLE := {"Andrew", "Auston", "Jeff",
-	 "Vera", "John", "Fengyan", "Sikdar"};
-#set PEOPLE := read "PEOPLE.dat" as "<1s>" comment "#";
+#set PEOPLE := {"Andrew", "Auston", "Jeff", "Vera", "John", "Fengyan", "Sikdar"};
+set PEOPLE := { read "people.dat" as "<1s>" comment "#" };
 # List of students AND INSTRUCTORS. String identifiers.
 
-set INSTRUCTORS := {"John", "Fengyan", "Sikdar"};
-# set INSTRUCTORS := read "INSTRUCTORS.dat" as "<1s>" comment "#";
+#set INSTRUCTORS := {"John", "Fengyan", "Sikdar"};
+set INSTRUCTORS := { read "instructors.dat" as "<1s>" comment "#"};
 # List of instructors, a subset of PEOPLE
 # this may be unnecessary if we do some sort of logical indexing on the set of all people,
 # if the instructor string identifiers are somehow different.
@@ -24,16 +26,18 @@ set EXAMS[PEOPLE] :=  <"Andrew"> {"SDD", "CCN"}, <"Auston"> {"SDD"},
 	 <"Jeff"> {"SDD", "CCN"}, <"Vera"> {"SDD", "CLA"}, <"John"> {"SDD"}, 
 	 <"Fengyan"> {"CLA"}, <"Sikdar"> {"CCN"} ;
 
-#set EXAMS[PEOPLE] := read "EXAMS.dat" as "<1s>" comment "#";
+#set EXAMS[PEOPLE] := {read "EXAMS.dat" as "<1s>" comment "#"};
 # For each member p of PEOPLE, there is a set of exams the person has (gives/takes)
 
 set ALL_EXAMS := union <p> in PEOPLE : EXAMS[p];
 # All exams offered. Not sure if this is valid union syntax
 
-set TSLOT := {1..8};         		
+param numSlots := read "parameters.dat" as "1n" use 1 comment "#";
+set TSLOT := { 1..numSlots };         		
 # All timeslots available for exams (e.g. 5 days at 4 per day = 20 tslots)
 
-set DAYS := { 1..2 };          		 	 	
+param numDays := read "parameters.dat" as "1n" skip 1 use 1 comment "#";
+set DAYS := { 1..numDays };          		 	 	
 # All days available to schedule exams (e.g. 1 to 5)
 # we should actually read these in from a file
 
@@ -41,7 +45,7 @@ set DAYSLOT [DAYS] := <1> {1..4}, <2> {5..8};
 #					 <3> {9..12}, <4> {13..16}, <5> {17..20};
 # For each day, lists the timeslots. (e.g. 4 per day)
 # we should actually read these in from a file or do some logic.
-
+# but I'm not sure how to do this.
 
 
 ###############

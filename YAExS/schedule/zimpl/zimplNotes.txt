@@ -18,6 +18,10 @@ Creates solve.mps and solveme.tbl. The tbl is a table file which lists all varia
 ZIMPL can make mps or lp files. lp files tend to be smaller and more readable.
 
 
+to use a zimpl model directly in scip
+# SCIP > read roughZIMPLmodel.zpl
+# SCIP > optimize
+
 
 
 #
