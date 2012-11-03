@@ -9,7 +9,8 @@
 #include "roomgroup.h"
 
 #include <iostream>
-using namespace std;
+#include <algorithm>
+
 
 int main() 
 {
@@ -25,26 +26,59 @@ int main()
 	Exam bio(1);
 
 	std::cout << "4 exams created" << std::endl;
-	std::cout << "assigning time 'T1' to cla" << std::endl;
-	cla.assignTime("T1");
+	std::cout << "assigning time 1 to cla" << std::endl;
+	cla.assignTime(1);
+	std::cout << "assigning time 1 to sdd" << std::endl;
+	sdd.assignTime(1);
+	std::cout << "assigning time 2 to bio" << std::endl;
+	bio.assignTime(2);
+	std::cout << "assigning time 2 to ccn" << std::endl;
+	ccn.assignTime(2);
 
-	vector<Exam> johnExams;
+	std::vector<Exam> allExams;
+	allExams.push_back(ccn);
+	allExams.push_back(cla);
+	allExams.push_back(sdd);
+	allExams.push_back(bio);
+
+	std::cout <<"\nAll exams with times: " << std::endl;
+	for (unsigned i = 0; i < allExams.size(); i++)
+		allExams[i].print();
+
+	std::cout << "Sorting the exams by increasing time" << std::endl;
+	sort(allExams.begin(), allExams.end(), Exam::isEarlier);
+
+	std::cout << "Now the exams are " << std::endl;
+	for (unsigned i = 0; i < allExams.size(); i++)
+		allExams[i].print();
+
+	std::cout << "Sorting the exams by decreasing size" << std::endl;
+	sort(allExams.begin(), allExams.end(), Exam::isLarger);
+
+	std::cout << "Now the exams are " << std::endl;
+	for (unsigned i = 0; i < allExams.size(); i++)
+		allExams[i].print();
+
+
+
+
+	std::vector<Exam> johnExams;
 	johnExams.push_back(sdd);
 	johnExams.push_back(bio);
 
 	Instructor john("john", johnExams);
-	Instructor fengyan("fengyan", vector<Exam>(1, cla) );
-	Instructor sikdar("sikdar", vector<Exam>(1,ccn) );
+	Instructor fengyan("fengyan", std::vector<Exam>(1, cla) );
+	Instructor sikdar("sikdar", std::vector<Exam>(1,ccn) );
 
-	std::cout << "3 instructors created" << std::endl;
+	std::cout << "\n3 instructors created" << std::endl;
 
-	vector<Exam> andrewExams;
+	std::vector<Exam> andrewExams;
 	andrewExams.push_back(ccn);
 	andrewExams.push_back(sdd);
 
 	Student andrew("andrew", andrewExams);
 
-	vector<Exam> veraExams;
+	std::vector<Exam> veraExams;
 	veraExams.push_back(cla);
 	veraExams.push_back(bio);
 	veraExams.push_back(sdd);
@@ -60,12 +94,12 @@ int main()
 	Room tiny("Fictional","t",3);
 	
 	std::cout << "three rooms created" << std::endl;	
-	std::cout << "will CLA fit into room ae214?\t" << ae214.willExamFit(cla) << endl;
-	std::cout << "will CLA fit into room tiny?\t" << tiny.willExamFit(cla) << endl;
-	std::cout << "will SD&D fit into room tiny?\t" << tiny.willExamFit(sdd) << endl;
+	std::cout << "will CLA fit into room ae214?\t" << ae214.willExamFit(cla) << std::endl;
+	std::cout << "will CLA fit into room tiny?\t" << tiny.willExamFit(cla) << std::endl;
+	std::cout << "will SD&D fit into room tiny?\t" << tiny.willExamFit(sdd) << std::endl;
 
 	ExamLocation * AE2 = &ae214;
-	std::cout << "will SDD fit into exam location AE2 (room 214)?\t" << AE2->willExamFit(sdd) << endl;
+	std::cout << "will SDD fit into exam location AE2 (room 214)?\t" << AE2->willExamFit(sdd) << std::endl;
 	
 	if (AE2->willExamFit(sdd))
 	{	
@@ -73,6 +107,7 @@ int main()
 	}
 	std::cout << "Does sdd have an location? " << sdd.hasLocation() << std::endl;
 
+	
 
 	std::vector<Room> ae2rooms;
 	ae2rooms.push_back(ae214);
@@ -83,11 +118,31 @@ int main()
 	std::cout << "one room group created" << std::endl;
 
 	AE2 = &ae2;
-	std::cout << "now changing ExamLocation AE2 to be RoomGroup ae2. Will SDD still fit? " << AE2->willExamFit(sdd) << endl;
+	std::cout << "now changing ExamLocation AE2 to be RoomGroup ae2. Will SDD still fit? ";
+	std::cout << AE2->willExamFit(sdd) << std::endl;
 
 	AE2 = &tiny;
-	std::cout << "now changing ExamLocation AE2 to be tiny. Will SDD still fit? " << AE2->willExamFit(sdd) << endl;
+	std::cout << "now changing ExamLocation AE2 to be tiny. Will SDD still fit? ";
+	std::cout << AE2->willExamFit(sdd) << std::endl;
 
+
+	ExamLocation * AE214 = &ae214;
+	ExamLocation * AE215 = &ae215;
+	AE2 = &ae2;
+	std::vector<ExamLocation *> locations;
+	locations.push_back(AE214);
+	locations.push_back(AE215);
+	locations.push_back(AE2);
+	
+	std::cout << "\nbefore sorting the exam locations by size" << std::endl;
+	for (unsigned i = 0; i < locations.size(); i++)
+		locations[i]->print();
+
+	std::cout << "now sorting the exam locations by size\n" << std::endl;
+	sort(locations.begin(), locations.end(), ExamLocation::isLarger);	
+
+	for (unsigned i = 0; i < locations.size(); i++)
+		locations[i]->print();
 
 	return 0;
 

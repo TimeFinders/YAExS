@@ -10,12 +10,21 @@
 
 class Exam;
 
-#include<iostream>
 
 class ExamLocation 
 {		
 	public:
 		// Return true if the given exam can fit in this location, false otherwise.
 		virtual bool willExamFit(Exam exam) = 0;
+
+		static bool isLarger(ExamLocation * e1, ExamLocation * e2)
+			{ return e1->getCapacity() > e2->getCapacity(); };
+
+		//for debugging
+		virtual void print() = 0;
+		
+	protected:
+		virtual int getCapacity() = 0;
+		
 };
 #endif

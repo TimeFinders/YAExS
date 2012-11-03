@@ -12,6 +12,9 @@
 #include "exam.h"
 #include "room.h"
 
+// for debugging
+#include <iostream>
+
 class RoomGroup : public ExamLocation
 {
 	private:	
@@ -20,6 +23,9 @@ class RoomGroup : public ExamLocation
 
 		// half the number of total seats in all constituent rooms
 		int capacity;
+
+	protected:
+		int getCapacity() { return capacity; };
 
 	public:
 		RoomGroup() : rooms(), capacity(0) {};
@@ -36,5 +42,11 @@ class RoomGroup : public ExamLocation
 
 		// Return true if the given exam can fit in this room group, false otherwise.
 		bool willExamFit(Exam exam) { return this->capacity >= exam.size(); };
+
+		// for debugging
+		void print()
+		{ 
+			std::cout << "RoomGroup with Total capacity: " << capacity << std::endl;
+		 };	
 };
 #endif

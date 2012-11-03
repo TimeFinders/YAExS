@@ -11,6 +11,9 @@
 #include "exam.h"
 #include "examlocation.h"
 
+// for debugging
+#include <iostream>
+
 class Room : public ExamLocation
 {
 	friend class RoomGroup;
@@ -26,6 +29,9 @@ class Room : public ExamLocation
 		// e.g. AmosEaton 214 has 162 seats so capacity is 81
 		int capacity;
 
+	protected:
+		int getCapacity() { return capacity; };
+
 	public:
 		Room() : building(""), roomAddress(""), capacity(0) {};
 
@@ -37,5 +43,9 @@ class Room : public ExamLocation
 
 		// Return true if the given exam can fit in this room, false otherwise.
 		bool willExamFit(Exam exam) { return this->capacity >= exam.size(); };
+
+		// for debugging
+		void print() { std::cout << building << " " << roomAddress;
+			std::cout << " " << " capacity: " << capacity << std::endl; };	
 };
 #endif

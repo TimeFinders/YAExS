@@ -5,6 +5,8 @@
   or a group of rooms.
 */
 
+#include <algorithm>
+
 #include "Exam.h"
 #include "ExamLocation.h"
 
@@ -16,12 +18,17 @@ void LocationAssigner::assignLocations(
 {
 
 	// Sort the examLocations by size
-	
+	sort( examLocations.begin(), examLocations.end(), ExamLocation::isLarger);	
+
 	// Sort exams by time slot
+	sort( exams.begin(), exams.end(), Exam::isEarlier);
 
-	// For each time slot, assign locations to exams greedily by size
-
-
+	// For each exam
+	for (int i = 0; i < exams.size(); i++)
+	{
+		//some data structure availableLocations for this time slot
+	
+	}
 }
 
 
