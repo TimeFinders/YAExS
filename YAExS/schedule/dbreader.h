@@ -1,6 +1,6 @@
 /*
   -----Database Reader Class Declaration-----
-  A class to manage the connection to the database for class and student info.
+  A class to manage the connection to the database for course, exam and student info.
 */
 
 #ifndef _dbreader_h_

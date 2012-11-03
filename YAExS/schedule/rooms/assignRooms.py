@@ -1,5 +1,5 @@
-# A python parser to take in ampl results, assign rooms, and print create a human readable schedule.
-# We need to change this to a better input format.
+# A old python parser to take in ampl results, assign rooms, and print create a human readable schedule.
+
 
 # Usage: python assignRooms.py <exams file> <AMPL results X file> <students file> <rooms file> <grouped rooms file> <number of exam slots> <output file>
 # author: Vera Axelrod
