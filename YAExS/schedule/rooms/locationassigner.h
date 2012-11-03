@@ -17,8 +17,9 @@ class LocationAssigner
 {
 public:
 	// Assign exam locations to exams that have had times assigned. 
-	// After call, exam objects will have ExamLocation assigned.	
-	void assignLocations( std::list<Exam> exams, std::list<ExamLocation> examLocations);
+	// After call, exam objects will have ExamLocation assigned.
+	//Returns 0 if all goes well	
+	static int assignLocations( std::list<Exam> exams, std::list<ExamLocation *> examLocations);
 }
 
 #endif
