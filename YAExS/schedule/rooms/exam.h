@@ -6,26 +6,30 @@
 #ifndef _exam_h_
 #define _exam_h_
 
+#include "examlocation.h"
+#include <string>
+
 class Exam
 {
 	private:
 		int numStudents;	
-		Room room;
-		vector<Instructor> instructors;
-		vector<Student> students;
-		TimeSlot time;
+		ExamLocation * examLocation;
+		std::string timeSlot;
 
 	public:
-		Exam();
-		Exam(Instructor instructor);
-		Exam(vector<Instructor> instructors);
+		Exam(){ Exam(0); };
+
+		Exam(int numberOfStudents) :
+			numStudents(numberOfStudents),
+			examLocation(NULL),
+			timeSlot("") {};
 
 		// the number of students taking this exam
 		int size();
 
-		void addStudent(Student student);
-		void addStudents(Vector<Student> students);
+		void assignTime(std::string time);
+		void assignLocation(ExamLocation * examLocation);
 
-		void assignTime(TimeSlot time);
-		void assignRoom(Room room);
-}
+		bool hasLocation();
+};
+#endif
