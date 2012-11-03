@@ -1,5 +1,5 @@
 /*
-  Test instructor, student, exam, exam location,  room, and room group classes
+  Test instructor, student, exam, exam location, room, and room group classes
 */
 
 

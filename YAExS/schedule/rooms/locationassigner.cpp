@@ -1,22 +1,27 @@
 /*
   ----- Location Assigner Implementation-----
-  A class to assign location to exams after they have been
-  scheduled into time slots.
+  A class to assign locations to exams after they have been
+  scheduled into time slots. Locations could be single rooms
+  or a group of rooms.
 */
 
-#include "locationassigner.h"
-#include "exam.h"
-#include "examlocation.h"
+#include "Exam.h"
+#include "ExamLocation.h"
 
- // Default Constructor
-LocationAssigner::LocationAssigner()
+// Assign exam locations to exams that have had times assigned. 
+// After call, exam objects will have ExamLocation assigned.	
+void LocationAssigner::assignLocations( 
+	std::vector<Exam> exams, 
+	std::vector<ExamLocation> examLocations)
 {
-}
 
-// Assign locations to exams that have had times assigned. 
-void LocationAssigner::assignLocations(vector<Exam> exams, 
-	vector<ExamLocation> examLocations ) 
-{
+	// Sort the examLocations by size
+	
+	// Sort exams by time slot
+
+	// For each time slot, assign locations to exams greedily by size
+
+
 }
 
 

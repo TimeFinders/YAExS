@@ -16,12 +16,9 @@ class ExamLocation;
 class LocationAssigner 
 {
 public:
-	// Constructor
-	LocationAssigner();
-
 	// Assign exam locations to exams that have had times assigned. 
 	// After call, exam objects will have ExamLocation assigned.	
-	void assignLocations( vector<Exam> exams, vector<ExamLocation> examLocations);
+	void assignLocations( std::vector<Exam> exams, std::vector<ExamLocation> examLocations);
 }
 
 #endif
