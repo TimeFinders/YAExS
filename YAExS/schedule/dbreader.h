@@ -15,18 +15,17 @@ class DBReader
 public:
     //Constructors
     DBReader();
-    DBReader(std::string settings);
+    DBReader(const std::string& settings);
 
     //Destructor
     ~DBReader();
 
     //General use functions
-    //Should use specialized versions instead depending on what exactly SCIP needs
-    result execute(std::string command);
+    pqxx::result execute(const std::string& query);
 
 private:
     //Objects for the database connection itself
     pqxx::connection connect_;
-}
+};
 
 #endif
