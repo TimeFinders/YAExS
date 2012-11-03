@@ -49,7 +49,7 @@ std::string Optimizer::getBestSolution()
     std::streambuf* old = std::cout.rdbuf(redir.rdbuf());
 
     //Print the solution to the stringstream
-    SCIPgetBestSol(scip_);
+    SCIPprintBestSol(scip_, NULL, false);
 
     //Restore the old streambuf
     std::cout.rdbuf(old);
