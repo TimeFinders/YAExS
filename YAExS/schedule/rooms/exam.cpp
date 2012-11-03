@@ -42,6 +42,16 @@ bool Exam::isLarger(Exam e1, Exam e2)
 	return ( e1.numStudents > e2.numStudents );
 }
 
+bool Exam::isLargerByTime(Exam e1, Exam e2)
+{
+	if (e1.timeSlot < e2.timeSlot)
+		return true;
+	if (e1.timeSlot == e2.timeSlot)
+		return ( e1.numStudents > e2.numStudents );
+	else
+		return false;
+}
+
 //for debugging
 void Exam::print()
 {

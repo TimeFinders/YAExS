@@ -7,26 +7,44 @@
 
 #include <algorithm>
 
-#include "Exam.h"
-#include "ExamLocation.h"
+#include "locationassigner.h"
+
+#include "exam.h"
+#include "examlocation.h"
 
 // Assign exam locations to exams that have had times assigned. 
 // After call, exam objects will have ExamLocation assigned.	
 void LocationAssigner::assignLocations( 
-	std::vector<Exam> exams, 
-	std::vector<ExamLocation> examLocations)
+	std::list<Exam> exams, 
+	std::list<ExamLocation> examLocations)
 {
+	if (exams.empty())
+		return;
 
-	// Sort the examLocations by size
+	// Sort the examLocations by decreasing size
 	sort( examLocations.begin(), examLocations.end(), ExamLocation::isLarger);	
 
-	// Sort exams by time slot
-	sort( exams.begin(), exams.end(), Exam::isEarlier);
+	// Sort exams by time first, then within time by descreasing size
+	sort( exams.begin(), exams.end(), Exam::isLargerByTime);
+
+	
+	list<Exam> availableLocations = examLocations;
+	
+	int currentSlot = exams[0].getTime();
 
 	// For each exam
 	for (int i = 0; i < exams.size(); i++)
 	{
-		//some data structure availableLocations for this time slot
+		// reset the availableLocations when we hit a new time slot
+		if (currentSlot != exams[i].getTime())
+		{
+			availableLocations = examLocations;
+		}
+		
+		// now assign the smallest ExamLocation that will fit this exam.
+		// this uses linear search for now, could make much faster later.
+		ExamLocation * bestLocation;
+		
 	
 	}
 }

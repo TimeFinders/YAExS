@@ -26,20 +26,21 @@ int main()
 	Exam bio(1);
 
 	std::cout << "4 exams created" << std::endl;
-	std::cout << "assigning time 1 to cla" << std::endl;
-	cla.assignTime(1);
-	std::cout << "assigning time 1 to sdd" << std::endl;
-	sdd.assignTime(1);
-	std::cout << "assigning time 2 to bio" << std::endl;
-	bio.assignTime(2);
-	std::cout << "assigning time 2 to ccn" << std::endl;
-	ccn.assignTime(2);
+	std::cout << "assigning time 2 to cla" << std::endl;
+	cla.assignTime(2);
+		std::cout << "assigning time 3 to bio" << std::endl;
+	bio.assignTime(3);
+	std::cout << "assigning time 3 to sdd" << std::endl;
+	sdd.assignTime(3);
+	std::cout << "assigning time 1 to ccn" << std::endl;
+	ccn.assignTime(1);
 
 	std::vector<Exam> allExams;
+	allExams.push_back(bio);
 	allExams.push_back(ccn);
 	allExams.push_back(cla);
 	allExams.push_back(sdd);
-	allExams.push_back(bio);
+
 
 	std::cout <<"\nAll exams with times: " << std::endl;
 	for (unsigned i = 0; i < allExams.size(); i++)
@@ -59,6 +60,13 @@ int main()
 	for (unsigned i = 0; i < allExams.size(); i++)
 		allExams[i].print();
 
+
+	std::cout << "Sorting the exams by decreasing size by time" << std::endl;
+	sort(allExams.begin(), allExams.end(), Exam::isLargerByTime);
+
+	std::cout << "Now the exams are " << std::endl;
+	for (unsigned i = 0; i < allExams.size(); i++)
+		allExams[i].print();
 
 
 

@@ -30,12 +30,18 @@ class Exam
 		int size();
 
 		void assignTime(int timeSlot);
+		int getTime(){return timeSlot;};
 		void assignLocation(ExamLocation * examLocation);
 
 		bool hasLocation();
+		
+
 
 		static bool isEarlier( Exam e1, Exam e2);
 		static bool isLarger( Exam e1, Exam e2);
+
+		// for sorting by timeslot, then within time slot by non-decreasing size
+		static bool isLargerByTime( Exam e1, Exam e2);
 
 		// for debugging
 		void print();

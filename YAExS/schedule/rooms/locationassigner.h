@@ -8,7 +8,7 @@
 #ifndef _locationassigner_h_
 #define _locationassigner_h_
 
-include <vector>
+include <list>
 
 class Exam;
 class ExamLocation;
@@ -18,7 +18,7 @@ class LocationAssigner
 public:
 	// Assign exam locations to exams that have had times assigned. 
 	// After call, exam objects will have ExamLocation assigned.	
-	void assignLocations( std::vector<Exam> exams, std::vector<ExamLocation> examLocations);
+	void assignLocations( std::list<Exam> exams, std::list<ExamLocation> examLocations);
 }
 
 #endif
