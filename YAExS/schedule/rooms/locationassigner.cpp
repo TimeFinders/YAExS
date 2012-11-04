@@ -18,6 +18,8 @@
 // Assign exam locations to exams that have had times assigned. 
 // After call, exam objects will have ExamLocation assigned.	
 
+// This function is huge. Should split up into smaller functions.
+
 //Returns 0 if all goes well,
 int LocationAssigner::assignLocations( 
 	std::list<Exam> exams, 
@@ -41,43 +43,13 @@ int LocationAssigner::assignLocations(
 
 	std::list<ExamLocation *> activeLocs;
 	std::list<Exam>::iterator firstThisSlot = exams.begin();
-
+	std::list<Exam>::iterator eit;
 	// For each exam, assign an available location stingily
 
 	// This should be changed to prefer single rooms to grouped rooms 
-	for (std::list<Exam>::iterator eit = exams.begin(); eit != exams.end(); eit++)
+	for (eit = exams.begin(); eit != exams.end(); eit++)
 	{
 		currentExam = *eit;
-
-		// reset the availableLocs when we hit a new time slot
-		if (currentSlot != currentExam.getTime())
-		{			
-			// assign all the exams to activeLocs, biggest exams
-			// to biggest active location
-			activeLocs.sort(ExamLocation::isLarger);
-
-			std::cout << "at time slot " << currentSlot << " the active locs are" << std::endl;	
-
-			for (std::list<Exam>::iterator et = firstThisSlot; et!= eit; et++)
-			{
-				activeLocs.front()->print();	
-				std::cout << "\tassigned to ";
-				et->print();
-
-				et->assignLocation(activeLocs.front());	
-				
-				activeLocs.pop_front();
-			}
-			if (!activeLocs.empty())
-			{
-				return 10;
-			}			
-
-			std::cout << "\n\nswitched to timeslot " << currentExam.getTime() << std::endl;
-			availableLocs = examLocations;
-			//activeLocs = new std::list<ExamLocation *>();
-			firstThisSlot = eit;
-		}
 		
 		// now assign the smallest ExamLocation that will fit this exam.
 		
@@ -97,10 +69,52 @@ int LocationAssigner::assignLocations(
 			availableLocs = removeOverlappingLocations( bestLoc, availableLocs);
 		}
 		
-		
 		currentSlot = currentExam.getTime();
-		std::cout << "updated the current time slot to " << currentSlot << std::endl;
-	}
+		
+		// detect if at the last exam of a timeslot
+		std::list<Exam>::iterator next = eit;
+		next++;
+		if ( next == exams.end() || next->getTime() != currentSlot )
+		{
+			std::cout << "LAST EXAM OF THIS TIME SLOT " << std::endl;
+
+			// assign all the exams to activeLocs, biggest exams
+			// to biggest active location
+			activeLocs.sort(ExamLocation::isLarger);
+
+			std::cout << "at time slot " << currentSlot << " the active locs are" << std::endl;	
+
+			for (std::list<Exam>::iterator et = firstThisSlot; et != next; et++)
+			{
+				activeLocs.front()->print();	
+				std::cout << "\tassigned to ";
+				et->print();
+
+				if (!activeLocs.empty())	
+					et->assignLocation(activeLocs.front());	
+				else
+					return 9;
+	
+				activeLocs.pop_front();
+			}
+			if (!activeLocs.empty())
+			{
+				return 10;
+			}			
+			
+			// reset everything for next time slot, if not at end already
+			if (next != exams.end() )	
+			{		
+				std::cout << "\n\nmoving on to timeslot " << next->getTime() << std::endl;
+				availableLocs = examLocations;
+				firstThisSlot = next;
+			}
+			else
+				std::cout << "\nall time slots complete\n" << std::endl;
+
+
+		}
+	}		
 
 	return 0;
 }
@@ -108,31 +122,32 @@ int LocationAssigner::assignLocations(
 // find the "best" ExamLocation for the exam e from the list of available locations
 // if none are good, returns null;
 
-// currently is stingy. May want to change to prefer single rooms to double rooms.
+// change to prefer single rooms to double rooms
+// (can tell if single room by size of (ExamLocation*)->contains()
 ExamLocation* LocationAssigner::bestLocation(Exam e, std::list<ExamLocation*> available)
 {
-		std::list<ExamLocation *>::iterator it = available.begin(); 
-		while( it !=available.end() && (*it) -> willExamFit(e) )
-		{
-			it++;
-		}
+	std::list<ExamLocation *>::iterator bestIt = available.begin(); 
+	while( bestIt !=available.end() && (*bestIt) -> willExamFit(e) )
+	{
+		bestIt++;
+	}
 
-		// cannot fit the exam into the biggest location!
-		if (it == available.begin())
-		{
-			return NULL;
-		}
+	// cannot fit the exam into the biggest location!
+	if (bestIt == available.begin())
+	{
+		return NULL;
+	}
 
-		// now we need to take one step back so we can fit;
-		it--;	
+	// now we need to take one step back so we can fit;
+	bestIt--;	
 
-		// cannot fit the exam into any locations!
-		if ( ! (*it)->willExamFit(e) )
-		{
-			return NULL;
-		}
+	// cannot fit the exam into any locations!
+	if ( ! (*bestIt)->willExamFit(e) )
+	{
+		return NULL;
+	}
 
-		return (*it);
+	return (*bestIt);
 }
 
 
