@@ -10,6 +10,14 @@ Test location assignment
 
 int main()
 {
+	//exams 1: 25, 15, 100
+	//exams 2: 80, 55
+
+	//AE 81, 25, 20 ---> 126 (3)
+	// AE    -----      45 (2)
+	// VCC (2) 27
+	// West (1) 125	
+
 	// ROOMS
 	std::list<ExamLocation*> locs;
 
@@ -54,7 +62,7 @@ int main()
 	vcc.push_back(*VCCSouth);
 
 	ExamLocation * VCC = new RoomGroup(vcc);
-	//locs.push_back(VCC);
+	locs.push_back(VCC);
 
 
 	// EXAMS
@@ -68,7 +76,7 @@ int main()
 	sdd.assignTime(2);
 	exams.push_front(sdd);
 
-	Exam bio(100);
+	Exam bio(126);
 	bio.assignTime(1);
 	exams.push_front(bio);
 
