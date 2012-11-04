@@ -4,6 +4,7 @@ Test location assignment
 
 #include "locationassigner.h"
 #include "room.h"
+#include "exam.h"
 #include "roomgroup.h"
 
 //#include <list>
@@ -73,6 +74,10 @@ int main()
 
 	ExamLocation * VCC = new RoomGroup(vcc);
 	locs.push_back(VCC);
+
+	int a = LocationAssigner::tester(exams, locs);
+	std::cout << a << std::endl;
+	//LocationAssigner::assignLocations(exams, locs);
 
 
 	return 0;

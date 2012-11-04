@@ -23,26 +23,27 @@ int LocationAssigner::assignLocations(
 	std::list<ExamLocation *> examLocations)
 {
 	if (exams.empty())
-		return;
+		return 0;
 
 	// Sort the examLocations by decreasing size
-	sort( examLocations.begin(), examLocations.end(), ExamLocation::isLarger);	
+	//sort( examLocations.begin(), examLocations.end(), ExamLocation::isLarger);	
+	examLocations.sort(ExamLocation::isLarger);
 
 	// Sort exams by time first, then within time by descreasing size
-	sort( exams.begin(), exams.end(), Exam::isLargerByTime);
-
+	//sort( exams.begin(), exams.end(), Exam::isLargerByTime);
+	exams.sort(Exam::isLargerByTime);
 	
-	list<ExamLocation *> availableLos = examLocations;
+	std::list<ExamLocation *> availableLocs = examLocations;
 	
-	int currentSlot = exams[0].getTime();
+	int currentSlot = exams.begin()->getTime();
 	Exam currentExam;
 
 	// For each exam, assign an available location stingily
 
 	// This should be changed to prefer single rooms to grouped rooms 
-	for (int i = 0; i < exams.size(); i++)
+	for (std::list<Exam>::iterator eit = exams.begin(); eit != exams.end(); eit++)
 	{
-		currentExam = exams[i];
+		currentExam = *eit;
 
 
 		// reset the availableLocs when we hit a new time slot
@@ -56,8 +57,8 @@ int LocationAssigner::assignLocations(
 		// this uses linear search for now, could use binary search later
 		// (which I guess means switching to a data structur with slower remove).
 
-		list<ExamLocation *>::iterator it = availableLocs.begin(); 
-		while( it !=availableLocs.end() && (*it) -> willExamFit(currentExam);
+		std::list<ExamLocation *>::iterator it = availableLocs.begin(); 
+		while( it !=availableLocs.end() && (*it) -> willExamFit(currentExam) )
 		{
 			it++;
 		}
@@ -75,20 +76,22 @@ int LocationAssigner::assignLocations(
 			currentExam.print();
 
 			// assign the exam this location
-			currentExam.assignLocation( *(*it) );
+			currentExam.assignLocation( *it );
 
 			// location is no longer availabe
 			availableLocs = removeOverlappingLocations( *it, availableLocs);
 		}
 		
 		
-		currentSlot = exams[i].getTime();
+		currentSlot = currentExam.getTime();
 		std::cout << "updated the current time slot to " << currentSlot;
 	}
+
+	return 1;
 }
 
 //NEED TO WRITE
-std::list<ExamLocation *> locationassigner::removeOverlappingLocations( ExamLocation* loc, std::list<ExamLocation*> locList)
+std::list<ExamLocation *> LocationAssigner::removeOverlappingLocations( ExamLocation* loc, std::list<ExamLocation*> locList)
 {
 	return locList;
 }
