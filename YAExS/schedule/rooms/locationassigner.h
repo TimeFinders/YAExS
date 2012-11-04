@@ -11,7 +11,8 @@
 #include <list>
 
 #include "exam.h"
-#include "examlocation.h"
+//#include "examlocation.h"
+#include "room.h"
 
 class LocationAssigner 
 {

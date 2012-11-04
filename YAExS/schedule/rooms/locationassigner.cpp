@@ -101,9 +101,9 @@ int LocationAssigner::assignLocations(
 	return 0;
 }
 
-// May need to override == operator for Rooms
-/*
-class olap {    // function object that returns true when there is an overlap
+
+// function object that returns true when there is an overlap
+class olap {    
   private:
     ExamLocation * loc;       // call for which to return true
   public:
@@ -112,10 +112,11 @@ class olap {    // function object that returns true when there is an overlap
 
     bool operator() (ExamLocation * l) 
     {
-        return overlaps(loc, l);
+        return Room::overlaps(loc, l);
     }
 };
-*/
+
+
 //NEED TO WRITE overlapsWithLoc predicate
 bool everything (const ExamLocation* value) { return true; }
 
@@ -125,8 +126,8 @@ std::list<ExamLocation *> LocationAssigner::removeOverlappingLocations( ExamLoca
 {
 	std::list<ExamLocation*> locations(locList);
 
-	locations.remove_if( everything );
-	//locations.remove_if( overlapsWithLoc(loc) );
+	//locations.remove_if( everything );
+	locations.remove_if( olap(loc) );
 
 	// we need to remove all locations l in locList
 	// for which l.contains().contains(loc);
