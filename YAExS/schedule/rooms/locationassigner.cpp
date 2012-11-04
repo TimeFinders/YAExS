@@ -39,6 +39,9 @@ int LocationAssigner::assignLocations(
 	int currentSlot = exams.begin()->getTime();
 	Exam currentExam;
 
+	std::list<ExamLocation *> activeLocs;
+	std::list<Exam>::iterator firstThisSlot = exams.begin();
+
 	// For each exam, assign an available location stingily
 
 	// This should be changed to prefer single rooms to grouped rooms 
@@ -46,51 +49,52 @@ int LocationAssigner::assignLocations(
 	{
 		currentExam = *eit;
 
-
 		// reset the availableLocs when we hit a new time slot
 		if (currentSlot != currentExam.getTime())
-		{
-			std::cout << "now at timeslot " << currentSlot << std::endl;
+		{			
+			// assign all the exams to activeLocs, biggest exams
+			// to biggest active location
+			activeLocs.sort(ExamLocation::isLarger);
+
+			std::cout << "at time slot " << currentSlot << " the active locs are" << std::endl;	
+
+			for (std::list<Exam>::iterator et = firstThisSlot; et!= eit; et++)
+			{
+				activeLocs.front()->print();	
+				std::cout << "\tassigned to ";
+				et->print();
+
+				et->assignLocation(activeLocs.front());	
+				
+				activeLocs.pop_front();
+			}
+			if (!activeLocs.empty())
+			{
+				return 10;
+			}			
+
+			std::cout << "\n\nswitched to timeslot " << currentExam.getTime() << std::endl;
 			availableLocs = examLocations;
+			//activeLocs = new std::list<ExamLocation *>();
+			firstThisSlot = eit;
 		}
 		
 		// now assign the smallest ExamLocation that will fit this exam.
-		// this uses linear search for now, could use binary search later
-		// (which I guess means switching to a data structur with slower remove).
-
-		std::list<ExamLocation *>::iterator it = availableLocs.begin(); 
-		while( it !=availableLocs.end() && (*it) -> willExamFit(currentExam) )
-		{
-			it++;
-		}
-
-		// cannot fit the exam into the biggest location!
-		if (it == availableLocs.begin())
+		
+		ExamLocation * bestLoc = bestLocation(currentExam, availableLocs);
+		activeLocs.push_back(bestLoc);
+		if ( bestLoc == NULL)
 		{
 			return 1;
 		}
-
-		// now we need to take one step back so we can fit;
-		it--;	
-
-		// cannot fit the exam into any locations!
-		if ( ! (*it)->willExamFit(currentExam) )
-		{
-			return 2;
-		}
 		else
 		{
-			std::cout << "assigning location ";
-			(*it) -> print();
-			std::cout << " to exam:";
-			currentExam.print();
+			std::cout << "activating location ";
+			bestLoc -> print();
 			std::cout << std::endl;
 
-			// assign the exam this location
-			currentExam.assignLocation( *it );
-
 			// location is no longer availabe
-			availableLocs = removeOverlappingLocations( *it, availableLocs);
+			availableLocs = removeOverlappingLocations( bestLoc, availableLocs);
 		}
 		
 		
@@ -101,13 +105,43 @@ int LocationAssigner::assignLocations(
 	return 0;
 }
 
+// find the "best" ExamLocation for the exam e from the list of available locations
+// if none are good, returns null;
+
+// currently is stingy. May want to change to prefer single rooms to double rooms.
+ExamLocation* LocationAssigner::bestLocation(Exam e, std::list<ExamLocation*> available)
+{
+		std::list<ExamLocation *>::iterator it = available.begin(); 
+		while( it !=available.end() && (*it) -> willExamFit(e) )
+		{
+			it++;
+		}
+
+		// cannot fit the exam into the biggest location!
+		if (it == available.begin())
+		{
+			return NULL;
+		}
+
+		// now we need to take one step back so we can fit;
+		it--;	
+
+		// cannot fit the exam into any locations!
+		if ( ! (*it)->willExamFit(e) )
+		{
+			return NULL;
+		}
+
+		return (*it);
+}
+
 
 // function object that returns true when there is an overlap
 class olap {    
   private:
-    ExamLocation * loc;       // call for which to return true
+    const ExamLocation * loc;       // call for which to return true
   public:
-    olap (ExamLocation * examLoc) : loc(examLoc){
+    olap (const ExamLocation * examLoc) : loc(examLoc){
     }
 
     bool operator() (ExamLocation * l) 
@@ -117,21 +151,14 @@ class olap {
 };
 
 
-//NEED TO WRITE overlapsWithLoc predicate
-bool everything (const ExamLocation* value) { return true; }
 
 // Remove locations from locList that overlap with the given loc. 
 // Can assume that locList is sorted in order by decreasing size.
-std::list<ExamLocation *> LocationAssigner::removeOverlappingLocations( ExamLocation* loc, const  std::list<ExamLocation*> & locList)
+std::list<ExamLocation *> LocationAssigner::removeOverlappingLocations( const ExamLocation* loc, const  std::list<ExamLocation*> & locList)
 {
 	std::list<ExamLocation*> locations(locList);
 
-	//locations.remove_if( everything );
 	locations.remove_if( olap(loc) );
-
-	// we need to remove all locations l in locList
-	// for which l.contains().contains(loc);
-	
 
 	return locations;
 }

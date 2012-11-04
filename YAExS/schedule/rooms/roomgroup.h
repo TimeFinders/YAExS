@@ -25,7 +25,7 @@ class RoomGroup : public ExamLocation
 		int capacity;
 
 	protected:
-		int getCapacity() { return capacity; };
+		int getCapacity() const { return capacity; };
 
 	public:
 		RoomGroup() : rooms(), capacity(0) {};
@@ -34,21 +34,17 @@ class RoomGroup : public ExamLocation
 		{
 			int totalSize = 0;			
 			for (unsigned i = 0; i < rooms.size(); i++)
-			{
 				totalSize += rooms[i].capacity;
-			}
 			capacity = totalSize;		
 		 };	
 
-		std::vector<Room> contains() {return rooms;};	
+		std::vector<Room> contains() const {return rooms;};	
 
 		// Return true if the given exam can fit in this room group, false otherwise.
-		bool willExamFit(Exam exam) { return this->capacity >= exam.size(); };
+		bool willExamFit(Exam exam) const { return this->capacity >= exam.size(); };
 
 		// for debugging
-		void print()
-		{ 
-			std::cout << "RoomGroup with Total capacity: " << capacity << std::endl;
-		 };	
+		void print() const
+		{ std::cout << "RoomGroup with Total capacity: " << capacity << std::endl; };	
 };
 #endif

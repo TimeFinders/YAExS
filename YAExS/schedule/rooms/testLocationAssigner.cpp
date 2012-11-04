@@ -26,7 +26,7 @@ int main()
 	locs.push_back(&ae216);
 	
 	ExamLocation * West = new Room("West", "Auditorium", 250);
-	//locs.push_back(West);
+	locs.push_back(West);
 
 
 	std::vector<Room> ae2all;

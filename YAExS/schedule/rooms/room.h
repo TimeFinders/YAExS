@@ -32,7 +32,7 @@ class Room : public ExamLocation
 		int capacity;
 
 	protected:
-		int getCapacity() { return capacity; };
+		int getCapacity() const { return capacity; };
 
 	public:
 		//bool isOverlapping(ExamLocation * e) {return false;};
@@ -46,20 +46,20 @@ class Room : public ExamLocation
 			capacity(totalSeats / 2) {};
 
 		// Return true if the given exam can fit in this room, false otherwise.
-		bool willExamFit(Exam exam) { return this->capacity >= exam.size(); };
+		bool willExamFit(Exam exam) const { return this->capacity >= exam.size(); };
 
-		std::vector<Room> contains() { return std::vector<Room>(1,*this); }; 
+		std::vector<Room> contains() const { return std::vector<Room>(1,*this); }; 
 
 		// for debugging
-		void print() { std::cout << building << " " << roomAddress;
+		void print() const { std::cout << building << " " << roomAddress;
 			std::cout << " " << " capacity: " << capacity << std::endl; };	
 
-		bool operator== (const Room & r)
+		bool operator== (const Room & r) 
 		{	
 			return (r.building == this-> building && r.roomAddress == this->roomAddress);
 		}
 
-		bool static overlaps(ExamLocation * e1, ExamLocation * e2) 
+		bool static overlaps(const ExamLocation * e1, const ExamLocation * e2) 
 		{
 			std::vector<Room> rooms1 = e1->contains();
 			std::vector<Room> rooms2 = e2->contains();

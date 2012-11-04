@@ -23,9 +23,14 @@ public:
 	static int assignLocations( std::list<Exam> exams, std::list<ExamLocation *> examLocations);
 
 private:
+	// Return the "best" location for exam e from the available list.
+	// Returns NULL if no location is suitable.
+	static ExamLocation* bestLocation(Exam e, std::list<ExamLocation*> available);
+
 	// remove from locList all locations that overlap with loc. E.g. if loc is AE214
 	// and there is a RoomGroup[AE214, AE215, AE216] it will be removed.
-	static std::list<ExamLocation *> removeOverlappingLocations( ExamLocation* loc, const std::list<ExamLocation*>  & locList);
+	static std::list<ExamLocation *> removeOverlappingLocations( const ExamLocation* loc, const std::list<ExamLocation*>  & locList);
+
 
 };
 
