@@ -38,7 +38,9 @@ class RoomGroup : public ExamLocation
 				totalSize += rooms[i].capacity;
 			}
 			capacity = totalSize;		
-		 };
+		 };	
+
+		std::vector<Room> contains() {return rooms;};	
 
 		// Return true if the given exam can fit in this room group, false otherwise.
 		bool willExamFit(Exam exam) { return this->capacity >= exam.size(); };

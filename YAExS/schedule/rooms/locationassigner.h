@@ -16,8 +16,6 @@
 class LocationAssigner 
 {
 public:
-	static int tester(std::list<Exam> e, std::list<ExamLocation *> l){ return 5; };	
-	
 	// Assign exam locations to exams that have had times assigned. 
 	// After call, exam objects will have ExamLocation assigned.
 	//Returns 0 if all goes well	
@@ -26,7 +24,7 @@ public:
 private:
 	// remove from locList all locations that overlap with loc. E.g. if loc is AE214
 	// and there is a RoomGroup[AE214, AE215, AE216] it will be removed.
-	static std::list<ExamLocation *> removeOverlappingLocations( ExamLocation* loc, std::list<ExamLocation*> locList);
+	static std::list<ExamLocation *> removeOverlappingLocations( ExamLocation* loc, const std::list<ExamLocation*>  & locList);
 
 };
 

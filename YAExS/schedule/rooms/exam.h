@@ -6,7 +6,7 @@
 #ifndef _exam_h_
 #define _exam_h_
 
-#include "examlocation.h"
+class ExamLocation;
 
 #include <string>
 
