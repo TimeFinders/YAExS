@@ -9,8 +9,7 @@
 
 #include "locationassigner.h"
 
-#include "exam.h"
-#include "examlocation.h"
+
 
 // for debugging
 #include <iostream>
@@ -77,14 +76,21 @@ int LocationAssigner::assignLocations(
 
 			// assign the exam this location
 			currentExam.assignLocation( *(*it) );
+
 			// location is no longer availabe
-			availableLocs.remove(*it);
+			availableLocs = removeOverlappingLocations( *it, availableLocs);
 		}
 		
 		
 		currentSlot = exams[i].getTime();
 		std::cout << "updated the current time slot to " << currentSlot;
 	}
+}
+
+//NEED TO WRITE
+std::list<ExamLocation *> locationassigner::removeOverlappingLocations( ExamLocation* loc, std::list<ExamLocation*> locList)
+{
+	return locList;
 }
 
 
