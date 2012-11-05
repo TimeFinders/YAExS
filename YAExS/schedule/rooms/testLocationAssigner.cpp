@@ -54,8 +54,8 @@ int main()
 	
 	Room * VCCNorth = new Room("VCC", "North", 24);
 	Room * VCCSouth = new Room("VCC", "South", 30);
-	//locs.push_back(VCCNorth);
-	//locs.push_back(VCCSouth);
+	locs.push_back(VCCNorth);
+	locs.push_back(VCCSouth);
 
 	std::vector<Room> vcc;
 	vcc.push_back(*VCCNorth);
