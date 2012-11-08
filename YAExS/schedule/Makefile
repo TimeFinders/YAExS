@@ -1,6 +1,6 @@
 CC = g++
 CFLAGS = -g -Wall -Wextra -c
-SCIP_LFLAGS = -lreadline -lgmp -lz -lzimpl -lsoplex -llpispx -lobjscip -lnlpi.cppad -lscip
+SCIP_LFLAGS = -L/usr/lib -lscip -lreadline -lgmp -lz -lsoplex -llpispx -lobjscip -lnlpi.cppad 
 PQXX_LFLAGS = -lpqxx
 
 TESTOPT_OBJ = testOpt.cpp optimizer.o
@@ -9,13 +9,13 @@ TESTDB_OBJ = testDB.cpp dbreader.o
 test: testOpt testDB
 
 testOpt: $(TESTOPT_OBJ)
-	$(CC) $(TESTOPT_OBJ) $(SCIP_LFLAGS) -o testOpt
+	$(CC) $(SCIP_INCLUDE) $(TESTOPT_OBJ)  $(SCIP_LFLAGS) -o testOpt
 
 testDB: $(TESTDB_OBJ)
-	$(CC) $(TESTDB_OBJ) $(PQXX_LFLAGS) -o testDB
+	$(CC) $(SCIP_INCLUDE) $(TESTDB_OBJ) -o testDB $(PQXX_LFLAGS) 
 
 optimizer.o: optimizer.cpp optimizer.h
-	$(CC) optimizer.cpp optimizer.h $(CFLAGS)
+	$(CC) $(SCIP_INCLUDE) optimizer.cpp optimizer.h $(CFLAGS)
 
 dbreader.o: dbreader.cpp dbreader.h
-	$(CC) dbreader.cpp dbreader.h $(CFLAGS)
+	$(CC) $(SCIP_INCLUDE) dbreader.cpp dbreader.h $(CFLAGS)
