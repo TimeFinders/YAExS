@@ -68,23 +68,23 @@ int main()
 	// EXAMS
 	std::list<Exam> exams;
 
-	Exam cla(25);
+	Exam cla(25, "CLA");
 	cla.assignTime(1);
 	exams.push_front(cla);
 
-	Exam sdd(80);
+	Exam sdd(80, "SDD");
 	sdd.assignTime(2);
 	exams.push_front(sdd);
 
-	Exam bio(126);
+	Exam bio(126, "BIO");
 	bio.assignTime(1);
 	exams.push_front(bio);
 
-	Exam ccn(15);
+	Exam ccn(15, "CCN");
 	ccn.assignTime(1);
 	exams.push_front(ccn);
 
-	Exam ml(55);
+	Exam ml(55, "MachineLearning");
 	ml.assignTime(2);
 	exams.push_front(ml);
 
@@ -93,6 +93,19 @@ int main()
 	int status = LocationAssigner::assignLocations(exams, locs);
 	std::cout << "location assigner ended with status " << status << std::endl;
 	
+	std::cout << "\n\n THE LOCATION ASSIGNMENTS ARE:" << std::endl;
+	for (std::list<Exam>::iterator it = exams.begin(); it != exams.end(); it++)
+	{
+		it->print();
+		std::cout << "\t";
+
+		if (it->hasLocation())
+			it->getLocation()->print();
+		else
+			std::cout << "error: exam didnt actually get a location assigned!";
+
+	}
+
 
 	return 0;
 }

@@ -7,9 +7,11 @@
 #include "student.h"
 #include "room.h"
 #include "roomgroup.h"
+#include "timeslot.h"
 
 #include <iostream>
 #include <algorithm>
+
 
 
 int main() 
@@ -17,23 +19,23 @@ int main()
 	std::cout << "I'm going to create 4 exams" << std::endl;
 
 	int claStudents = 1;
-	Exam cla(claStudents);
+	Exam cla(claStudents, "CLA");
 	std::cout << "Size of cla: " << cla.size() << std::endl;	
 
-	Exam sdd(2);
+	Exam sdd(2, "SDD");
 	std::cout << "Size of sdd: " << sdd.size() << std::endl;
-	Exam ccn(1);
-	Exam bio(1);
+	Exam ccn(1, "CCN");
+	Exam bio(1, "BIO");
 
 	std::cout << "4 exams created" << std::endl;
 	std::cout << "assigning time 2 to cla" << std::endl;
-	cla.assignTime(2);
+	cla.assignTime(TimeSlot(2));
 		std::cout << "assigning time 3 to bio" << std::endl;
-	bio.assignTime(3);
+	bio.assignTime(TimeSlot(3));
 	std::cout << "assigning time 3 to sdd" << std::endl;
-	sdd.assignTime(3);
+	sdd.assignTime(TimeSlot(3));
 	std::cout << "assigning time 1 to ccn" << std::endl;
-	ccn.assignTime(1);
+	ccn.assignTime(TimeSlot(1));
 
 	std::vector<Exam> allExams;
 	allExams.push_back(bio);

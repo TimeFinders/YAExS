@@ -22,7 +22,7 @@
 
 //Returns 0 if all goes well,
 int LocationAssigner::assignLocations( 
-	std::list<Exam> exams, 
+	std::list<Exam> & exams, 
 	std::list<ExamLocation *> examLocations)
 {
 	if (exams.empty())
@@ -37,7 +37,7 @@ int LocationAssigner::assignLocations(
 	exams.sort(Exam::isLargerByTime);
 
 
-	int currentSlot;
+	TimeSlot currentSlot;
 	Exam currentExam;
 	
 	// ExamLocations available for a particular time slot	
@@ -64,9 +64,9 @@ int LocationAssigner::assignLocations(
 		}
 		else
 		{
-			std::cout << "activating location ";
-			bestLoc -> print();
-			std::cout << std::endl;
+			//std::cout << "activating location ";
+			//bestLoc -> print();
+			//std::cout << std::endl;
 
 			// location is no longer availabe
 			availableLocs = removeOverlappingLocations( bestLoc, availableLocs);
@@ -79,22 +79,30 @@ int LocationAssigner::assignLocations(
 		next++;
 		if ( next == exams.end() || next->getTime() != currentSlot )
 		{
-			std::cout << "LAST EXAM OF THIS TIME SLOT " << std::endl;
+			//std::cout << "LAST EXAM OF THIS TIME SLOT " << std::endl;
 
 			// assign all the exams to activeLocs, biggest exams
 			// to biggest active location
 			activeLocs.sort(ExamLocation::isLarger);
 
-			std::cout << "at time slot " << currentSlot << " the active locs are" << std::endl;	
+			//std::cout << "at time slot " << currentSlot.toPrint() << " the active locs are" << std::endl;	
 
 			for (std::list<Exam>::iterator et = firstThisSlot; et != next; et++)
 			{
-				activeLocs.front()->print();	
-				std::cout << "\tassigned to ";
-				et->print();
+				//activeLocs.front()->print();	
+				//std::cout << "\tassigned to ";
+				//et->print();
 
-				if (!activeLocs.empty())	
+
+				if (!activeLocs.empty())
+				{	
+					// assign the exam
 					et->assignLocation(activeLocs.front());	
+
+					if ( !et->hasLocation() )
+						return 8;
+
+				}
 				else
 					return 9;
 	
@@ -108,13 +116,13 @@ int LocationAssigner::assignLocations(
 			// reset everything for next time slot, if not at end already
 			if (next != exams.end() )	
 			{		
-				std::cout << "\n\nmoving on to timeslot " << next->getTime() << std::endl;
+			//	std::cout << "\n\nmoving on to timeslot " << next->getTime().toPrint() << std::endl;
 				availableLocs = examLocations;
 				firstThisSlot = next;
 			}
 			else
 			{
-				std::cout << "\nall time slots complete\n" << std::endl;
+			//	std::cout << "\nall time slots complete\n" << std::endl;
 			}
 
 		}//end if check for end of time slot

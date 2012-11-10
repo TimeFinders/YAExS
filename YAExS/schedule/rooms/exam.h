@@ -9,6 +9,7 @@
 class ExamLocation;
 
 #include <string>
+#include "timeslot.h"
 
 
 class Exam
@@ -16,26 +17,28 @@ class Exam
 	private:
 		int numStudents;	
 		ExamLocation * examLocation;
-		int timeSlot;
+		TimeSlot timeSlot;
+		std::string name;
 
 	public:
-		Exam(){ Exam(-1); };
+		Exam(){ Exam(-1, ""); };
 
-		Exam(int numberOfStudents) :
+		Exam(int numberOfStudents, std::string name) :
 			numStudents(numberOfStudents),
 			examLocation(NULL),
-			timeSlot(-1) {};
+			timeSlot(-1),
+			name(name) {};
 
 		// the number of students taking this exam
 		int size();
 
-		void assignTime(int timeSlot);
-		int getTime(){return timeSlot;};
+		void assignTime(TimeSlot timeSlot);
+		TimeSlot getTime(){return timeSlot;};
 		void assignLocation(ExamLocation * examLocation);
+		ExamLocation * getLocation() { return examLocation; };
 
 		bool hasLocation();
 		
-
 
 		static bool isEarlier( Exam e1, Exam e2);
 		static bool isLarger( Exam e1, Exam e2);

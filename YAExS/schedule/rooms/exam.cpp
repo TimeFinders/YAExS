@@ -4,6 +4,7 @@
 */
 
 #include "exam.h"
+#include "timeslot.h"
 
 //for debugging
 #include <iostream>
@@ -14,7 +15,7 @@ int Exam::size()
 	return numStudents;
 }
 
-void Exam::assignTime(int timeSlot)
+void Exam::assignTime(TimeSlot timeSlot)
 {
 	this->timeSlot = timeSlot;
 }
@@ -32,9 +33,7 @@ bool Exam::hasLocation()
 
 bool Exam::isEarlier(Exam e1, Exam e2)
 {
-	return (    e1.timeSlot != -1 
-		 && e2.timeSlot != -1
-		 && e1.timeSlot < e2.timeSlot );
+	return e1.timeSlot < e2.timeSlot ;
 }
 
 bool Exam::isLarger(Exam e1, Exam e2)
@@ -55,7 +54,7 @@ bool Exam::isLargerByTime(Exam e1, Exam e2)
 //for debugging
 void Exam::print()
 {
-	std::cout << "students: " << numStudents << " time: " << timeSlot << std::endl;
+	std::cout << name << " students: " << numStudents << " time: " << timeSlot.toPrint() << std::endl;
 }
 
 

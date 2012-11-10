@@ -20,7 +20,7 @@ public:
 	// Assign exam locations to exams that have had times assigned. 
 	// After call, exam objects will have ExamLocation assigned.
 	//Returns 0 if all goes well	
-	static int assignLocations( std::list<Exam> exams, std::list<ExamLocation *> examLocations);
+	static int assignLocations( std::list<Exam> & exams, std::list<ExamLocation *> examLocations);
 
 private:
 	// Return the "best" location for exam e from the available list.
