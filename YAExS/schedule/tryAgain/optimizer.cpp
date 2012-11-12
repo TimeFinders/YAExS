@@ -23,31 +23,23 @@ Optimizer::Optimizer()
 //Destructor
 Optimizer::~Optimizer()
 {
-    //Free the SCIP structure
-    // Close things up
+     // Close things up
 		
-		
-	//std::cout << " releasing extra variable" << std::endl;
-	SCIPreleaseVar(scip_, & extraVar);
-	SCIPreleaseVar(scip_, & extraVar2);
-	
-	//std::cout << "releasing extra constraint" << std::endl;
-	SCIPreleaseCons(scip_, & extraCon);
-
-	
-	
-	for (std::unordered_map<Exam::EXAM_ID, std::unordered_map<int, SCIP_VAR*> >::iterator examIt = examIsAt.begin();
+	for (std::unordered_map<Exam::EXAM_ID, std::unordered_map<TimeSlot::TIMESLOT_ID, SCIP_VAR*> >::iterator examIt = examIsAt.begin();
 		examIt != examIsAt.end(); examIt++)
 	{
-		std::unordered_map<int, SCIP_VAR *> theMap;
+		std::unordered_map<TimeSlot::TIMESLOT_ID, SCIP_VAR *> theMap;
 		theMap  = examIt->second;
-		for (std::unordered_map<int, SCIP_VAR *>::iterator tsIt= theMap.begin();
+		for (std::unordered_map<TimeSlot::TIMESLOT_ID, SCIP_VAR *>::iterator tsIt= theMap.begin();
 			tsIt != theMap.end(); tsIt++)
 		{	
 			SCIPreleaseVar(scip_, & tsIt->second);
 		}
 	}
-	
+
+	//std::cout << "releasing extra constraint" << std::endl;
+	SCIPreleaseCons(scip_, & extraCon);
+
 	
 	//Then we close the SCIP environment:
     SCIPfree(&scip_);
@@ -70,34 +62,13 @@ const char* Optimizer::examAtVariableName(const Exam & exam, const TimeSlot & ti
 //Loads a ZIMPL model into SCIP
 void Optimizer::loadModel(const std::vector<Exam> & exams, const std::vector<TimeSlot> & slots)
 {
-	// JUST FOR CHECKING
-	//SCIP_VAR * extraVar;
-	std::string ExtravString = "extra";
-	const char * ExtravName = ExtravString.c_str();
-	bool isInitial = TRUE;
-	bool canRemoveInAging = FALSE;
-	double coefInObjective = -10.0;
-	SCIPcreateVar(scip_, & extraVar, ExtravName, 0.0, 1.0, 
-				coefInObjective, SCIP_VARTYPE_BINARY, 
-				isInitial, canRemoveInAging,
-				NULL, NULL, NULL, NULL, NULL);
-	// dont forget to add variable to scip object or you will get segfaults later!
-	SCIPaddVar(scip_, extraVar);
-	
-	//SCIP_VAR * extraVar2;
-	std::string ExtravString2 = "extra2";
-	const char * ExtravName2 = ExtravString2.c_str();
-	double coefInObjective2 = -20;
-	SCIPcreateVar(scip_, & extraVar2, ExtravName2, 0.0, 1.0,
-				coefInObjective2, SCIP_VARTYPE_BINARY, 
-				isInitial, canRemoveInAging,
-				NULL, NULL, NULL, NULL, NULL);
-	SCIPaddVar(scip_, extraVar2);
+	bool isInitial = true;
+	bool canRemoveInAging = false;
 
 	for (std::vector<Exam>::const_iterator examIt = exams.begin(); 
 		examIt != exams.end(); examIt++)
 	{	
-		std::unordered_map<int,  SCIP_VAR *> aMap;
+		std::unordered_map<TimeSlot::TIMESLOT_ID,  SCIP_VAR *> aMap;
 		for (std::vector<TimeSlot>::const_iterator tsIt = slots.begin(); tsIt != slots.end(); tsIt++)
 		{
 			//std::cout << "adding an exam variable for time slot "  << tsIt->getId() << std::endl;
@@ -128,17 +99,14 @@ void Optimizer::loadModel(const std::vector<Exam> & exams, const std::vector<Tim
 			0, NULL, NULL, lbound, ubound, isInitial,
 			TRUE, TRUE, TRUE, TRUE, FALSE,
 			FALSE, FALSE, FALSE, FALSE);
-	SCIPaddCoefLinear(scip_, extraCon, extraVar, 1.0);
-	SCIPaddCoefLinear(scip_, extraCon, extraVar2, 1.0);
 
-
-	for (std::unordered_map<Exam::EXAM_ID, std::unordered_map<int, SCIP_VAR*> >::iterator examIt = examIsAt.begin();
+	for (std::unordered_map<Exam::EXAM_ID, std::unordered_map<TimeSlot::TIMESLOT_ID, SCIP_VAR*> >::iterator examIt = examIsAt.begin();
 		examIt != examIsAt.end(); examIt++)
 	{
-		std::unordered_map<int, SCIP_VAR *> theMap;
+		std::unordered_map<TimeSlot::TIMESLOT_ID, SCIP_VAR *> theMap;
 		theMap  = examIt->second;
 		std::cout << "size of the map for exam: " << theMap.size() << std::endl;
-		for (std::unordered_map<int, SCIP_VAR *>::iterator tsIt= theMap.begin();
+		for (std::unordered_map<TimeSlot::TIMESLOT_ID, SCIP_VAR *>::iterator tsIt= theMap.begin();
 			tsIt != theMap.end(); tsIt++)
 		{	
 			std::cout << " adding variable to constraint for exam " << examIt->first;
@@ -168,15 +136,12 @@ void Optimizer::printSolutionAndValues()
 	{
 		std::cout << "\nSolution found!" << std::endl;
 		
-		std::cout << "\t" << "extra variable : " << SCIPgetSolVal(scip_, sol, extraVar) << std::endl; 
-		std::cout << "\t" << "extra variable2 : " << SCIPgetSolVal(scip_, sol, extraVar2) << std::endl; 
-
-		for (std::unordered_map<Exam::EXAM_ID, std::unordered_map<int, SCIP_VAR*> >::iterator examIt = examIsAt.begin();
+		for (std::unordered_map<Exam::EXAM_ID, std::unordered_map<TimeSlot::TIMESLOT_ID, SCIP_VAR*> >::iterator examIt = examIsAt.begin();
 			examIt != examIsAt.end(); examIt++)
 		{
-			std::unordered_map<int, SCIP_VAR *> theMap;
+			std::unordered_map<TimeSlot::TIMESLOT_ID, SCIP_VAR *> theMap;
 			theMap  = examIt->second;
-			for (std::unordered_map<int, SCIP_VAR *>::iterator tsIt= theMap.begin();
+			for (std::unordered_map<TimeSlot::TIMESLOT_ID, SCIP_VAR *>::iterator tsIt= theMap.begin();
 				tsIt != theMap.end(); tsIt++)
 			{	
 				std::cout << "\t" << "exam " << examIt->first;

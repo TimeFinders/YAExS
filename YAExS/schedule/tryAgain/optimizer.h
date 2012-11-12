@@ -49,10 +49,8 @@ private:
 
     // just for testing:
     SCIP_CONS * extraCon;
-    SCIP_VAR * extraVar;
-    SCIP_VAR * extraVar2;
 
-    std::unordered_map< Exam::EXAM_ID, std::unordered_map<int, SCIP_VAR *> > examIsAt;
+    std::unordered_map< Exam::EXAM_ID, std::unordered_map<TimeSlot::TIMESLOT_ID, SCIP_VAR *> > examIsAt;
 
     static const char* examAtVariableName(const Exam & exam, const TimeSlot & timeslot);
 };
