@@ -30,7 +30,7 @@ public:
     ~Optimizer();
 
     //Setup function
-    void loadModel(const Exam & e, const std::vector<TimeSlot> & slots);
+    void loadModel(const std::vector<Exam> & exams, const std::vector<TimeSlot> & slots);
 
     //Runs the solver
     void schedule();

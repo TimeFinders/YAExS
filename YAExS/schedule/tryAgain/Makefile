@@ -2,7 +2,7 @@ CC = g++ -std=c++0x
 CFLAGS = -g -Wall -Wextra -c
 SCIP_LFLAGS =  -L/usr/lib  -lscip -lreadline  -lgmp -lz  -llpispx  -lsoplex -lobjscip -lnlpi.cppad
 
-TESTOPT_OBJ = testOpt.cpp optimizer.o
+TESTOPT_OBJ = testOpt.cpp exam.cpp optimizer.o
 
 test: testOpt
 

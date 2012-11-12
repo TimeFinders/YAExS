@@ -26,7 +26,9 @@ int main(int argc, char* argv[])
     }
     std::cout << "\n\n";
 
-    scipScheduler.loadModel(e, slots);
+ 
+    std::vector<Exam> exams = GetSome::getSomeExams();
+    scipScheduler.loadModel(exams, slots);
     
     //Get the best solution
     scipScheduler.schedule();

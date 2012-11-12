@@ -68,7 +68,7 @@ const char* Optimizer::examAtVariableName(const Exam & exam, const TimeSlot & ti
 
 
 //Loads a ZIMPL model into SCIP
-void Optimizer::loadModel(const Exam & e, const std::vector<TimeSlot> & slots)
+void Optimizer::loadModel(const std::vector<Exam> & exams, const std::vector<TimeSlot> & slots)
 {
 	// JUST FOR CHECKING
 	//SCIP_VAR * extraVar;
@@ -94,26 +94,29 @@ void Optimizer::loadModel(const Exam & e, const std::vector<TimeSlot> & slots)
 				NULL, NULL, NULL, NULL, NULL);
 	SCIPaddVar(scip_, extraVar2);
 
-	
-	std::unordered_map<int,  SCIP_VAR *> aMap;
-	for (std::vector<TimeSlot>::const_iterator it = slots.begin(); it != slots.end(); it++)
-	{
-		std::cout << "adding an exam variable for time slot "  << it->getId() << std::endl;
-		const char * examName = examAtVariableName(e, *it);
-	
-		double objCoefExam = -50 + 5 * (it->getId());
+	for (std::vector<Exam>::const_iterator examIt = exams.begin(); 
+		examIt != exams.end(); examIt++)
+	{	
+		std::unordered_map<int,  SCIP_VAR *> aMap;
+		for (std::vector<TimeSlot>::const_iterator tsIt = slots.begin(); tsIt != slots.end(); tsIt++)
+		{
+			//std::cout << "adding an exam variable for time slot "  << tsIt->getId() << std::endl;
+			const char * examName = examAtVariableName(*examIt, *tsIt);
+		
+			double objCoefExam = -50 + 5 * (tsIt->getId());
 
-		SCIP_VAR * examVar;
-		SCIPcreateVar(scip_, & examVar, examName, 0.0, 1.0,
-				objCoefExam, SCIP_VARTYPE_BINARY,
-				isInitial, canRemoveInAging,
-				NULL, NULL, NULL, NULL, NULL);
-		SCIPaddVar(scip_, examVar);
+			SCIP_VAR * examVar;
+			SCIPcreateVar(scip_, & examVar, examName, 0.0, 1.0,
+					objCoefExam, SCIP_VARTYPE_BINARY,
+					isInitial, canRemoveInAging,
+					NULL, NULL, NULL, NULL, NULL);
+			SCIPaddVar(scip_, examVar);
 
-		aMap[it->getId()] = examVar;
+			aMap[tsIt->getId()] = examVar;
 
+		}
+		examIsAt[examIt->getId()] = aMap;
 	}
-	examIsAt[e.getId()] = aMap;
 
 	//SCIP_CONS * extraCon;
 	double lbound = 1.0;
