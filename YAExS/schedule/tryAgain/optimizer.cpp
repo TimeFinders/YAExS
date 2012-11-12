@@ -27,7 +27,7 @@ Optimizer::~Optimizer()
 }
 
 //Loads a ZIMPL model into SCIP
-void Optimizer::loadModel()
+void Optimizer::loadModel(const Exam & e)
 {
 
 	// JUST FOR CHECKING
@@ -54,6 +54,15 @@ void Optimizer::loadModel()
 				NULL, NULL, NULL, NULL, NULL);
 	SCIPaddVar(scip_, extraVar2);
 
+	std::string examString = e.getId();
+	const char * examName = examString.c_str();
+	double objCoefExam = -50;
+	SCIPcreateVar(scip_, & examVar, examName, 0.0, 1.0,
+				objCoefExam, SCIP_VARTYPE_BINARY,
+				isInitial, canRemoveInAging,
+				NULL, NULL, NULL, NULL, NULL);
+	SCIPaddVar(scip_, examVar);
+
 	SCIP_CONS * extraCon;
 	double lbound = 1.0;
 	double ubound = 1.0;
@@ -66,6 +75,7 @@ void Optimizer::loadModel()
 			FALSE, FALSE, FALSE, FALSE);
 	SCIPaddCoefLinear(scip_, extraCon, extraVar, 1.0);
 	SCIPaddCoefLinear(scip_, extraCon, extraVar2, 1.0);
+	SCIPaddCoefLinear(scip_, extraCon, examVar, 1.0);
 
 	// add the constraint to the problem: (not in queens documentation but I think its necessary)
 	 SCIPaddCons(scip_, extraCon);
@@ -85,11 +95,11 @@ void Optimizer::printSolutionAndValues()
 	}
 	else 
 	{
-		std::cout << "Solution found!" << std::endl;
+		std::cout << "\nSolution found!" << std::endl;
 		
 		std::cout << "\t" << "extra variable : " << SCIPgetSolVal(scip_, sol, extraVar) << std::endl; 
 		std::cout << "\t" << "extra variable2 : " << SCIPgetSolVal(scip_, sol, extraVar2) << std::endl; 
-		
+		std::cout << "\t" << "exam Var : " << SCIPgetSolVal(scip_, sol, examVar) << std::endl; 
 	}
 }
 

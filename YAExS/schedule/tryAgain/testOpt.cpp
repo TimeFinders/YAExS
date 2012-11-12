@@ -13,7 +13,9 @@ int main(int argc, char* argv[])
 
     std::string solution;
     //Load a model
-    scipScheduler.loadModel();
+    Exam e(5, "CLA");
+
+    scipScheduler.loadModel(e);
     
     //Get the best solution
     scipScheduler.schedule();

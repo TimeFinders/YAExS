@@ -10,6 +10,7 @@
 #include <string>
 #include <sstream>
 #include <iostream>
+#include "exam.h"
 
 #include <objscip/objscip.h>
 #include <objscip/objscipdefplugins.h>
@@ -24,13 +25,8 @@ public:
     //Destructor
     ~Optimizer();
 
-    //Setup functions. Pretty much all placeholders while we figure out what's needed
-    //void setupTimeSlots(int days, int slotsPerDay);
-    //void addStudent(int id, std::vector<int> classid);
-    //void addInstructor(int id, std::vector<int> classid);
-    //void addClass(int id, int meetingTime);
-    //void addPreference();
-    void loadModel();
+    //Setup function
+    void loadModel(const Exam & e);
 
     //Runs the solver
     void schedule();
@@ -50,6 +46,8 @@ private:
     // just for testing:
     SCIP_VAR * extraVar;
     SCIP_VAR * extraVar2;
+
+    SCIP_VAR * examVar;
 };
 
 #endif
