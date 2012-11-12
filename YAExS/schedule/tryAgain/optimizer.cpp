@@ -24,7 +24,8 @@ Optimizer::Optimizer()
 Optimizer::~Optimizer()
 {
      // Close things up
-		
+	//std::cout << "closing things up" << std::endl;
+
 	for (std::unordered_map<Exam::EXAM_ID, std::unordered_map<TimeSlot::TIMESLOT_ID, SCIP_VAR*> >::iterator examIt = examIsAt.begin();
 		examIt != examIsAt.end(); examIt++)
 	{
@@ -35,10 +36,10 @@ Optimizer::~Optimizer()
 		{	
 			SCIPreleaseVar(scip_, & tsIt->second);
 		}
-	}
 
-	//std::cout << "releasing extra constraint" << std::endl;
-	SCIPreleaseCons(scip_, & extraCon);
+		//std::cout << "releasing once constraint" << std::endl;
+		SCIPreleaseCons(scip_, & onceCon[examIt->first]);
+	}
 
 	
 	//Then we close the SCIP environment:
@@ -56,6 +57,16 @@ const char* Optimizer::examAtVariableName(const Exam & exam, const TimeSlot & ti
    const char* name = str.c_str();
 
    return name;
+}
+
+const char* Optimizer::onceConName( const Exam::EXAM_ID & eid)
+{
+	return (eid + "_oncee").c_str();
+}
+
+const char* Optimizer::onceConName( const Exam & exam)
+{
+	return onceConName(exam.getId());
 }
 
 
@@ -92,7 +103,8 @@ void Optimizer::loadExamIsAtVariables(const std::vector<Exam> & exams, const std
 				//std::cout << "adding an exam variable for time slot "  << tsIt->getId() << std::endl;
 				const char * examName = examAtVariableName(*examIt, *tsIt);
 			
-				double objCoefExam = -50 + 5 * (tsIt->getId());
+				// just for testing, remove later
+				double objCoefExam = 1 + 5 * (tsIt->getId());
 
 				SCIP_VAR * examVar;
 				SCIPcreateVar(scip_, & examVar, examName, 0.0, 1.0,
@@ -127,33 +139,39 @@ void Optimizer::loadOnceConstraints()
 		bool isInitial = true;
 		double lbound = 1.0;
 		double ubound = 1.0;
-		std::string extraConName = "extraCon";
-		const char * extraConNameChar = extraConName.c_str();
-		
-		SCIPcreateConsLinear(scip_, & extraCon, extraConNameChar,
-				0, NULL, NULL, lbound, ubound, isInitial,
-				TRUE, TRUE, TRUE, TRUE, FALSE,
-				FALSE, FALSE, FALSE, FALSE);
+	
 
 		for (std::unordered_map<Exam::EXAM_ID, std::unordered_map<TimeSlot::TIMESLOT_ID, SCIP_VAR*> >::iterator examIt = examIsAt.begin();
 			examIt != examIsAt.end(); examIt++)
 		{
+			Exam::EXAM_ID eid = examIt->first;
+			SCIP_CONS * constraintPointer;
+			const char * conName = onceConName(eid);
+			SCIPcreateConsLinear(scip_, & constraintPointer, conName,
+				0, NULL, NULL, lbound, ubound, isInitial,
+				TRUE, TRUE, TRUE, TRUE, FALSE,
+				FALSE, FALSE, FALSE, FALSE);
+
 			std::unordered_map<TimeSlot::TIMESLOT_ID, SCIP_VAR *> theMap;
 			theMap  = examIt->second;
-			//std::cout << "size of the map for exam: " << theMap.size() << std::endl;
 			for (std::unordered_map<TimeSlot::TIMESLOT_ID, SCIP_VAR *>::iterator tsIt= theMap.begin();
 				tsIt != theMap.end(); tsIt++)
 			{	
-			//	std::cout << " adding variable to constraint for exam " << examIt->first;
-			//	std::cout << " and time " << tsIt ->first;
-				SCIPaddCoefLinear(scip_, extraCon, tsIt->second, 1.0);
-			}
-		}
-		
+				//	std::cout << " adding variable to once constraint for exam " << examIt->first;
+				//	std::cout << " and time " << tsIt ->first;
+				SCIPaddCoefLinear(scip_, constraintPointer, tsIt->second, 1.0);
+			} // end time slot loop
 
-		// add the constraint to the problem: (not in queens documentation but I think its necessary)
-		 SCIPaddCons(scip_, extraCon);
-	}
+		
+			// add the constraint to the problem: (not in queens documentation but I think its necessary)
+		 	SCIPaddCons(scip_, constraintPointer);
+
+		 	// keep track of the constraint for later
+		 	onceCon[eid] = constraintPointer;
+
+		} // end exam loop
+		
+	} // end else
 }
 
 void Optimizer::printSolutionAndValues()

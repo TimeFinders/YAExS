@@ -61,7 +61,10 @@ private:
     // doesn't need parameters because just uses examIsAtVariables
     void loadOnceConstraints();
 
+    // used for naming variables and constraints. const char *'s are needed for SCIP
     static const char* examAtVariableName(const Exam & exam, const TimeSlot & timeslot);
+    static const char* onceConName( const Exam::EXAM_ID & eid);
+    static const char* onceConName( const Exam & exam);
 };
 
 #endif
