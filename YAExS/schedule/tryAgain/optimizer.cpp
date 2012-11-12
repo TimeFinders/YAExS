@@ -59,37 +59,52 @@ const char* Optimizer::examAtVariableName(const Exam & exam, const TimeSlot & ti
 }
 
 
-//Loads a ZIMPL model into SCIP
+void Optimizer::loadExamIsAtVariables(const std::vector<Exam> & exams, const std::vector<TimeSlot> & slots)
+{
+	// check that the variables haven't been loaded already;
+	if ( !examIsAt.empty() )
+		std::cerr << " exam is at variable map is NOT empty." << std::endl;
+
+	else 
+	{
+		bool isInitial = true;
+		bool canRemoveInAging = false;
+
+		for (std::vector<Exam>::const_iterator examIt = exams.begin(); 
+			examIt != exams.end(); examIt++)
+		{	
+			std::unordered_map<TimeSlot::TIMESLOT_ID,  SCIP_VAR *> aMap;
+			for (std::vector<TimeSlot>::const_iterator tsIt = slots.begin(); tsIt != slots.end(); tsIt++)
+			{
+				//std::cout << "adding an exam variable for time slot "  << tsIt->getId() << std::endl;
+				const char * examName = examAtVariableName(*examIt, *tsIt);
+			
+				double objCoefExam = -50 + 5 * (tsIt->getId());
+
+				SCIP_VAR * examVar;
+				SCIPcreateVar(scip_, & examVar, examName, 0.0, 1.0,
+						objCoefExam, SCIP_VARTYPE_BINARY,
+						isInitial, canRemoveInAging,
+						NULL, NULL, NULL, NULL, NULL);
+				SCIPaddVar(scip_, examVar);
+
+				aMap[tsIt->getId()] = examVar;
+
+			} // end time slot for loop
+			examIsAt[examIt->getId()] = aMap;
+		} // end exam for loop
+
+	} // end else
+}
+
+//Loads a model into SCIP
 void Optimizer::loadModel(const std::vector<Exam> & exams, const std::vector<TimeSlot> & slots)
 {
-	bool isInitial = true;
-	bool canRemoveInAging = false;
 
-	for (std::vector<Exam>::const_iterator examIt = exams.begin(); 
-		examIt != exams.end(); examIt++)
-	{	
-		std::unordered_map<TimeSlot::TIMESLOT_ID,  SCIP_VAR *> aMap;
-		for (std::vector<TimeSlot>::const_iterator tsIt = slots.begin(); tsIt != slots.end(); tsIt++)
-		{
-			//std::cout << "adding an exam variable for time slot "  << tsIt->getId() << std::endl;
-			const char * examName = examAtVariableName(*examIt, *tsIt);
-		
-			double objCoefExam = -50 + 5 * (tsIt->getId());
-
-			SCIP_VAR * examVar;
-			SCIPcreateVar(scip_, & examVar, examName, 0.0, 1.0,
-					objCoefExam, SCIP_VARTYPE_BINARY,
-					isInitial, canRemoveInAging,
-					NULL, NULL, NULL, NULL, NULL);
-			SCIPaddVar(scip_, examVar);
-
-			aMap[tsIt->getId()] = examVar;
-
-		}
-		examIsAt[examIt->getId()] = aMap;
-	}
+	loadExamIsAtVariables(exams, slots);
 
 	//SCIP_CONS * extraCon;
+	bool isInitial = true;
 	double lbound = 1.0;
 	double ubound = 1.0;
 	std::string extraConName = "extraCon";
@@ -105,12 +120,12 @@ void Optimizer::loadModel(const std::vector<Exam> & exams, const std::vector<Tim
 	{
 		std::unordered_map<TimeSlot::TIMESLOT_ID, SCIP_VAR *> theMap;
 		theMap  = examIt->second;
-		std::cout << "size of the map for exam: " << theMap.size() << std::endl;
+		//std::cout << "size of the map for exam: " << theMap.size() << std::endl;
 		for (std::unordered_map<TimeSlot::TIMESLOT_ID, SCIP_VAR *>::iterator tsIt= theMap.begin();
 			tsIt != theMap.end(); tsIt++)
 		{	
-			std::cout << " adding variable to constraint for exam " << examIt->first;
-			std::cout << " and time " << tsIt ->first;
+		//	std::cout << " adding variable to constraint for exam " << examIt->first;
+		//	std::cout << " and time " << tsIt ->first;
 			SCIPaddCoefLinear(scip_, extraCon, tsIt->second, 1.0);
 		}
 	}
@@ -119,9 +134,8 @@ void Optimizer::loadModel(const std::vector<Exam> & exams, const std::vector<Tim
 	// add the constraint to the problem: (not in queens documentation but I think its necessary)
 	 SCIPaddCons(scip_, extraCon);
 
-
-
 }
+
 
 void Optimizer::printSolutionAndValues()
 {

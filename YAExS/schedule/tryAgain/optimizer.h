@@ -50,7 +50,15 @@ private:
     // just for testing:
     SCIP_CONS * extraCon;
 
+    // exam is at time variables
     std::unordered_map< Exam::EXAM_ID, std::unordered_map<TimeSlot::TIMESLOT_ID, SCIP_VAR *> > examIsAt;
+
+    // exam can meet at exactly one time constraint
+    std::unordered_map< Exam::EXAM_ID, SCIP_CONS *> onceCon;
+
+    void loadExamIsAtVariables(const std::vector<Exam> & exams, const std::vector<TimeSlot> & slots);
+
+    void loadOnceConstraints(const std::vector<Exam> & exams, const std::vector<TimeSlot> & slots);
 
     static const char* examAtVariableName(const Exam & exam, const TimeSlot & timeslot);
 };
