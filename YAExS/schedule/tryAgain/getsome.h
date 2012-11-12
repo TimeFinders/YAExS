@@ -54,12 +54,18 @@ public:
 	}
 
 	
+	static Person * getVera()
+	{
+		Person * veraPtr = new Student("VERA");
+		return veraPtr;
+	}
+
 	static std::vector<Person*> getSomePeople()
 	{
-		std::vector<Person*> people;
-		Student s("Vera");
-		
-		people.push_back(&s);
+   	 	std::vector<Person *> people;
+    	Person * veraPtr = new Student("VERA");
+    	people.push_back(veraPtr);
+
 		return people;
 	}
 	

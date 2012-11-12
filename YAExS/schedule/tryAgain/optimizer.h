@@ -71,6 +71,14 @@ private:
     static const char* onceConName( const Exam::EXAM_ID & eid);
     static const char* onceConName( const Exam & exam);
     static const char* twoPlusVariableName(Person* person);
+
+
+    // For releasing scip variables and constraints when done
+    void releaseExamIsAtVariables();
+    void releaseTwoPlusVariables();
+
+    void releaseOnceConstraints();
+    
 };
 
 #endif

@@ -17,14 +17,20 @@ class Student : public Person
 		std::vector<Exam> exams;
 	
 	public:
-		Student() : identifier(""), exams(0) {};
+		//Student() : identifier(""), exams(0) {};
 
 		Student(std::string id) : identifier(id), exams(0) {};
 
 		Student(std::string id, std::vector<Exam> exams) 
 			: identifier(id), exams(exams) {};	
 
-		Person::PERSON_ID getId() const { return identifier;};
+		Person::PERSON_ID getId() const
+		{ 
+			std::cout << "student getId() will return" << std::endl;
+			std::cout << identifier << std::endl;
+			return identifier;
+		};
+
 		std::vector<Exam> getExams() { return exams; };
 };
 #endif

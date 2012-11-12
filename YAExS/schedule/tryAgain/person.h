@@ -16,6 +16,7 @@ class Person
 
 		typedef std::string PERSON_ID;
 
+		PERSON_ID getId() {return "GenericPerson";};
 		virtual PERSON_ID getId() const = 0;
 		virtual std::vector<Exam> getExams() = 0;
 };

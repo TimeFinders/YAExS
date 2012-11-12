@@ -26,6 +26,21 @@ Optimizer::~Optimizer()
      // Close things up
 	//std::cout << "closing things up" << std::endl;
 
+	// release variables
+	releaseExamIsAtVariables();
+	//releaseTwoPlusVariables();
+
+	// release constaints
+	releaseOnceConstraints();
+	
+
+	
+	//close the SCIP environment:
+    SCIPfree(&scip_);
+}
+
+void Optimizer::releaseExamIsAtVariables()
+{
 	for (std::unordered_map<Exam::EXAM_ID, std::unordered_map<TimeSlot::TIMESLOT_ID, SCIP_VAR*> >::iterator examIt = examIsAt.begin();
 		examIt != examIsAt.end(); examIt++)
 	{
@@ -36,17 +51,29 @@ Optimizer::~Optimizer()
 		{	
 			SCIPreleaseVar(scip_, & tsIt->second);
 		}
+	}
+}
 
+void Optimizer::releaseTwoPlusVariables()
+{
+ 		//std::unordered_map <PERSON_ID, SCIP_VAR * > twoPlus;
+	for (std::unordered_map <Person::PERSON_ID, SCIP_VAR *>::iterator it = twoPlus.begin();
+		 it != twoPlus.end(); it++)
+	{
+		SCIPreleaseVar(scip_, & it->second);
+	}
+
+}
+
+void Optimizer::releaseOnceConstraints()
+{
+	for (std::unordered_map<Exam::EXAM_ID, std::unordered_map<TimeSlot::TIMESLOT_ID, SCIP_VAR*> >::iterator examIt = examIsAt.begin();
+		examIt != examIsAt.end(); examIt++)
+	{
 		//std::cout << "releasing once constraint" << std::endl;
 		SCIPreleaseCons(scip_, & onceCon[examIt->first]);
 	}
-
-	
-	//Then we close the SCIP environment:
-    SCIPfree(&scip_);
 }
-
-
 
 
 //Loads a model into SCIP
@@ -54,6 +81,7 @@ void Optimizer::loadModel(const std::vector<Exam> & exams,
 		const std::vector<TimeSlot> & slots, 
 		const std::vector<Person* > & people)
 {
+
 	// load the exam is at variables
 	loadExamIsAtVariables(exams, slots);
 
@@ -61,12 +89,13 @@ void Optimizer::loadModel(const std::vector<Exam> & exams,
 	// doesn't need parameters because just uses the examIsAtVariables
 	loadOnceConstraints();
 
-	//loadTwoPlusVariables(people);
+	loadTwoPlusVariables(people);
 
 }
 
 
-void Optimizer::loadExamIsAtVariables(const std::vector<Exam> & exams, const std::vector<TimeSlot> & slots)
+void Optimizer::loadExamIsAtVariables(const std::vector<Exam> & exams, 
+	const std::vector<TimeSlot> & slots)
 {
 	// check that the variables haven't been loaded already;
 	if ( !examIsAt.empty() )
@@ -81,7 +110,8 @@ void Optimizer::loadExamIsAtVariables(const std::vector<Exam> & exams, const std
 			examIt != exams.end(); examIt++)
 		{	
 			std::unordered_map<TimeSlot::TIMESLOT_ID,  SCIP_VAR *> aMap;
-			for (std::vector<TimeSlot>::const_iterator tsIt = slots.begin(); tsIt != slots.end(); tsIt++)
+			for (std::vector<TimeSlot>::const_iterator tsIt = slots.begin(); 
+					tsIt != slots.end(); tsIt++)
 			{
 				//std::cout << "adding an exam variable for time slot "  << tsIt->getId() << std::endl;
 				const char * name = examAtVariableName(*examIt, *tsIt);
@@ -163,6 +193,8 @@ void Optimizer::loadTwoPlusVariables(const std::vector<Person* > & people)
 		std::cerr << " twoPlus variable map is not empty. Only call loadTwoPlusVariables once!" << std::endl;
 	else
 	{
+		//std::cout << "loading the two plus variables" << std::endl;
+		
 		bool isInitial = true;
 		bool canRemoveInAging = false;
 
@@ -172,8 +204,7 @@ void Optimizer::loadTwoPlusVariables(const std::vector<Person* > & people)
 		 //std::unordered_map <PERSON_ID, SCIP_VAR * > twoPlus;
 		for (std::vector<Person*>::const_iterator it = people.begin(); it!=people.end(); it++)
 		{
-
-			//std::cout << "adding a two plus variable for person slot "  << it->getId() << std::endl;
+			std::cout << "adding a two plus variable for person slot "  << (*it)->getId() << std::endl;
 			const char * name = twoPlusVariableName(*it);
 
 			// create the variable

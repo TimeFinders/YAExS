@@ -6,6 +6,9 @@
 #include <iostream>
 #include <vector>
 #include "getsome.h"
+#include <algorithm>
+
+static bool deleteAll( Person * p ) { delete p; return true; }
 
 int main(int argc, char* argv[])
 {
@@ -26,8 +29,9 @@ int main(int argc, char* argv[])
     }
     std::cout << "\n\n";
 
-    std::vector<Person* > people = GetSome::getSomePeople();
+   
 
+    std::vector<Person* > people = GetSome::getSomePeople();
 
     std::vector<Exam> exams = GetSome::getSomeExams();
     
@@ -42,6 +46,9 @@ int main(int argc, char* argv[])
 
     //Print the solution to cout
     //std::cout << solution << std::endl;
+
+
+    std::remove_if( people.begin(), people.end(), deleteAll );
 	
 
     return 0;
