@@ -19,6 +19,13 @@ int main(int argc, char* argv[])
 
     std::vector<TimeSlot> slots = GetSome::getSomeTimeSlots();
 
+    std::cout << " all the time slots are:" << std::endl;
+    for (std::vector<TimeSlot>::iterator it = slots.begin(); it!=slots.end(); it++)
+    {
+        std::cout << it->getId() << "\t";
+    }
+    std::cout << "\n\n";
+
     scipScheduler.loadModel(e, slots);
     
     //Get the best solution

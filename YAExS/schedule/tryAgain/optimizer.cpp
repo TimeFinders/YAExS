@@ -36,8 +36,8 @@ Optimizer::~Optimizer()
 
 	
 	
-	for (std::unordered_map<Exam::EXAM_ID, std::unordered_map<int, SCIP_VAR*> >::iterator examIt = examVars.begin();
-		examIt != examVars.end(); examIt++)
+	for (std::unordered_map<Exam::EXAM_ID, std::unordered_map<int, SCIP_VAR*> >::iterator examIt = examIsAt.begin();
+		examIt != examIsAt.end(); examIt++)
 	{
 		std::unordered_map<int, SCIP_VAR *> theMap;
 		theMap  = examIt->second;
@@ -70,7 +70,6 @@ const char* Optimizer::examAtVariableName(const Exam & exam, const TimeSlot & ti
 //Loads a ZIMPL model into SCIP
 void Optimizer::loadModel(const Exam & e, const std::vector<TimeSlot> & slots)
 {
-
 	// JUST FOR CHECKING
 	//SCIP_VAR * extraVar;
 	std::string ExtravString = "extra";
@@ -96,9 +95,10 @@ void Optimizer::loadModel(const Exam & e, const std::vector<TimeSlot> & slots)
 	SCIPaddVar(scip_, extraVar2);
 
 	
-	
+	std::unordered_map<int,  SCIP_VAR *> aMap;
 	for (std::vector<TimeSlot>::const_iterator it = slots.begin(); it != slots.end(); it++)
 	{
+		std::cout << "adding an exam variable for time slot "  << it->getId() << std::endl;
 		const char * examName = examAtVariableName(e, *it);
 	
 		double objCoefExam = -50 + 5 * (it->getId());
@@ -110,10 +110,10 @@ void Optimizer::loadModel(const Exam & e, const std::vector<TimeSlot> & slots)
 				NULL, NULL, NULL, NULL, NULL);
 		SCIPaddVar(scip_, examVar);
 
-		std::unordered_map<int,  SCIP_VAR *> aMap;
 		aMap[it->getId()] = examVar;
-		examVars[e.getId()] = aMap;
+
 	}
+	examIsAt[e.getId()] = aMap;
 
 	//SCIP_CONS * extraCon;
 	double lbound = 1.0;
@@ -129,14 +129,17 @@ void Optimizer::loadModel(const Exam & e, const std::vector<TimeSlot> & slots)
 	SCIPaddCoefLinear(scip_, extraCon, extraVar2, 1.0);
 
 
-	for (std::unordered_map<Exam::EXAM_ID, std::unordered_map<int, SCIP_VAR*> >::iterator examIt = examVars.begin();
-		examIt != examVars.end(); examIt++)
+	for (std::unordered_map<Exam::EXAM_ID, std::unordered_map<int, SCIP_VAR*> >::iterator examIt = examIsAt.begin();
+		examIt != examIsAt.end(); examIt++)
 	{
 		std::unordered_map<int, SCIP_VAR *> theMap;
 		theMap  = examIt->second;
+		std::cout << "size of the map for exam: " << theMap.size() << std::endl;
 		for (std::unordered_map<int, SCIP_VAR *>::iterator tsIt= theMap.begin();
 			tsIt != theMap.end(); tsIt++)
 		{	
+			std::cout << " adding variable to constraint for exam " << examIt->first;
+			std::cout << " and time " << tsIt ->first;
 			SCIPaddCoefLinear(scip_, extraCon, tsIt->second, 1.0);
 		}
 	}
@@ -165,8 +168,8 @@ void Optimizer::printSolutionAndValues()
 		std::cout << "\t" << "extra variable : " << SCIPgetSolVal(scip_, sol, extraVar) << std::endl; 
 		std::cout << "\t" << "extra variable2 : " << SCIPgetSolVal(scip_, sol, extraVar2) << std::endl; 
 
-		for (std::unordered_map<Exam::EXAM_ID, std::unordered_map<int, SCIP_VAR*> >::iterator examIt = examVars.begin();
-			examIt != examVars.end(); examIt++)
+		for (std::unordered_map<Exam::EXAM_ID, std::unordered_map<int, SCIP_VAR*> >::iterator examIt = examIsAt.begin();
+			examIt != examIsAt.end(); examIt++)
 		{
 			std::unordered_map<int, SCIP_VAR *> theMap;
 			theMap  = examIt->second;
