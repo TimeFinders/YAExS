@@ -53,8 +53,22 @@ Optimizer::~Optimizer()
     SCIPfree(&scip_);
 }
 
+
+const char* Optimizer::examAtVariableName(const Exam & exam, const TimeSlot & timeslot)
+{
+    // could change to read later: http://www.cplusplus.com/reference/iostream/istream/read/
+
+   std::stringstream ss;
+   ss << exam.getId() << "_" << timeslot.getId();
+   std::string str(ss.str());
+   const char* name = str.c_str();
+
+   return name;
+}
+
+
 //Loads a ZIMPL model into SCIP
-void Optimizer::loadModel(const Exam & e, const std::vector<TimeSlot> slots)
+void Optimizer::loadModel(const Exam & e, const std::vector<TimeSlot> & slots)
 {
 
 	// JUST FOR CHECKING
@@ -81,20 +95,25 @@ void Optimizer::loadModel(const Exam & e, const std::vector<TimeSlot> slots)
 				NULL, NULL, NULL, NULL, NULL);
 	SCIPaddVar(scip_, extraVar2);
 
-	SCIP_VAR * examVar;
-	std::string examString = e.getId();
-	const char * examName = examString.c_str();
-	double objCoefExam = -50;
-	SCIPcreateVar(scip_, & examVar, examName, 0.0, 1.0,
+	
+	
+	for (std::vector<TimeSlot>::const_iterator it = slots.begin(); it != slots.end(); it++)
+	{
+		const char * examName = examAtVariableName(e, *it);
+	
+		double objCoefExam = -50 + 5 * (it->getId());
+
+		SCIP_VAR * examVar;
+		SCIPcreateVar(scip_, & examVar, examName, 0.0, 1.0,
 				objCoefExam, SCIP_VARTYPE_BINARY,
 				isInitial, canRemoveInAging,
 				NULL, NULL, NULL, NULL, NULL);
-	SCIPaddVar(scip_, examVar);
+		SCIPaddVar(scip_, examVar);
 
-	TimeSlot firstSlot = slots.front();
-	std::unordered_map<int,  SCIP_VAR *> aMap;
-	aMap[firstSlot.getId()] = examVar;
-	examVars[examString] = aMap;
+		std::unordered_map<int,  SCIP_VAR *> aMap;
+		aMap[it->getId()] = examVar;
+		examVars[e.getId()] = aMap;
+	}
 
 	//SCIP_CONS * extraCon;
 	double lbound = 1.0;
@@ -108,7 +127,20 @@ void Optimizer::loadModel(const Exam & e, const std::vector<TimeSlot> slots)
 			FALSE, FALSE, FALSE, FALSE);
 	SCIPaddCoefLinear(scip_, extraCon, extraVar, 1.0);
 	SCIPaddCoefLinear(scip_, extraCon, extraVar2, 1.0);
-	SCIPaddCoefLinear(scip_, extraCon, examVar, 1.0);
+
+
+	for (std::unordered_map<Exam::EXAM_ID, std::unordered_map<int, SCIP_VAR*> >::iterator examIt = examVars.begin();
+		examIt != examVars.end(); examIt++)
+	{
+		std::unordered_map<int, SCIP_VAR *> theMap;
+		theMap  = examIt->second;
+		for (std::unordered_map<int, SCIP_VAR *>::iterator tsIt= theMap.begin();
+			tsIt != theMap.end(); tsIt++)
+		{	
+			SCIPaddCoefLinear(scip_, extraCon, tsIt->second, 1.0);
+		}
+	}
+	
 
 	// add the constraint to the problem: (not in queens documentation but I think its necessary)
 	 SCIPaddCons(scip_, extraCon);

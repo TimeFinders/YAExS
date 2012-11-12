@@ -1,0 +1,55 @@
+/*
+Just a helper class for testing SCIP
+*/
+
+#include "exam.h"
+#include <vector>
+
+class GetSome
+{
+
+public:
+
+
+	// EXAMS
+	static std::vector<Exam> getFourExams()
+	{
+		std::vector<Exam> exams;
+
+		Exam cla(25, "CLA");
+		cla.assignTime(1);
+		exams.push_back(cla);
+
+		Exam sdd(80, "SDD");
+		sdd.assignTime(2);
+		exams.push_back(sdd);
+
+		Exam bio(126, "BIO");
+		bio.assignTime(1);
+		exams.push_back(bio);
+
+		Exam ccn(15, "CCN");
+		ccn.assignTime(1);
+		exams.push_back(ccn);
+
+
+
+		return exams;
+	}
+
+	static std::vector<Exam> getSomeExams()
+	{
+		return getFourExams();
+	}
+
+	static std::vector<TimeSlot> getSomeTimeSlots()
+	{
+		std::vector<TimeSlot> ts;
+		ts.push_back(TimeSlot(1));
+		ts.push_back(TimeSlot(2));
+		return ts;
+	}
+
+	//static std::vector<Student> getSomeStudents();
+	//static std::vector<Instructor> getSomeInstructors();
+};

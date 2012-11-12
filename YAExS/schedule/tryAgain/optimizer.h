@@ -30,7 +30,7 @@ public:
     ~Optimizer();
 
     //Setup function
-    void loadModel(const Exam & e, const std::vector<TimeSlot> slots);
+    void loadModel(const Exam & e, const std::vector<TimeSlot> & slots);
 
     //Runs the solver
     void schedule();
@@ -53,6 +53,8 @@ private:
     SCIP_VAR * extraVar2;
 
     std::unordered_map< Exam::EXAM_ID, std::unordered_map<int, SCIP_VAR *> > examVars;
+
+    static const char* examAtVariableName(const Exam & exam, const TimeSlot & timeslot);
 };
 
 #endif
