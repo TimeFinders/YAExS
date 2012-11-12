@@ -33,7 +33,7 @@ int main(int argc, char* argv[])
     //Get the best solution
     scipScheduler.schedule();
     
-    scipScheduler.printSolutionAndValues();
+    scipScheduler.printSolutionAndNonzeroValues();
 	//solution = scipScheduler.getBestSolution();
 
     //Print the solution to cout

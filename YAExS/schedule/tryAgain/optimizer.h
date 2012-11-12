@@ -35,8 +35,8 @@ public:
     //Runs the solver
     void schedule();
 
-    // print the solution and the values of the variables
-    void printSolutionAndValues();
+    // print the solution and the values of the variables where they are nonzero
+    void printSolutionAndNonzeroValues();
 
     //Returns the generated schedules
     std::string getBestSolution();

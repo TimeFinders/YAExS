@@ -174,7 +174,7 @@ void Optimizer::loadOnceConstraints()
 	} // end else
 }
 
-void Optimizer::printSolutionAndValues()
+void Optimizer::printSolutionAndNonzeroValues()
 {
 
 	SCIP_SOL* sol = SCIPgetBestSol(scip_);
@@ -195,9 +195,13 @@ void Optimizer::printSolutionAndValues()
 			for (std::unordered_map<TimeSlot::TIMESLOT_ID, SCIP_VAR *>::iterator tsIt= theMap.begin();
 				tsIt != theMap.end(); tsIt++)
 			{	
-				std::cout << "\t" << "exam " << examIt->first;
-				std::cout << " time " << tsIt->first;
-				std::cout << " Var : " << SCIPgetSolVal(scip_, sol, tsIt->second) << std::endl; 
+				double value =  SCIPgetSolVal(scip_, sol, tsIt->second);
+				if (value != 0.0)
+				{
+					std::cout << "\t" << "exam " << examIt->first;
+					std::cout << " time " << tsIt->first;
+					std::cout << " Var : " << SCIPgetSolVal(scip_, sol, tsIt->second) << std::endl; 
+				}
 			}
 		}
 	}
