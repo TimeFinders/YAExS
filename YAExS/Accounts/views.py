@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.http import HttpRequest
-from courses.models import Department
+from courses.models import Department, Semester, Section
 
 
 @login_required

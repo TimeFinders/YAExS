@@ -2,7 +2,7 @@ from optparse import make_option
 
 from django.core.management.base import BaseCommand, CommandError
 
-from courses.bridge.rpi import import_catalog
+from courses.bridge.rpi import add_cross_listing
 
 
 class Command(BaseCommand):
@@ -12,4 +12,4 @@ class Command(BaseCommand):
     )
 
     def handle(self, *args, **options):
-        import_catalog(a=options.get('all', False))
+        add_cross_listing()

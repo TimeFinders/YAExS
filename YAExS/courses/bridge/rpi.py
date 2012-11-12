@@ -18,7 +18,7 @@ from django.core.mail import send_mail
 from django.conf import settings
 
 from courses.models import (Semester, Course, Department, Section,
-    Period, SectionPeriod, OfferedFor, SectionCrosslisting, SemesterDepartment)
+    Period, SectionPeriod, OfferedFor, SemesterDepartment)
 from courses.signals import sections_modified
 from courses.utils import Synchronizer, DAYS
 from shortcuts import commit_all_or_rollback
@@ -424,23 +424,17 @@ def import_catalog(a=False):
             c.prereqs = catalog[key]['prereqs']
             c.save()
     # uses >1GB of ram - currently unacceptable
-    #add_cross_listing()
+    add_cross_listing()
 
 
 def add_cross_listing():
     from itertools import product
-    courses = Course.objects.all().prefetch_related('sections')
-    for c in courses:
-        sections = c.sections.all()
-        cross_list = set()
-        for s1, s2 in product(sections, sections):
-            if s1 != s2 and s1.conflicts_with(s2) and s1.instructors == s2.instructors:
-                cross_list.add(str(s1.id))
-                cross_list.add(str(s2.id))
-        sc = SectionCrosslisting(semester=Semester.objects.get(id=s1.semester), ref=",".join(cross_list[i]))
-        for s in cross_list:
-            courses.sections.get(id=s).crosslisted = sc.id
-
+    sections = Sections.all().prefetch_related('periods', 'section_times')
+    for s1, s2 in product(sections, sections):
+        if s1.conflicts_with(s2) and s1.instructors == s2.instructors:
+            print s1.
+            s1.crosslisted.add(s2)
+            s2.crosslisted.add(s1)
 
 def export_schedule(crns):
     weekday_offset = {}

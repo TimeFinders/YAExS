@@ -14,7 +14,7 @@ DEBUG = getattr(settings, 'DEBUG', False)
 WARN_EXTRA_QUERIES = getattr(settings, 'COURSES_WARN_EXTRA_QUERIES', DEBUG)
 
 
-__all__ = ['Department', 'Semester', 'Period', 'Section', 'SectionCrosslisting',
+__all__ = ['Department', 'Semester', 'Period', 'Section',
     'Course', 'OfferedFor', 'SectionPeriod']
 
 
@@ -192,24 +192,6 @@ class Period(models.Model):
         return (self.start, self.end, self.days_of_week_flag)
 
 
-class SectionCrosslisting(models.Model):
-    """Interface for courses that are crosslisted. Crosslisted sections are similar to each other.
-
-    For example: Grad & Undergrad courses might be crosslisted if they share the same class times & location.
-    """
-    semester = models.ForeignKey(Semester, related_name='section_crosslistings')
-    ref = models.CharField(max_length=200, unique=True, help_text='Internal unique identification used by bridge module.')
-
-    #objects = managers.QuerySetManager()
-
-    class Meta:
-        verbose_name = 'Section Crosslisting'
-        verbose_name_plural = 'Section Crosslistings'
-
-    def __unicode__(self):
-        return "%s for %s" % (self.semester, self.ref)
-
-
 class Section(models.Model):
     """Represents a particular course a student can sign up for."""
     STUDY_ABROAD = -1
@@ -220,7 +202,7 @@ class Section(models.Model):
     course = models.ForeignKey('Course', related_name='sections')
     semester = models.ForeignKey(Semester, related_name='sections')
     periods = models.ManyToManyField(Period, through='SectionPeriod', related_name='sections')
-    crosslisted = models.ForeignKey(SectionCrosslisting, related_name='sections', null=True, blank=True)
+    crosslisted = models.ManyToManyField("self")
 
     seats_taken = models.IntegerField('Seats Taken')
     seats_total = models.IntegerField('Seats Total')
