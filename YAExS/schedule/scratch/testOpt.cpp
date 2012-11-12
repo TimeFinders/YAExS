@@ -3,24 +3,25 @@
 */
 
 #include <iostream>
-#include <objscip/objscip.h>
-#include <objscip/objscipdefplugins.h>
-#include "scip_exception.hpp"
+
 #include <string>
 #include <vector>
-#include <list>
+//#include <list>
 #include "exam.h"
 #include "getsome.h"
 #include "timeslot.h"
+
+//#include "optimizer.h"
 
 using namespace std;
 
 int main()
 {
+	
 	const int numExams = 4;
 	const int numSlots = 2;
 
-	list<Exam> exams;
+	vector<Exam> exams;
 	exams = GetSome::getFourExams();
 
 	unsigned nExams = exams.size();
@@ -40,20 +41,19 @@ int main()
 	
 
 
-	try
-	{
+	
 		// create scip instance
-		SCIP_CALL_EXC(SCIPcreate( & scip));
+		SCIPcreate( & scip);
 		// default output and other plugins
-		SCIP_CALL_EXC(SCIPincludeDefaultPlugins(scip));
+		SCIPincludeDefaultPlugins(scip);
 
 		// begin the problem with the name, default sense is minimization 
 		// as we would like
-		SCIP_CALL_EXC(SCIPcreateProb(scip, "testProblem", NULL, NULL, NULL,
-			 NULL, NULL, NULL, NULL));
+		SCIPcreateProb(scip, "testProblem", NULL, NULL, NULL,
+			 NULL, NULL, NULL, NULL);
 
 
-		
+		/*
 		// add binary examIsAt variables
 		
 		double lBound = 0.0;
@@ -143,7 +143,7 @@ int main()
 			{
 				SCIP_CALL_EXC(SCIPaddCoefLinear(scip, timeConstraint[exam], examIsAt[exam][ts], coeff));
 			}
-			
+
 			// add the constraint to the problem: (not in queens documentation but I think its necessary)
 			SCIP_CALL_EXC( SCIPaddCons(scip, timeConstraint[exam]) );
 		}
@@ -247,10 +247,7 @@ int main()
 		//Then we close the SCIP environment:
 		SCIP_CALL_EXC(SCIPfree(& scip));
 		
-	} catch(SCIPException & exec)
-	{
-		cerr<<"oops"<<endl;
-		exit(exec.getRetcode());
-	} 
+		*/
 	std::cout << "success!" << endl;
+	
 }

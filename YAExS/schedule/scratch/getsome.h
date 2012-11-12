@@ -6,13 +6,13 @@ Just a helper class for testing SCIP
 #include "room.h"
 #include "exam.h"
 #include "roomgroup.h"
-
+#include <vector>
 
 class GetSome
 {
 
 public:
-	static std::list<ExamLocation *> getSomeLocations()
+	static std::vector<ExamLocation *> getSomeLocations()
 	{
 		//exams 1: 25, 15, 100
 		//exams 2: 80, 55
@@ -23,7 +23,7 @@ public:
 		// West (1) 125	
 
 		// ROOMS
-		std::list<ExamLocation*> locs;
+		std::vector<ExamLocation*> locs;
 
 		Room ae214("AmosEaton","214",162);
 		Room * ae215 = new Room("AmosEaton", "215", 50);
@@ -72,29 +72,44 @@ public:
 	}
 
 	// EXAMS
-	static std::list<Exam> getFourExams()
+	static std::vector<Exam> getFourExams()
 	{
-		std::list<Exam> exams;
+		std::vector<Exam> exams;
 
 		Exam cla(25, "CLA");
 		cla.assignTime(1);
-		exams.push_front(cla);
+		exams.push_back(cla);
 
 		Exam sdd(80, "SDD");
 		sdd.assignTime(2);
-		exams.push_front(sdd);
+		exams.push_back(sdd);
 
 		Exam bio(126, "BIO");
 		bio.assignTime(1);
-		exams.push_front(bio);
+		exams.push_back(bio);
 
 		Exam ccn(15, "CCN");
 		ccn.assignTime(1);
-		exams.push_front(ccn);
+		exams.push_back(ccn);
 
 
 
 		return exams;
 	}
 
+	static std::vector<Exam> getSomeExams()
+	{
+		return getFourExams();
+	}
+
+	static std::vector<TimeSlot> getSomeTimeSlots()
+	{
+		std::vector<TimeSlot> ts;
+		ts.push_back(TimeSlot(1));
+		ts.push_back(TimeSlot(2));
+		return ts;
+	}
+
+	//static std::vector<Student> getSomeStudents();
+	//static std::vector<Instructor> getSomeInstructors();
 };
