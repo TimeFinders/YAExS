@@ -13,6 +13,7 @@
 #include <unordered_map>
 #include "exam.h"
 #include "person.h"
+#include "day.h"
 
 #include <objscip/objscip.h>
 #include <objscip/objscipdefplugins.h>
@@ -29,8 +30,8 @@ public:
 
     //Setup function
     void loadModel(const std::vector<Exam> & exams, 
-            const std::vector<TimeSlot> & slots, 
-            const std::vector<Person*> & people);
+            const std::vector<Person*> & people,
+            int numDays, int slotsPerDay);
 
     //Runs the solver
     void schedule();
@@ -54,30 +55,37 @@ private:
     std::unordered_map <Person::PERSON_ID, SCIP_VAR * > twoPlus;
 
     // person has three or more exams in one dat variables
-    //std::unordered_map <Person::PERSON_ID, SCIP_VAR * > threePlus;
+    std::unordered_map <Person::PERSON_ID, SCIP_VAR * > threePlus;
 
     // exam can meet at exactly one time constraint
     std::unordered_map< Exam::EXAM_ID, SCIP_CONS *> onceCon;
 
-    void loadExamIsAtVariables(const std::vector<Exam> & exams, const std::vector<TimeSlot> & slots);
+    // set the two plus and three plus variables constraint
+    std::unordered_map< Person::PERSON_ID, std::unordered_map<Day::DAY_ID, SCIP_CONS *> >overloadCon;
+
+    void loadExamIsAtVariables(const std::vector<Exam> & exams, const std::vector<Day> & days);
     void loadTwoPlusVariables(const std::vector<Person* > & people);
-    //void loadThreePlusVariables(const std::vector<Person* > & people);
+    void loadThreePlusVariables(const std::vector<Person* > & people);
 
     // doesn't need parameters because just uses examIsAtVariables
     void loadOnceConstraints();
+    void loadOverloadConstraints();
 
     // used for naming variables and constraints. const char *'s are needed for SCIP
     static const char* examAtVariableName(const Exam & exam, const TimeSlot & timeslot);
     static const char* onceConName( const Exam::EXAM_ID & eid);
     static const char* onceConName( const Exam & exam);
-    static const char* twoPlusVariableName(Person* person);
+    static const char* twoPlusVariableName(Person * person);
+    static const char* threePlusVariableName(Person * person);
 
 
     // For releasing scip variables and constraints when done
     void releaseExamIsAtVariables();
     void releaseTwoPlusVariables();
+    void releaseThreePlusVariables();
 
     void releaseOnceConstraints();
+    void releaseOverloadConstraints();
     
 };
 

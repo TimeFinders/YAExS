@@ -4,7 +4,7 @@ CFLAGS = -g -Wall -Wextra -c
 SCIP_LFLAGS =  -L/usr/lib  -lscip -lreadline  -lgmp -lz  -llpispx  -lsoplex -lobjscip -lnlpi.cppad
 
 # if you change anything in these files, it will re-make
-OTHER_FILES = person.h student.h instructor.h exam.h exam.cpp getsome.h timeslot.h
+OTHER_FILES = person.h student.h instructor.h exam.h exam.cpp getsome.h day.h timeslot.h
 
 TESTOPT_OBJ = testOpt.cpp exam.cpp optimizer.o
 

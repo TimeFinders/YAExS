@@ -53,17 +53,25 @@ public:
 		return ts;
 	}
 
-	
-	static Person * getVera()
-	{
-		Person * veraPtr = new Student("VERA");
-		return veraPtr;
-	}
 
 	static std::vector<Person*> getSomePeople()
 	{
    	 	std::vector<Person *> people;
-    	Person * veraPtr = new Student("VERA");
+
+    	std::vector<Exam> andrewExams = getSomeExams();
+    	andrewExams.erase(andrewExams.begin());
+    	Person * andrewPtr = new Student("Andrew", andrewExams);
+    	people.push_back(andrewPtr);
+
+    	
+    	std::vector<Exam> jeffExams = getSomeExams();
+    	jeffExams.erase(jeffExams.begin());
+    	Person * jeffPtr = new Student("Jeff", jeffExams);
+    	people.push_back(jeffPtr);
+
+    	std::vector<Exam> veraExams = getSomeExams();
+    	veraExams.pop_back();
+    	Person * veraPtr = new Student("Vera", veraExams);
     	people.push_back(veraPtr);
 
 		return people;

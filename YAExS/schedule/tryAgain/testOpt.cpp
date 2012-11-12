@@ -20,23 +20,13 @@ int main(int argc, char* argv[])
     //Load a model
     Exam e(5, "CLA");
 
-    std::vector<TimeSlot> slots = GetSome::getSomeTimeSlots();
-
-    std::cout << " all the time slots are:" << std::endl;
-    for (std::vector<TimeSlot>::iterator it = slots.begin(); it!=slots.end(); it++)
-    {
-        std::cout << it->getId() << "\t";
-    }
-    std::cout << "\n\n";
-
-   
-
     std::vector<Person* > people = GetSome::getSomePeople();
 
     std::vector<Exam> exams = GetSome::getSomeExams();
     
-    
-    scipScheduler.loadModel(exams, slots, people);
+    int numDays = 1;
+    int slotsPerDay = 2;
+    scipScheduler.loadModel(exams, people, numDays, slotsPerDay);
     
     //Get the best solution
     scipScheduler.schedule();

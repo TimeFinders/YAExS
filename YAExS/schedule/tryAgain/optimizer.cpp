@@ -28,13 +28,14 @@ Optimizer::~Optimizer()
 
 	// release variables
 	releaseExamIsAtVariables();
-	//releaseTwoPlusVariables();
+	releaseTwoPlusVariables();
+	releaseThreePlusVariables();
 
+	
 	// release constaints
 	releaseOnceConstraints();
 	
 
-	
 	//close the SCIP environment:
     SCIPfree(&scip_);
 }
@@ -65,6 +66,17 @@ void Optimizer::releaseTwoPlusVariables()
 
 }
 
+void Optimizer::releaseThreePlusVariables()
+{
+ 		//std::unordered_map <PERSON_ID, SCIP_VAR * > threePlus;
+	for (std::unordered_map <Person::PERSON_ID, SCIP_VAR *>::iterator it = threePlus.begin();
+		 it != threePlus.end(); it++)
+	{
+		SCIPreleaseVar(scip_, & it->second);
+	}
+
+}
+
 void Optimizer::releaseOnceConstraints()
 {
 	for (std::unordered_map<Exam::EXAM_ID, std::unordered_map<TimeSlot::TIMESLOT_ID, SCIP_VAR*> >::iterator examIt = examIsAt.begin();
@@ -78,24 +90,55 @@ void Optimizer::releaseOnceConstraints()
 
 //Loads a model into SCIP
 void Optimizer::loadModel(const std::vector<Exam> & exams, 
-		const std::vector<TimeSlot> & slots, 
-		const std::vector<Person* > & people)
+		const std::vector<Person* > & people,
+		int numDays, int slotsPerDay)
 {
+	// set up the days with their time slots
+	std::vector<Day> days;
+	int slotId = 0;
+	for (int dayNum = 0; dayNum < numDays; dayNum++)
+	{
+		std::vector<TimeSlot> slots;
+		for (int slotNum = 0; slotNum < slotsPerDay; slotNum++)
+		{
+			TimeSlot s(slotId);
+			slots.push_back(s);
+
+			slotId++;
+		}
+		Day d(dayNum, slots);
+		days.push_back(d);
+	}
+
+	// print everything to make sure it worked
+	for (std::vector<Day>::iterator dIt = days.begin(); dIt != days.end(); dIt++)
+	{
+		std::cout << "day: " << dIt->getId();
+		std::vector<TimeSlot> slots = dIt->getSlots();
+		for(std::vector<TimeSlot>::iterator tsIt = slots.begin(); tsIt!=slots.end(); tsIt++)
+		{
+			std::cout << "\t timeslot: " << tsIt->getId() << std::endl;
+		}
+		std::cout << std::endl;
+	}
 
 	// load the exam is at variables
-	loadExamIsAtVariables(exams, slots);
+	loadExamIsAtVariables(exams, days);
+
 
 	// load the once constraints (each exam meets at exactly one time slot)
 	// doesn't need parameters because just uses the examIsAtVariables
 	loadOnceConstraints();
 
+	// load the too many exams in a day variables
 	loadTwoPlusVariables(people);
+	loadThreePlusVariables(people);
 
 }
 
 
 void Optimizer::loadExamIsAtVariables(const std::vector<Exam> & exams, 
-	const std::vector<TimeSlot> & slots)
+	const std::vector<Day> & days)
 {
 	// check that the variables haven't been loaded already;
 	if ( !examIsAt.empty() )
@@ -109,27 +152,38 @@ void Optimizer::loadExamIsAtVariables(const std::vector<Exam> & exams,
 		for (std::vector<Exam>::const_iterator examIt = exams.begin(); 
 			examIt != exams.end(); examIt++)
 		{	
-			std::unordered_map<TimeSlot::TIMESLOT_ID,  SCIP_VAR *> aMap;
-			for (std::vector<TimeSlot>::const_iterator tsIt = slots.begin(); 
-					tsIt != slots.end(); tsIt++)
+
+			for (std::vector<Day>::const_iterator dayIt = days.begin();
+				dayIt != days.end(); dayIt++)
 			{
-				//std::cout << "adding an exam variable for time slot "  << tsIt->getId() << std::endl;
-				const char * name = examAtVariableName(*examIt, *tsIt);
-			
-				// just for testing, remove later
-				double objCoefExam = 1 + 5 * (tsIt->getId());
+				std::vector<TimeSlot> slots = dayIt->getSlots();
 
-				SCIP_VAR * examVar;
-				SCIPcreateVar(scip_, & examVar, name, 0.0, 1.0,
-						objCoefExam, SCIP_VARTYPE_BINARY,
-						isInitial, canRemoveInAging,
-						NULL, NULL, NULL, NULL, NULL);
-				SCIPaddVar(scip_, examVar);
+				std::unordered_map<TimeSlot::TIMESLOT_ID,  SCIP_VAR *> aMap;
+				for (std::vector<TimeSlot>::iterator tsIt = slots.begin(); 
+						tsIt != slots.end(); tsIt++)
+				{
+					/*
+					std::cout << "adding an " << examIt->getId();
+					std::cout << " exam variable for time slot "  << tsIt->getId();
+					std::cout << " on day " << dayIt->getId() << std::endl;
+					*/
+					const char * name = examAtVariableName(*examIt, *tsIt);
+				
+					// just for testing, remove later
+					double objCoefExam = 1 + 5 * (tsIt->getId());
 
-				aMap[tsIt->getId()] = examVar;
+					SCIP_VAR * examVar;
+					SCIPcreateVar(scip_, & examVar, name, 0.0, 1.0,
+							objCoefExam, SCIP_VARTYPE_BINARY,
+							isInitial, canRemoveInAging,
+							NULL, NULL, NULL, NULL, NULL);
+					SCIPaddVar(scip_, examVar);
 
-			} // end time slot for loop
-			examIsAt[examIt->getId()] = aMap;
+					aMap[tsIt->getId()] = examVar;
+
+				} // end time slot for loop
+				examIsAt[examIt->getId()] = aMap;
+			} // end day for loop
 		} // end exam for loop
 
 	} // end else
@@ -204,7 +258,7 @@ void Optimizer::loadTwoPlusVariables(const std::vector<Person* > & people)
 		 //std::unordered_map <PERSON_ID, SCIP_VAR * > twoPlus;
 		for (std::vector<Person*>::const_iterator it = people.begin(); it!=people.end(); it++)
 		{
-			std::cout << "adding a two plus variable for person slot "  << (*it)->getId() << std::endl;
+			//std::cout << "adding a two plus variable for person "  << (*it)->getId() << std::endl;
 			const char * name = twoPlusVariableName(*it);
 
 			// create the variable
@@ -219,6 +273,44 @@ void Optimizer::loadTwoPlusVariables(const std::vector<Person* > & people)
 
 			// keep variable pointer for later use
 			twoPlus[(*it)->getId()] = theVar;
+
+		} // end person for loop
+
+	} // end else
+}
+
+void Optimizer::loadThreePlusVariables(const std::vector<Person* > & people)
+{
+	if (!threePlus.empty())
+		std::cerr << " threePlus variable map is not empty. Only call loadThreePlusVariables once!" << std::endl;
+	else
+	{
+		//std::cout << "loading the three plus variables" << std::endl;
+		
+		bool isInitial = true;
+		bool canRemoveInAging = false;
+
+		// three exams in one day is worth 10;
+		double objCoefTwo = 10.0;
+
+		 //std::unordered_map <PERSON_ID, SCIP_VAR * > threePlus;
+		for (std::vector<Person*>::const_iterator it = people.begin(); it != people.end(); it++)
+		{
+			//std::cout << "adding a three plus variable for person "  << (*it)->getId() << std::endl;
+			const char * name = threePlusVariableName(*it);
+
+			// create the variable
+			SCIP_VAR * theVar;
+			SCIPcreateVar(scip_, & theVar, name, 0.0, 1.0,
+				objCoefTwo, SCIP_VARTYPE_BINARY,
+				isInitial, canRemoveInAging,
+				NULL, NULL, NULL, NULL, NULL);
+
+			// add variable to SCIP problem		
+			SCIPaddVar(scip_, theVar);
+
+			// keep variable pointer for later use
+			threePlus[(*it)->getId()] = theVar;
 
 		} // end person for loop
 
@@ -336,4 +428,9 @@ const char* Optimizer::onceConName( const Exam & exam)
 const char* Optimizer::twoPlusVariableName( Person * person)
 {
 	return (person->getId() + "_twoPlus").c_str();
+}
+
+const char* Optimizer::threePlusVariableName( Person * person)
+{
+	return (person->getId() + "_threePlus").c_str();
 }
