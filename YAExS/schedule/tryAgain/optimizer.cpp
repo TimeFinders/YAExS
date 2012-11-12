@@ -238,6 +238,7 @@ void Optimizer::printSolutionAndNonzeroValues()
 	{
 		std::cout << "\nSolution found!" << std::endl;
 		
+		// print the exam is at variables
 		for (std::unordered_map<Exam::EXAM_ID, std::unordered_map<TimeSlot::TIMESLOT_ID, SCIP_VAR*> >::iterator examIt = examIsAt.begin();
 			examIt != examIsAt.end(); examIt++)
 		{
@@ -258,6 +259,28 @@ void Optimizer::printSolutionAndNonzeroValues()
 				}
 			}
 		}
+
+		
+		// Print the two plus variables
+	 	//std::unordered_map <PERSON_ID, SCIP_VAR * > twoPlus;
+		for (std::unordered_map <Person::PERSON_ID, SCIP_VAR *>::iterator tpIt = twoPlus.begin();
+			 tpIt != twoPlus.end(); tpIt++)
+		{
+			double value =  SCIPgetSolVal(scip_, sol, tpIt->second);
+			if (value != 0.0)
+			{
+				std::cout << '\t' << " person " << tpIt->first;
+				std::cout << " has two or more exams on some day!"<< std::endl;
+			}
+			else
+			{
+				std::cout << '\t' << " person " << tpIt->first;
+				std::cout << " never has more than one exam per day" << std::endl;
+			}
+		}
+		
+
+
 	}
 }
 
