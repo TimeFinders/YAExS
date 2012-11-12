@@ -13,10 +13,8 @@
 #include <unordered_map>
 #include "exam.h"
 
-
 #include <objscip/objscip.h>
 #include <objscip/objscipdefplugins.h>
-//#include <scip/reader_zpl.h>
 
 class TimeSlot;
 
