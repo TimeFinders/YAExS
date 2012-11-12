@@ -4,6 +4,8 @@
 
 #include "optimizer.h"
 #include <iostream>
+#include <vector>
+#include "getsome.h"
 
 int main(int argc, char* argv[])
 {
@@ -15,7 +17,9 @@ int main(int argc, char* argv[])
     //Load a model
     Exam e(5, "CLA");
 
-    scipScheduler.loadModel(e);
+    std::vector<TimeSlot> slots = GetSome::getSomeTimeSlots();
+
+    scipScheduler.loadModel(e, slots);
     
     //Get the best solution
     scipScheduler.schedule();

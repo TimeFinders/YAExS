@@ -10,11 +10,15 @@
 #include <string>
 #include <sstream>
 #include <iostream>
+#include <unordered_map>
 #include "exam.h"
+
 
 #include <objscip/objscip.h>
 #include <objscip/objscipdefplugins.h>
 //#include <scip/reader_zpl.h>
+
+class TimeSlot;
 
 class Optimizer
 {
@@ -26,7 +30,7 @@ public:
     ~Optimizer();
 
     //Setup function
-    void loadModel(const Exam & e);
+    void loadModel(const Exam & e, const std::vector<TimeSlot> slots);
 
     //Runs the solver
     void schedule();
@@ -44,10 +48,11 @@ private:
     SCIP* scip_;
 
     // just for testing:
+    SCIP_CONS * extraCon;
     SCIP_VAR * extraVar;
     SCIP_VAR * extraVar2;
 
-    SCIP_VAR * examVar;
+    std::unordered_map< Exam::EXAM_ID, std::unordered_map<int, SCIP_VAR *> > examVars;
 };
 
 #endif
