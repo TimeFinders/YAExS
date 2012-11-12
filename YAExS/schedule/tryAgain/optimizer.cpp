@@ -269,12 +269,12 @@ void Optimizer::printSolutionAndNonzeroValues()
 			double value =  SCIPgetSolVal(scip_, sol, tpIt->second);
 			if (value != 0.0)
 			{
-				std::cout << '\t' << " person " << tpIt->first;
+				std::cout << '\t' << tpIt->first << " (Person)";
 				std::cout << " has two or more exams on some day!"<< std::endl;
 			}
 			else
 			{
-				std::cout << '\t' << " person " << tpIt->first;
+				std::cout << '\t' << tpIt->first << " (Person)";
 				std::cout << " never has more than one exam per day" << std::endl;
 			}
 		}
