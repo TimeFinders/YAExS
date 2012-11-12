@@ -37,7 +37,7 @@ class TimeSlot
 		int getId() const { return id; };
 
 		// for debugging
-		int toPrint() const{ return id; }
+		int toPrint() const { return id; }
 		
 };
 #endif
