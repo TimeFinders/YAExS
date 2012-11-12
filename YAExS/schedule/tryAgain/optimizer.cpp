@@ -4,7 +4,7 @@
 */
 
 #include "optimizer.h"
-#include "timeslot.h"
+
 
 //Default constructor
 Optimizer::Optimizer()
@@ -47,31 +47,12 @@ Optimizer::~Optimizer()
 }
 
 
-const char* Optimizer::examAtVariableName(const Exam & exam, const TimeSlot & timeslot)
-{
-    // could change to read later: http://www.cplusplus.com/reference/iostream/istream/read/
-
-   std::stringstream ss;
-   ss << exam.getId() << "_" << timeslot.getId();
-   std::string str(ss.str());
-   const char* name = str.c_str();
-
-   return name;
-}
-
-const char* Optimizer::onceConName( const Exam::EXAM_ID & eid)
-{
-	return (eid + "_oncee").c_str();
-}
-
-const char* Optimizer::onceConName( const Exam & exam)
-{
-	return onceConName(exam.getId());
-}
 
 
 //Loads a model into SCIP
-void Optimizer::loadModel(const std::vector<Exam> & exams, const std::vector<TimeSlot> & slots)
+void Optimizer::loadModel(const std::vector<Exam> & exams, 
+		const std::vector<TimeSlot> & slots, 
+		const std::vector<Person* > & people)
 {
 	// load the exam is at variables
 	loadExamIsAtVariables(exams, slots);
@@ -79,6 +60,8 @@ void Optimizer::loadModel(const std::vector<Exam> & exams, const std::vector<Tim
 	// load the once constraints (each exam meets at exactly one time slot)
 	// doesn't need parameters because just uses the examIsAtVariables
 	loadOnceConstraints();
+
+	//loadTwoPlusVariables(people);
 
 }
 
@@ -101,13 +84,13 @@ void Optimizer::loadExamIsAtVariables(const std::vector<Exam> & exams, const std
 			for (std::vector<TimeSlot>::const_iterator tsIt = slots.begin(); tsIt != slots.end(); tsIt++)
 			{
 				//std::cout << "adding an exam variable for time slot "  << tsIt->getId() << std::endl;
-				const char * examName = examAtVariableName(*examIt, *tsIt);
+				const char * name = examAtVariableName(*examIt, *tsIt);
 			
 				// just for testing, remove later
 				double objCoefExam = 1 + 5 * (tsIt->getId());
 
 				SCIP_VAR * examVar;
-				SCIPcreateVar(scip_, & examVar, examName, 0.0, 1.0,
+				SCIPcreateVar(scip_, & examVar, name, 0.0, 1.0,
 						objCoefExam, SCIP_VARTYPE_BINARY,
 						isInitial, canRemoveInAging,
 						NULL, NULL, NULL, NULL, NULL);
@@ -128,8 +111,8 @@ void Optimizer::loadOnceConstraints()
 {
 
 	// check that the variables haven't been loaded already;
-	if ( extraCon != NULL )
-		std::cerr << " extra constraint is not null. only call loadOnceConstraints once" << std::endl;
+	if ( !onceCon.empty() )
+		std::cerr << " once constraints map is not empty. only call loadOnceConstraints once" << std::endl;
 	else if ( examIsAt.empty() )
 	{
 		std::cerr << " examIsAt variable map is null or empty. need to call loadExamIsAtVariables beforeLoadOnceConstraints." << std::endl;
@@ -174,6 +157,43 @@ void Optimizer::loadOnceConstraints()
 	} // end else
 }
 
+void Optimizer::loadTwoPlusVariables(const std::vector<Person* > & people)
+{
+	if (!twoPlus.empty())
+		std::cerr << " twoPlus variable map is not empty. Only call loadTwoPlusVariables once!" << std::endl;
+	else
+	{
+		bool isInitial = true;
+		bool canRemoveInAging = false;
+
+		// two exams in one day is worth 1;
+		double objCoefTwo = 1.0;
+
+		 //std::unordered_map <PERSON_ID, SCIP_VAR * > twoPlus;
+		for (std::vector<Person*>::const_iterator it = people.begin(); it!=people.end(); it++)
+		{
+
+			//std::cout << "adding a two plus variable for person slot "  << it->getId() << std::endl;
+			const char * name = twoPlusVariableName(*it);
+
+			// create the variable
+			SCIP_VAR * theVar;
+			SCIPcreateVar(scip_, & theVar, name, 0.0, 1.0,
+				objCoefTwo, SCIP_VARTYPE_BINARY,
+				isInitial, canRemoveInAging,
+				NULL, NULL, NULL, NULL, NULL);
+
+			// add variable to SCIP problem		
+			SCIPaddVar(scip_, theVar);
+
+			// keep variable pointer for later use
+			twoPlus[(*it)->getId()] = theVar;
+
+		} // end person for loop
+
+	} // end else
+}
+
 void Optimizer::printSolutionAndNonzeroValues()
 {
 
@@ -199,13 +219,17 @@ void Optimizer::printSolutionAndNonzeroValues()
 				if (value != 0.0)
 				{
 					std::cout << "\t" << "exam " << examIt->first;
-					std::cout << " time " << tsIt->first;
-					std::cout << " Var : " << SCIPgetSolVal(scip_, sol, tsIt->second) << std::endl; 
+					std::cout << " is scheduled at time " << tsIt->first;
+
+					std::cout << " (because examIsAt variable has value ";
+					std::cout << SCIPgetSolVal(scip_, sol, tsIt->second) << ")";
+					std::cout << std::endl; 
 				}
 			}
 		}
 	}
 }
+
 
 //Run the solver
 void Optimizer::schedule()
@@ -230,4 +254,32 @@ std::string Optimizer::getBestSolution()
 
     //Return the string stored in redir
     return redir.str();
+}
+
+
+const char* Optimizer::examAtVariableName(const Exam & exam, const TimeSlot & timeslot)
+{
+    // could change to read later: http://www.cplusplus.com/reference/iostream/istream/read/
+
+   std::stringstream ss;
+   ss << exam.getId() << "_" << timeslot.getId();
+   std::string str(ss.str());
+   const char* name = str.c_str();
+
+   return name;
+}
+
+const char* Optimizer::onceConName( const Exam::EXAM_ID & eid)
+{
+	return (eid + "_once").c_str();
+}
+
+const char* Optimizer::onceConName( const Exam & exam)
+{
+	return onceConName(exam.getId());
+}
+
+const char* Optimizer::twoPlusVariableName( Person * person)
+{
+	return (person->getId() + "_twoPlus").c_str();
 }

@@ -12,11 +12,11 @@
 #include <iostream>
 #include <unordered_map>
 #include "exam.h"
+#include "person.h"
 
 #include <objscip/objscip.h>
 #include <objscip/objscipdefplugins.h>
 
-class TimeSlot;
 
 class Optimizer
 {
@@ -28,7 +28,9 @@ public:
     ~Optimizer();
 
     //Setup function
-    void loadModel(const std::vector<Exam> & exams, const std::vector<TimeSlot> & slots);
+    void loadModel(const std::vector<Exam> & exams, 
+            const std::vector<TimeSlot> & slots, 
+            const std::vector<Person*> & people);
 
     //Runs the solver
     void schedule();
@@ -45,16 +47,21 @@ private:
     //SCIP problem information
     SCIP* scip_;
 
-    // just for testing:
-    SCIP_CONS * extraCon;
-
     // exam is at time variables
     std::unordered_map< Exam::EXAM_ID, std::unordered_map<TimeSlot::TIMESLOT_ID, SCIP_VAR *> > examIsAt;
+
+    // person has two or more exams in one day variables
+    std::unordered_map <Person::PERSON_ID, SCIP_VAR * > twoPlus;
+
+    // person has three or more exams in one dat variables
+    //std::unordered_map <Person::PERSON_ID, SCIP_VAR * > threePlus;
 
     // exam can meet at exactly one time constraint
     std::unordered_map< Exam::EXAM_ID, SCIP_CONS *> onceCon;
 
     void loadExamIsAtVariables(const std::vector<Exam> & exams, const std::vector<TimeSlot> & slots);
+    void loadTwoPlusVariables(const std::vector<Person* > & people);
+    //void loadThreePlusVariables(const std::vector<Person* > & people);
 
     // doesn't need parameters because just uses examIsAtVariables
     void loadOnceConstraints();
@@ -63,6 +70,7 @@ private:
     static const char* examAtVariableName(const Exam & exam, const TimeSlot & timeslot);
     static const char* onceConName( const Exam::EXAM_ID & eid);
     static const char* onceConName( const Exam & exam);
+    static const char* twoPlusVariableName(Person* person);
 };
 
 #endif

@@ -3,7 +3,10 @@ Just a helper class for testing SCIP
 */
 
 #include "exam.h"
+#include "student.h"
 #include <vector>
+
+class Person;
 
 class GetSome
 {
@@ -50,6 +53,23 @@ public:
 		return ts;
 	}
 
-	//static std::vector<Student> getSomeStudents();
+	
+	static std::vector<Person*> getSomePeople()
+	{
+		std::vector<Person*> people;
+		Student s("Vera");
+		
+		people.push_back(&s);
+		return people;
+	}
+	
+
+	static std::vector<Student> getSomeStudents()
+	{
+		std::vector<Student> students;
+		Student s("Vera");
+		students.push_back(s);
+		return students;
+	}
 	//static std::vector<Instructor> getSomeInstructors();
 };
