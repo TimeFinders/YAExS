@@ -59,11 +59,24 @@ const char* Optimizer::examAtVariableName(const Exam & exam, const TimeSlot & ti
 }
 
 
+//Loads a model into SCIP
+void Optimizer::loadModel(const std::vector<Exam> & exams, const std::vector<TimeSlot> & slots)
+{
+	// load the exam is at variables
+	loadExamIsAtVariables(exams, slots);
+
+	// load the once constraints (each exam meets at exactly one time slot)
+	// doesn't need parameters because just uses the examIsAtVariables
+	loadOnceConstraints();
+
+}
+
+
 void Optimizer::loadExamIsAtVariables(const std::vector<Exam> & exams, const std::vector<TimeSlot> & slots)
 {
 	// check that the variables haven't been loaded already;
 	if ( !examIsAt.empty() )
-		std::cerr << " exam is at variable map is NOT empty." << std::endl;
+		std::cerr << " exam is at variable map is NOT empty. Only call loadExamIsAtVariables once." << std::endl;
 
 	else 
 	{
@@ -97,45 +110,51 @@ void Optimizer::loadExamIsAtVariables(const std::vector<Exam> & exams, const std
 	} // end else
 }
 
-//Loads a model into SCIP
-void Optimizer::loadModel(const std::vector<Exam> & exams, const std::vector<TimeSlot> & slots)
+// load once constraints, which require that each exam meets at exactly one time slot
+// doesn't need parameters because just uses examIsAt
+void Optimizer::loadOnceConstraints()
 {
 
-	loadExamIsAtVariables(exams, slots);
-
-	//SCIP_CONS * extraCon;
-	bool isInitial = true;
-	double lbound = 1.0;
-	double ubound = 1.0;
-	std::string extraConName = "extraCon";
-	const char * extraConNameChar = extraConName.c_str();
-	
-	SCIPcreateConsLinear(scip_, & extraCon, extraConNameChar,
-			0, NULL, NULL, lbound, ubound, isInitial,
-			TRUE, TRUE, TRUE, TRUE, FALSE,
-			FALSE, FALSE, FALSE, FALSE);
-
-	for (std::unordered_map<Exam::EXAM_ID, std::unordered_map<TimeSlot::TIMESLOT_ID, SCIP_VAR*> >::iterator examIt = examIsAt.begin();
-		examIt != examIsAt.end(); examIt++)
+	// check that the variables haven't been loaded already;
+	if ( extraCon != NULL )
+		std::cerr << " extra constraint is not null. only call loadOnceConstraints once" << std::endl;
+	else if ( examIsAt.empty() )
 	{
-		std::unordered_map<TimeSlot::TIMESLOT_ID, SCIP_VAR *> theMap;
-		theMap  = examIt->second;
-		//std::cout << "size of the map for exam: " << theMap.size() << std::endl;
-		for (std::unordered_map<TimeSlot::TIMESLOT_ID, SCIP_VAR *>::iterator tsIt= theMap.begin();
-			tsIt != theMap.end(); tsIt++)
-		{	
-		//	std::cout << " adding variable to constraint for exam " << examIt->first;
-		//	std::cout << " and time " << tsIt ->first;
-			SCIPaddCoefLinear(scip_, extraCon, tsIt->second, 1.0);
-		}
+		std::cerr << " examIsAt variable map is null or empty. need to call loadExamIsAtVariables beforeLoadOnceConstraints." << std::endl;
 	}
-	
+	else 
+	{
+		bool isInitial = true;
+		double lbound = 1.0;
+		double ubound = 1.0;
+		std::string extraConName = "extraCon";
+		const char * extraConNameChar = extraConName.c_str();
+		
+		SCIPcreateConsLinear(scip_, & extraCon, extraConNameChar,
+				0, NULL, NULL, lbound, ubound, isInitial,
+				TRUE, TRUE, TRUE, TRUE, FALSE,
+				FALSE, FALSE, FALSE, FALSE);
 
-	// add the constraint to the problem: (not in queens documentation but I think its necessary)
-	 SCIPaddCons(scip_, extraCon);
+		for (std::unordered_map<Exam::EXAM_ID, std::unordered_map<TimeSlot::TIMESLOT_ID, SCIP_VAR*> >::iterator examIt = examIsAt.begin();
+			examIt != examIsAt.end(); examIt++)
+		{
+			std::unordered_map<TimeSlot::TIMESLOT_ID, SCIP_VAR *> theMap;
+			theMap  = examIt->second;
+			//std::cout << "size of the map for exam: " << theMap.size() << std::endl;
+			for (std::unordered_map<TimeSlot::TIMESLOT_ID, SCIP_VAR *>::iterator tsIt= theMap.begin();
+				tsIt != theMap.end(); tsIt++)
+			{	
+			//	std::cout << " adding variable to constraint for exam " << examIt->first;
+			//	std::cout << " and time " << tsIt ->first;
+				SCIPaddCoefLinear(scip_, extraCon, tsIt->second, 1.0);
+			}
+		}
+		
 
+		// add the constraint to the problem: (not in queens documentation but I think its necessary)
+		 SCIPaddCons(scip_, extraCon);
+	}
 }
-
 
 void Optimizer::printSolutionAndValues()
 {

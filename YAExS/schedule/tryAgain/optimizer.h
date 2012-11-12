@@ -58,7 +58,8 @@ private:
 
     void loadExamIsAtVariables(const std::vector<Exam> & exams, const std::vector<TimeSlot> & slots);
 
-    void loadOnceConstraints(const std::vector<Exam> & exams, const std::vector<TimeSlot> & slots);
+    // doesn't need parameters because just uses examIsAtVariables
+    void loadOnceConstraints();
 
     static const char* examAtVariableName(const Exam & exam, const TimeSlot & timeslot);
 };
