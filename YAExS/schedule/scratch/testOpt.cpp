@@ -39,6 +39,7 @@ int main()
 	SCIP * scip;
 	
 
+
 	try
 	{
 		// create scip instance
@@ -51,6 +52,8 @@ int main()
 		SCIP_CALL_EXC(SCIPcreateProb(scip, "testProblem", NULL, NULL, NULL,
 			 NULL, NULL, NULL, NULL));
 
+
+		
 		// add binary examIsAt variables
 		
 		double lBound = 0.0;
@@ -140,27 +143,53 @@ int main()
 			{
 				SCIP_CALL_EXC(SCIPaddCoefLinear(scip, timeConstraint[exam], examIsAt[exam][ts], coeff));
 			}
+			
+			// add the constraint to the problem: (not in queens documentation but I think its necessary)
+			SCIP_CALL_EXC( SCIPaddCons(scip, timeConstraint[exam]) );
 		}
-
-
+		
+	
 		// EXTRA STUFF TO CHECK
 		SCIP_VAR * extraVar;
 		std::string ExtravString = "extra";
 		const char * ExtravName = ExtravString.c_str();
+		isInitial = TRUE;
+		canRemoveInAging = FALSE;
+		double coefInObjective = -10.0;
 		SCIP_CALL_EXC(SCIPcreateVar(scip, & extraVar, ExtravName, 0.0, 1.0, 
-					-10.0, SCIP_VARTYPE_BINARY, 
+					coefInObjective, SCIP_VARTYPE_BINARY, 
 					isInitial, canRemoveInAging,
 					NULL, NULL, NULL, NULL, NULL));
 		// dont forget to add variable to scip object or you will get segfaults later!
 		SCIP_CALL_EXC(SCIPaddVar(scip, extraVar));
 		
+		SCIP_VAR * extraVar2;
+		std::string ExtravString2 = "extra2";
+		const char * ExtravName2 = ExtravString2.c_str();
+		double coefInObjective2 = -20;
+		SCIP_CALL_EXC(SCIPcreateVar(scip, & extraVar2, ExtravName2, 0.0, 1.0,
+					coefInObjective2, SCIP_VARTYPE_BINARY, 
+					isInitial, canRemoveInAging,
+					NULL, NULL, NULL, NULL, NULL));
+		SCIP_CALL_EXC(SCIPaddVar(scip, extraVar2));
+
 		SCIP_CONS * extraCon;
-		SCIP_CALL_EXC(SCIPcreateConsLinear(scip, & extraCon, "extraCon",
-				0, NULL, NULL, 0.0, 1.0, isInitial,
+		double lbound = 1.0;
+		double ubound = 1.0;
+		std::string extraConName = "extraCon";
+		const char * extraConNameChar = extraConName.c_str();
+		
+		SCIP_CALL_EXC(SCIPcreateConsLinear(scip, & extraCon, extraConNameChar,
+				0, NULL, NULL, lbound, ubound, isInitial,
 				TRUE, TRUE, TRUE, TRUE, FALSE,
 				FALSE, FALSE, FALSE, FALSE));
 		SCIP_CALL_EXC(SCIPaddCoefLinear(scip, extraCon, extraVar, 1.0));
-			
+		SCIP_CALL_EXC(SCIPaddCoefLinear(scip, extraCon, extraVar2, 1.0));
+	
+		// add the constraint to the problem: (not in queens documentation but I think its necessary)
+		SCIP_CALL_EXC( SCIPaddCons(scip, extraCon) );
+
+
 		//solve the problem!		
 		SCIP_CALL_EXC(SCIPsolve(scip));
 
@@ -175,6 +204,7 @@ int main()
 		else 
 		{
 			std::cout << "Solution found!" << std::endl;
+			
 			for (unsigned exam = 0; exam < numExams; exam++)
 			{
 				for (unsigned ts = 0; ts < numSlots; ts++)
@@ -187,10 +217,12 @@ int main()
 			}
 			
 			std::cout << "\t" << "extra variable : " << SCIPgetSolVal(scip, sol, extraVar) << std::endl; 
+			std::cout << "\t" << "extra variable2 : " << SCIPgetSolVal(scip, sol, extraVar2) << std::endl; 
 			
 		}
 
 		// Close things up
+		
 		for (int exam = 0; exam < numExams; exam ++)
 		{
 			for (int ts = 0; ts < numSlots; ts ++)
@@ -198,19 +230,23 @@ int main()
 				//std::cout << "release variable for exam " << exam << " and time " << ts << std::endl;
 				SCIP_CALL_EXC(SCIPreleaseVar(scip, & examIsAt[exam][ts])) ;
 			}
-			std::cout << "NOT WORKING: release constraint for exam " << exam << std::endl;
-			//SCIP_CALL_EXC(SCIPreleaseCons(scip, & timeConstraint[exam]));
+			
+			//std::cout << "release constraint for exam " << exam << std::endl;
+			SCIP_CALL_EXC(SCIPreleaseCons(scip, & timeConstraint[exam]));
 
 		}
 		
+		
 		//std::cout << " releasing extra variable" << std::endl;
 		SCIP_CALL_EXC(SCIPreleaseVar(scip, & extraVar));
-		std::cout << "NOT WORKING releasing extra constraint" << std::endl;
-		//SCIP_CALL_EXC(SCIPreleaseCons(scip, & extraCon));
+		SCIP_CALL_EXC(SCIPreleaseVar(scip, & extraVar2));
+		
+		//std::cout << "releasing extra constraint" << std::endl;
+		SCIP_CALL_EXC(SCIPreleaseCons(scip, & extraCon));
 
 		//Then we close the SCIP environment:
 		SCIP_CALL_EXC(SCIPfree(& scip));
-
+		
 	} catch(SCIPException & exec)
 	{
 		cerr<<"oops"<<endl;
