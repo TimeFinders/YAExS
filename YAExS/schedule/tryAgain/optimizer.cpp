@@ -18,13 +18,34 @@ Optimizer::Optimizer()
     //Create a problem
     SCIPcreateProb(scip_, "Exam Scheduling",
                    NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+
+    shouldPrint_ = false;
 }
+
+Optimizer::Optimizer(bool enablePrinting)
+{
+    //Initialize SCIP
+    SCIPcreate(&scip_);
+
+    //Load default plugins
+    SCIPincludeDefaultPlugins(scip_);
+
+    //Create a problem
+    SCIPcreateProb(scip_, "Exam Scheduling",
+                   NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+    
+    shouldPrint_ = enablePrinting;
+}
+
 
 //Destructor
 Optimizer::~Optimizer()
 {
      // Close things up
-	//std::cout << "closing things up" << std::endl;
+	if (shouldPrint_)
+	{
+		std::cout << "closing things up" << std::endl;
+	}
 
 	// release variables
 	releaseExamIsAtVariables();
@@ -42,6 +63,11 @@ Optimizer::~Optimizer()
 
 void Optimizer::releaseExamIsAtVariables()
 {
+	if (shouldPrint_)
+	{
+		std::cout << "releasing exam is at variables" << std::endl;
+	}
+
 	for (std::unordered_map<Exam::EXAM_ID, std::unordered_map<TimeSlot::TIMESLOT_ID, SCIP_VAR*> >::iterator examIt = examIsAt_.begin();
 		examIt != examIsAt_.end(); examIt++)
 	{
@@ -57,6 +83,11 @@ void Optimizer::releaseExamIsAtVariables()
 
 void Optimizer::releaseTwoPlusVariables()
 {
+ 	if (shouldPrint_)
+ 	{
+ 		std::cout << "releasing two plus variables" << std::endl;
+ 	}
+
  		//std::unordered_map <PERSON_ID, SCIP_VAR * > twoPlus;
 	for (std::unordered_map <Person::PERSON_ID, SCIP_VAR *>::iterator it = twoPlus_.begin();
 		 it != twoPlus_.end(); it++)
@@ -68,6 +99,11 @@ void Optimizer::releaseTwoPlusVariables()
 
 void Optimizer::releaseThreePlusVariables()
 {
+ 	if (shouldPrint_)
+	{
+		std::cout << "releasing three plus at variables" << std::endl;
+	}
+
  		//std::unordered_map <PERSON_ID, SCIP_VAR * > threePlus;
 	for (std::unordered_map <Person::PERSON_ID, SCIP_VAR *>::iterator it = threePlus_.begin();
 		 it != threePlus_.end(); it++)
@@ -79,6 +115,12 @@ void Optimizer::releaseThreePlusVariables()
 
 void Optimizer::releaseOnceConstraints()
 {
+
+	if (shouldPrint_)
+	{
+		std::cout << "releasing once constraints " << std::endl;
+	}
+
 	for (std::unordered_map<Exam::EXAM_ID, std::unordered_map<TimeSlot::TIMESLOT_ID, SCIP_VAR*> >::iterator examIt = examIsAt_.begin();
 		examIt != examIsAt_.end(); examIt++)
 	{
@@ -89,6 +131,10 @@ void Optimizer::releaseOnceConstraints()
 
 void Optimizer::releaseOverloadConstraints()
 {
+	if (shouldPrint_)
+	{
+		std::cout << "releasing overload constraints" << std::endl;
+	}
 	// set the two plus and three plus variables constraint
     // std::unordered_map< Person::PERSON_ID, std::unordered_map<Day::DAY_ID, SCIP_CONS *> >overloadCon;
 
@@ -99,7 +145,8 @@ void Optimizer::releaseOverloadConstraints()
     	for (std::unordered_map<Day::DAY_ID, SCIP_CONS*>::iterator mapIt = theMap.begin(); 
     		mapIt != theMap.end(); mapIt++)
     	{
-    		std::cout << " releasing overload constraint" << std::endl;
+    		if (shouldPrint_)
+	    		std::cout << " releasing overload constraint" << std::endl;
     		SCIPreleaseCons(scip_, & mapIt->second );
     	}
     }
@@ -112,6 +159,11 @@ void Optimizer::loadModel(const std::vector<Exam> & exams,
 		const std::vector<Person* > & people,
 		int numDays, int slotsPerDay)
 {
+	if (shouldPrint_)
+	{
+		std::cout << "loading model into SCIP" << std::endl;
+	}
+
 	// set up the days
 	loadDays(numDays, slotsPerDay);
 
@@ -135,39 +187,6 @@ void Optimizer::loadModel(const std::vector<Exam> & exams,
 
 }
 
-// set up the days with their time slots
-void Optimizer::loadDays( int numDays, int slotsPerDay)
-{
-	int slotId = 0;
-	for (int dayNum = 0; dayNum < numDays; dayNum++)
-	{
-		std::vector<TimeSlot> slots;
-		for (int slotNum = 0; slotNum < slotsPerDay; slotNum++)
-		{
-			TimeSlot s(slotId);
-			slots.push_back(s);
-
-			slotId++;
-		}
-		Day d(dayNum, slots);
-		days_.push_back(d);
-	}
-
-	// print everything to make sure it worked for debugging
-	for (std::vector<Day>::iterator dIt = days_.begin(); 
-			dIt != days_.end(); dIt++)
-	{
-		std::cout << "day: " << dIt->getId();
-		std::vector<TimeSlot> slots = dIt->getSlots();
-		for(std::vector<TimeSlot>::iterator tsIt = slots.begin();
-			 tsIt != slots.end(); tsIt++)
-		{
-			std::cout << "\t timeslot: " << tsIt->getId() << std::endl;
-		}
-		std::cout << std::endl;
-	}
-
-}
 
 void Optimizer::loadExamIsAtVariables(const std::vector<Exam> & exams)
 {
@@ -193,13 +212,15 @@ void Optimizer::loadExamIsAtVariables(const std::vector<Exam> & exams)
 				for (std::vector<TimeSlot>::iterator tsIt = slots.begin(); 
 						tsIt != slots.end(); tsIt++)
 				{
-					/*
-					std::cout << "adding an " << examIt->getId();
-					std::cout << " exam variable for time slot "  << tsIt->getId();
-					std::cout << " on day " << dayIt->getId() << std::endl;
-					*/
+					if (shouldPrint_)
+					{
+						std::cout << "adding " << examIt->getId();
+						std::cout << " exam variable for time slot "  << tsIt->getId();
+						std::cout << " on day " << dayIt->getId() << std::endl;
+					}
+
 					const char * name = examAtVariableName(*examIt, *tsIt);
-				
+
 					// just for testing, remove later
 					double objCoefExam = 1 + 5 * (tsIt->getId());
 
@@ -255,8 +276,11 @@ void Optimizer::loadOnceConstraints()
 			for (std::unordered_map<TimeSlot::TIMESLOT_ID, SCIP_VAR *>::iterator tsIt= theMap.begin();
 				tsIt != theMap.end(); tsIt++)
 			{	
-				//	std::cout << " adding variable to once constraint for exam " << examIt->first;
-				//	std::cout << " and time " << tsIt ->first;
+				if (shouldPrint_)
+				{
+					std::cout << " adding variable to once constraint for exam " << examIt->first;
+					std::cout << " and time " << tsIt ->first;
+				}
 				double coef = 1.0;
 				SCIPaddCoefLinear(scip_, constraintPointer, tsIt->second, coef);
 			} // end time slot loop
@@ -292,7 +316,12 @@ void Optimizer::loadTwoPlusVariables(const std::vector<Person* > & people)
 		 //std::unordered_map <PERSON_ID, SCIP_VAR * > twoPlus;
 		for (std::vector<Person*>::const_iterator it = people.begin(); it!=people.end(); it++)
 		{
-			//std::cout << "adding a two plus variable for person "  << (*it)->getId() << std::endl;
+			if (shouldPrint_)	
+			{
+				std::cout << "adding a two plus variable for person ";
+				std::cout << (*it)->getId() << std::endl;
+			}
+			
 			const char * name = twoPlusVariableName(*it);
 
 			// create the variable
@@ -331,7 +360,12 @@ void Optimizer::loadThreePlusVariables(const std::vector<Person* > & people)
 		 //std::unordered_map <PERSON_ID, SCIP_VAR * > threePlus;
 		for (std::vector<Person*>::const_iterator it = people.begin(); it != people.end(); it++)
 		{
-			//std::cout << "adding a three plus variable for person "  << (*it)->getId() << std::endl;
+			if (shouldPrint_)
+			{
+				std::cout << "adding a three plus variable for person ";
+				std::cout << (*it)->getId() << std::endl;
+			}
+
 			const char * name = threePlusVariableName(*it);
 
 			// create the variable
@@ -388,8 +422,12 @@ void Optimizer::loadOverloadConstraints()
 			SCIP_CONS * constraintPointer;
 			const char* conName = overloadConName( personID, *dIt );
 
-			std::cout << "creating an overload constraint for person " << personID;
-			std::cout << " and day " << dayId << std::endl;
+			if (shouldPrint_)
+			{
+				std::cout << "creating an overload constraint for person " << personID;
+				std::cout << " and day " << dayId << std::endl;
+			}
+
 			SCIPcreateConsLinear(scip_, & constraintPointer, conName,
 				0, NULL, NULL, lbound, ubound, isInitial,
 				TRUE, TRUE, TRUE, TRUE, FALSE,
@@ -414,8 +452,11 @@ void Optimizer::loadOverloadConstraints()
 						TimeSlot::TIMESLOT_ID tsID = tsIt->first;
 						if ( dayHasSlot(dayId, tsID) )
 						{
-							std::cout << "\t adding exam is at variable for exam " << eIt->first;
-							std::cout << " at timeslot " << tsID << std::endl;
+							if (shouldPrint_)
+							{
+								std::cout << "\t adding exam is at variable for exam " << eIt->first;
+								std::cout << " at timeslot " << tsID << std::endl;
+							}
 
 							//add examIsAt variable to constraint
 							double coef = 1.0;
@@ -592,8 +633,49 @@ const char* Optimizer::overloadConName( Person::PERSON_ID pID, const Day & day )
 	return s.c_str();
 }
 
+
+// set up the days with their time slots
+void Optimizer::loadDays( int numDays, int slotsPerDay)
+{
+	int slotId = 0;
+	for (int dayNum = 0; dayNum < numDays; dayNum++)
+	{
+		std::vector<TimeSlot> slots;
+		for (int slotNum = 0; slotNum < slotsPerDay; slotNum++)
+		{
+			TimeSlot s(slotId);
+			slots.push_back(s);
+
+			slotId++;
+		}
+		Day d(dayNum, slots);
+		days_.push_back(d);
+	}
+
+	if (shouldPrint_)
+	{
+		std::cout << "the following days were created:" << std::endl;
+		for (std::vector<Day>::iterator dIt = days_.begin(); 
+				dIt != days_.end(); dIt++)
+		{
+			std::cout << "\tday: " << dIt->getId() << std::endl;
+			std::vector<TimeSlot> slots = dIt->getSlots();
+			for(std::vector<TimeSlot>::iterator tsIt = slots.begin();
+				 tsIt != slots.end(); tsIt++)
+			{
+				std::cout << "\t\ttimeslot: " << tsIt->getId() << std::endl;
+			}
+			std::cout << std::endl;
+		}
+	}
+
+}
+
  void Optimizer::loadAllPeople( const std::vector<Person*> & people)
  {
+ 	if (shouldPrint_)
+ 		std::cout << "loading all the people" << std::endl;
+
  	for (std::vector<Person*>::const_iterator it = people.begin(); 
  			it != people.end(); it++)
  	{

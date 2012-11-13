@@ -25,6 +25,8 @@ public:
     //Constructors
     Optimizer();
 
+    Optimizer(bool enablePrinting);
+
     //Destructor
     ~Optimizer();
 
@@ -45,6 +47,9 @@ public:
     //std::vector<SCIP_SOL*> getSolutions();
 
 private:
+    // if true lots of debugging info will print to standard out
+    bool shouldPrint_;
+
     //SCIP problem information
     SCIP* scip_;
 

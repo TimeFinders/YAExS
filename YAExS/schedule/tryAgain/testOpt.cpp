@@ -14,7 +14,7 @@ int main(int argc, char* argv[])
 {
 
     //Create an Optimizer
-    Optimizer scipScheduler;
+    Optimizer scipScheduler(true);
 
     std::string solution;
     //Load a model
