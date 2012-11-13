@@ -56,6 +56,7 @@ Optimizer::~Optimizer()
 	// release constaints
 	releaseOnceConstraints();
 	releaseOverloadConstraints();
+	releaseConflictConstraints();
 
 	//close the SCIP environment:
     SCIPfree(&scip_);
@@ -158,14 +159,14 @@ void Optimizer::releaseOverloadConstraints()
 	{
 		std::cout << "releasing overload constraints" << std::endl;
 	}
-	// set the two plus and three plus variables constraint
-    // std::unordered_map< Person::PERSON_ID, std::unordered_map<Day::DAY_ID, SCIP_CONS *> >overloadCon;
+	
+	// std::unordered_map< Person::PERSON_ID, std::unordered_map<Day::DAY_ID, SCIP_CONS *> >overloadCon;
 
     for ( std::unordered_map< Person::PERSON_ID, std::unordered_map<Day::DAY_ID, SCIP_CONS *> >::iterator pit = overloadCon_.begin();
     	pit != overloadCon_.end(); pit++)
     {
-    	//if (shouldPrint_)
-    	//	std::cout << "\t for person " << pit->first << std::endl;
+    	if (shouldPrint_)
+    		std::cout << "\t for person " << pit->first << std::endl;
 
     	std::unordered_map<Day::DAY_ID, SCIP_CONS*> theMap = pit->second;
     	for (std::unordered_map<Day::DAY_ID, SCIP_CONS*>::iterator mapIt = theMap.begin(); 
@@ -178,9 +179,34 @@ void Optimizer::releaseOverloadConstraints()
     }
 }
 
+void Optimizer::releaseConflictConstraints()
+{
+	if (shouldPrint_)
+	{
+		std::cout << "releasing conflict constraints" << std::endl;
+	}
+	
+	// std::unordered_map< Person::PERSON_ID, std::unordered_map<TimeSlot::TIMESLOT_ID, SCIP_CONS *> >conflictCon_;
+
+    for ( std::unordered_map<Person::PERSON_ID, std::unordered_map<TimeSlot::TIMESLOT_ID, SCIP_CONS*> >::iterator personIt = conflictCon_.begin();
+    	personIt != conflictCon_.end(); personIt++)
+    {
+    	if (shouldPrint_)
+    		std::cout << "\t for person " << personIt->first << std::endl;
+
+    	std::unordered_map<TimeSlot::TIMESLOT_ID, SCIP_CONS *> theMap = personIt->second;
+    	for (std::unordered_map<TimeSlot::TIMESLOT_ID, SCIP_CONS *>::iterator mapIt = theMap.begin(); 
+    		mapIt != theMap.end(); mapIt++)
+    	{
+    		//if (shouldPrint_)
+	    	//	std::cout << " \t\t time slot " << mapIt->first << std::endl;
+    		SCIPreleaseCons(scip_, & mapIt->second );
+    	}
+    }
+}
 
 
-//Loads a model into SCIP
+//Load a model into SCIP
 void Optimizer::loadModel(const std::vector<Exam> & exams, 
 		const std::vector<Person* > & people,
 		int numDays, int slotsPerDay)
@@ -202,7 +228,6 @@ void Optimizer::loadModel(const std::vector<Exam> & exams,
 	// load the once constraints (each exam meets at exactly one time slot)
 	// doesn't need parameters because just uses the examIsAtVariables
 	loadOnceConstraints();
-	
 
 	// load the too many exams in a day variables
 	loadTwoPlusVariables(people);
@@ -215,7 +240,7 @@ void Optimizer::loadModel(const std::vector<Exam> & exams,
 	loadConflictAtVariables(people);
 
 	// set the conflict at variables with conflict constraints
-	// loadConflictConstraints;
+	 loadConflictConstraints();
 }
 
 
@@ -282,65 +307,7 @@ void Optimizer::loadExamIsAtVariables(const std::vector<Exam> & exams)
 	} // end else
 }
 
-void Optimizer::loadConflictAtVariables(const std::vector<Person *> & people)
-{
-	// check that the variables haven't been loaded already;
-	if ( !conflictAt_.empty() )
-		std::cerr << " conflict at variable map is NOT empty. Only call loadConflictAtVariables once." << std::endl;
 
-	else 
-	{
-		bool isInitial = true;
-		bool canRemoveInAging = false;
-
-		if (shouldPrint_)
-			std::cout << "\nloading conflict  at variables" << std::endl;
-
-	// std::unordered_map <Person::PERSON_ID, std::unordered_map <TimeSlot::TIMESLOT_ID, SCIP_VAR *> > conflictAt_;
-	
-		for (std::vector<Person *>::const_iterator personIt = people.begin(); 
-			personIt != people.end(); personIt++)
-		{	
-			std::unordered_map<TimeSlot::TIMESLOT_ID,  SCIP_VAR *> aMap;
-			Person::PERSON_ID personID = (*personIt)->getId();
-
-			// loop through the time slots, creating conflict variable for each
-			for (std::vector<TimeSlot>::iterator tsIt = allTimeSlots_.begin(); 
-					tsIt != allTimeSlots_.end(); tsIt++)
-			{
-				if (shouldPrint_)
-				{
-					std::cout << "adding " << personID << "'s";
-					std::cout << " 'conflict at' variable for time slot "  << tsIt->getId();
-				}
-
-				const char * name = conflictAtVariableName(personID, tsIt->getId());
-
-				// Conflicts are worth 20
-				double objCoefConflict = 20.0;
-
-				// create the exam is at variable
-				SCIP_VAR * conflictVar;
-				SCIPcreateVar(scip_, & conflictVar, name, 0.0, 1.0,
-						objCoefConflict, SCIP_VARTYPE_BINARY,
-						isInitial, canRemoveInAging,
-						NULL, NULL, NULL, NULL, NULL);
-
-				// add exam is at variable to SCIP
-				SCIPaddVar(scip_, conflictVar);
-
-				// store exam is at variable point for later use
-				aMap[tsIt->getId()] = conflictVar;
-
-			} // end time slot for loop
-				
-			
-			// store the exam is at variables for this exam for later use
-			conflictAt_[personID] = aMap;
-		} // end exam for loop
-
-	} // end else
-}
 
 // load once constraints, which require that each exam meets at exactly one time slot
 // doesn't need parameters because just uses examIsAt
@@ -360,8 +327,8 @@ void Optimizer::loadOnceConstraints()
 			std::cout << "\nloading the once constraints." << std::endl;
 
 		bool isInitial = true;
-		double lbound = 1.0;
-		double ubound = 1.0;
+		double lBound = 1.0;
+		double uBound = 1.0;
 	
 
 		for (std::unordered_map<Exam::EXAM_ID, std::unordered_map<TimeSlot::TIMESLOT_ID, SCIP_VAR*> >::iterator examIt = examIsAt_.begin();
@@ -376,7 +343,7 @@ void Optimizer::loadOnceConstraints()
 			SCIP_CONS * constraintPointer;
 			const char * conName = onceConName(eid);
 			SCIPcreateConsLinear(scip_, & constraintPointer, conName,
-				0, NULL, NULL, lbound, ubound, isInitial,
+				0, NULL, NULL, lBound, uBound, isInitial,
 				TRUE, TRUE, TRUE, TRUE, FALSE,
 				FALSE, FALSE, FALSE, FALSE);
 
@@ -495,6 +462,215 @@ void Optimizer::loadThreePlusVariables(const std::vector<Person* > & people)
 	} // end else
 }
 
+std::unordered_map<TimeSlot::TIMESLOT_ID, std::list<SCIP_VAR *> > Optimizer::personalExamIsAtVariables(Person * person)
+{
+	std::unordered_map<TimeSlot::TIMESLOT_ID, std::list<SCIP_VAR *> > variables;
+
+	std::vector<Exam> exams = person->getExams();
+
+	for (std::vector<Exam>::iterator examIt = exams.begin(); 
+		examIt != exams.end(); examIt++)
+	{
+		Exam::EXAM_ID examID = examIt->getId();
+		std::unordered_map<TimeSlot::TIMESLOT_ID, SCIP_VAR *> examIsAtMap;
+		examIsAtMap = examIsAt_[examID];
+
+		// add exam is at variables to the variables map
+		for (std::unordered_map<TimeSlot::TIMESLOT_ID, SCIP_VAR *>::iterator varIt = examIsAtMap.begin();
+			varIt != examIsAtMap.end(); varIt++)
+		{
+			TimeSlot::TIMESLOT_ID timeslotID = varIt->first;
+			SCIP_VAR * variable = varIt->second;
+			variables[timeslotID].push_back(variable); 
+		}
+		
+	} // end exam loop
+
+	return variables;
+}
+
+void Optimizer::loadConflictAtVariables(const std::vector<Person *> & people)
+{
+	// check that the variables haven't been loaded already;
+	if ( !conflictAt_.empty() )
+		std::cerr << " conflict at variable map is NOT empty. Only call loadConflictAtVariables once." << std::endl;
+
+	else 
+	{
+		bool isInitial = true;
+		bool canRemoveInAging = false;
+
+		if (shouldPrint_)
+			std::cout << "\nloading conflict  at variables" << std::endl;
+
+	// std::unordered_map <Person::PERSON_ID, std::unordered_map <TimeSlot::TIMESLOT_ID, SCIP_VAR *> > conflictAt_;
+	
+		for (std::vector<Person *>::const_iterator personIt = people.begin(); 
+			personIt != people.end(); personIt++)
+		{	
+			std::unordered_map<TimeSlot::TIMESLOT_ID,  SCIP_VAR *> aMap;
+			Person::PERSON_ID personID = (*personIt)->getId();
+
+			// loop through the time slots, creating conflict variable for each
+			for (std::vector<TimeSlot>::iterator tsIt = allTimeSlots_.begin(); 
+					tsIt != allTimeSlots_.end(); tsIt++)
+			{
+				if (shouldPrint_)
+				{
+					std::cout << "adding " << personID << "'s";
+					std::cout << " 'conflict at' variable for time slot ";
+					std::cout << tsIt->getId() << std::endl;;
+				}
+
+				const char * name = conflictAtVariableName(personID, tsIt->getId());
+
+				// Conflicts are worth 20
+				double objCoefConflict = 20.0;
+
+				// create the exam is at variable
+				SCIP_VAR * conflictVar;
+				SCIPcreateVar(scip_, & conflictVar, name, 0.0, 1.0,
+						objCoefConflict, SCIP_VARTYPE_BINARY,
+						isInitial, canRemoveInAging,
+						NULL, NULL, NULL, NULL, NULL);
+
+				// add exam is at variable to SCIP
+				SCIPaddVar(scip_, conflictVar);
+
+				// store exam is at variable point for later use
+				aMap[tsIt->getId()] = conflictVar;
+
+			} // end time slot for loop
+				
+			
+			// store the exam is at variables for this exam for later use
+			conflictAt_[personID] = aMap;
+		} // end exam for loop
+
+	} // end else
+}
+
+void Optimizer::loadConflictConstraints(Person * person)
+{
+	// same for all conflict constraints
+	double lBound = - SCIPinfinity(scip_);
+	double uBound = 1.0;
+	bool isInitial = false;
+	double conflictCoef = -1.0;
+	double examCoef = 1.0;
+	
+	Person::PERSON_ID personID = person->getId();
+
+	if (shouldPrint_)
+		std::cout << "\t for person " << personID << std::endl;
+
+	// for each person the variables map of a given time slot has all of the 
+	// exam is at variables for that time slot that that person takes.
+	std::unordered_map<TimeSlot::TIMESLOT_ID, std::list<SCIP_VAR *> > personalExamVarMap;
+	personalExamVarMap = personalExamIsAtVariables(person);
+	
+	/*
+	if (shouldPrint_)
+	{
+		std::cout << " we will be using the followig variables:" << std::endl;
+		for (std::unordered_map<TimeSlot::TIMESLOT_ID, std::list<SCIP_VAR*> >::iterator it = variables.begin();
+			it != variables.end(); it++)
+		{
+			std::cout << "\ttime: " << it->first << std::endl;
+			std::list<SCIP_VAR*> varList = it->second;
+			for (std::list<SCIP_VAR*>::iterator varIt = varList.begin();
+				varIt != varList.end(); varIt++)
+			{
+				std::cout << "\t\t some variable" << std::endl;
+				// cant seem to do (*varIt)->name
+			}
+		}
+	}
+	*/
+	
+	//will be filled up with constraint pointers
+	std::unordered_map <TimeSlot::TIMESLOT_ID, SCIP_CONS *> constraintMap;
+
+	// all the conflict variables for this person
+	std::unordered_map<TimeSlot::TIMESLOT_ID, SCIP_VAR *> conflictVariableMap;
+	conflictVariableMap = conflictAt_[personID];
+	
+	// loop through the time slots, creating a constraint for each
+	for ( std::unordered_map<TimeSlot::TIMESLOT_ID, SCIP_VAR *>::iterator conflictVarIt = conflictVariableMap.begin();
+		conflictVarIt != conflictVariableMap.end(); conflictVarIt++ )
+	{
+		TimeSlot::TIMESLOT_ID slotID = conflictVarIt->first;
+
+		if (shouldPrint_)
+			std::cout << "\t\t at time " << slotID << std::endl;
+
+		// make a constraint
+		SCIP_CONS * constraintPointer;
+		const char* constraintName = conflictConName( personID, slotID );
+
+		SCIPcreateConsLinear(scip_, & constraintPointer, constraintName,
+			0, NULL, NULL, lBound, uBound, isInitial,
+			TRUE, TRUE, TRUE, TRUE, FALSE,
+			FALSE, FALSE, FALSE, FALSE);
+
+		// add the variables to the constraint
+
+		// conflict variable
+		if(shouldPrint_)
+				std::cout << "\t\t\t adding conflict variable";
+		SCIP_VAR * conflictVariable = conflictVarIt->second;
+		SCIPaddCoefLinear(scip_, constraintPointer, conflictVariable, conflictCoef);
+
+
+		// exam is at variables
+		std::list<SCIP_VAR *> examVariables = personalExamVarMap[slotID];
+		for(std::list<SCIP_VAR *>::iterator examVarIt = examVariables.begin();
+			examVarIt != examVariables.end(); examVarIt++)
+		{
+			if(shouldPrint_)
+				std::cout << "\t\t\t adding an exam is at variable ";
+
+			SCIPaddCoefLinear(scip_, constraintPointer, *examVarIt, examCoef);
+		} // end exam is at variable loop
+
+		// add the constraint to the problem
+	 	SCIPaddCons(scip_, constraintPointer);
+
+	 	// keep track of the constraint for later
+	 	constraintMap[slotID] = constraintPointer;
+	 	
+	} // end time slot loop
+
+	// save all of this persons constraints
+	conflictCon_[personID] = constraintMap;
+}
+
+void Optimizer::loadConflictConstraints()
+{
+	if (shouldPrint_)
+		std::cout << "loading conflict constraints" << std::endl;
+
+	// for each person's conflict variables we will amke a
+	for (std::unordered_map<Person::PERSON_ID, std::unordered_map<TimeSlot::TIMESLOT_ID, SCIP_VAR*> >::iterator personIt = conflictAt_.begin();
+		personIt != conflictAt_.end(); personIt++)
+	{
+		Person::PERSON_ID personID = personIt->first;
+		Person * person = allPeople_[personID];
+
+		if (person == NULL)
+		{
+			std::cerr << "person not found!" << std::endl;
+			continue;
+		}
+		else
+		{
+			loadConflictConstraints(person);
+		}
+		
+	} // end person loop
+
+}
+
 // constraints that set up the two plus and three plus values
 void Optimizer::loadOverloadConstraints()
 {
@@ -510,8 +686,8 @@ void Optimizer::loadOverloadConstraints()
 
 	bool isInitial = true;
 	// there is no lower bound, so use negative infinity
-	double lbound = -SCIPinfinity(scip_);
-	double ubound = 1.0;
+	double lBound = -SCIPinfinity(scip_);
+	double uBound = 1.0;
 
 	// loop over people
 	for (std::unordered_map <Person::PERSON_ID, SCIP_VAR *>::iterator pIt= twoPlus_.begin();
@@ -538,7 +714,7 @@ void Optimizer::loadOverloadConstraints()
 			}
 
 			SCIPcreateConsLinear(scip_, & constraintPointer, conName,
-				0, NULL, NULL, lbound, ubound, isInitial,
+				0, NULL, NULL, lBound, uBound, isInitial,
 				TRUE, TRUE, TRUE, TRUE, FALSE,
 				FALSE, FALSE, FALSE, FALSE);
 
@@ -619,6 +795,7 @@ void Optimizer::printSolutionAndNonzeroValues()
 		
 		printTwoPlusVariables(sol);
 		printThreePlusVariables(sol);
+		printConflictVariables(sol);
 		
 		std::cout << std::endl;
 	} // end else
@@ -642,8 +819,30 @@ void Optimizer::printExamIsAtVariables(SCIP_SOL* sol)
 				std::cout << " is scheduled at time " << tsIt->first;
 
 				std::cout << " (because examIsAt variable has value ";
-				std::cout << SCIPgetSolVal(scip_, sol, tsIt->second) << ")";
-				std::cout << std::endl; 
+				std::cout << value << ")" << std::endl; 
+			}
+		}
+	}
+}
+
+void Optimizer::printConflictVariables(SCIP_SOL * sol)
+{
+	for (std::unordered_map<Person::PERSON_ID, std::unordered_map<TimeSlot::TIMESLOT_ID, SCIP_VAR*> >::iterator personIt = conflictAt_.begin();
+		personIt != conflictAt_.end(); personIt++)
+	{
+		std::unordered_map<TimeSlot::TIMESLOT_ID, SCIP_VAR *> theMap;
+		theMap  = personIt->second;
+		for (std::unordered_map<TimeSlot::TIMESLOT_ID, SCIP_VAR *>::iterator tsIt= theMap.begin();
+			tsIt != theMap.end(); tsIt++)
+		{	
+			double value =  SCIPgetSolVal(scip_, sol, tsIt->second);
+			if (value != 0.0)
+			{
+				std::cout << "\t" << "person " << personIt->first;
+				std::cout << " has a conflict at time " << tsIt->first;
+
+				std::cout << " (because conflictAt variable has value ";
+				std::cout << value << ")" << std::endl; 
 			}
 		}
 	}
@@ -772,6 +971,13 @@ const char* Optimizer::overloadConName( Person::PERSON_ID pID, const Day & day )
 {
 	std::string s = "overload_" + pID;
 	s += "_" + day.getId();
+	return s.c_str();
+}
+
+const char* Optimizer::conflictConName( Person::PERSON_ID pID, TimeSlot::TIMESLOT_ID tsID)
+{
+	std::string s = "conflict_" + pID;
+	s += "_" + tsID;
 	return s.c_str();
 }
 

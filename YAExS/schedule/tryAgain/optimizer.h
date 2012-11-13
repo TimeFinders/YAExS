@@ -7,6 +7,7 @@
 #define _optimizer_h_
 
 #include <vector>
+#include <list>
 #include <string>
 #include <sstream>
 #include <iostream>
@@ -75,7 +76,7 @@ private:
     std::unordered_map< Person::PERSON_ID, std::unordered_map<Day::DAY_ID, SCIP_CONS *> >overloadCon_;
 
     // conflict constraints
-    // time requirement constraints
+    std::unordered_map <Person::PERSON_ID, std::unordered_map <TimeSlot::TIMESLOT_ID, SCIP_CONS *> > conflictCon_;
 
     // OTHER DATA
     // holds the days you can schedule exams over. 
@@ -96,7 +97,9 @@ private:
 
     void loadOnceConstraints();
     void loadOverloadConstraints();
-    void loadConflictConstraints(); // WRITE
+    void loadConflictConstraints(); 
+    // load the conflict constraints for a single person (one for each time slot)
+    void loadConflictConstraints(Person * p);
 
     // RELEASING SCIP INFO
     void releaseExamIsAtVariables();
@@ -106,17 +109,18 @@ private:
 
     void releaseOnceConstraints();
     void releaseOverloadConstraints();
-    void releaseConflictConstraints(); // WRITE
+    void releaseConflictConstraints();
 
     // PRINT VALUES OF (NONZERO) VARIABLES in a solution
     void printExamIsAtVariables(SCIP_SOL* sol);
     void printTwoPlusVariables(SCIP_SOL* sol);
     void printThreePlusVariables(SCIP_SOL* sol);
+    void printConflictVariables(SCIP_SOL * sol);
     
     // NAME SCIP VARIABLES AND CONSTRAINTS
     // used for naming variables and constraints for SCIP. const char *'s are needed for SCIP
     static const char* examAtVariableName( const Exam & exam, const TimeSlot & timeslot );
-    static const char * conflictAtVariableName( Person::PERSON_ID pID, TimeSlot::TIMESLOT_ID tsID );
+    static const char* conflictAtVariableName( Person::PERSON_ID pID, TimeSlot::TIMESLOT_ID tsID );
     static const char* twoPlusVariableName( Person * person );
     static const char* threePlusVariableName( Person * person );
     static const char* onceConName( Exam::EXAM_ID eid );
@@ -133,6 +137,10 @@ private:
 
     // true if the day contains the time slot
     bool dayHasSlot(Day::DAY_ID dayID, TimeSlot::TIMESLOT_ID tsID);
+
+    // the exam is at variables for this person, keyed by their time slot
+    std::unordered_map<TimeSlot::TIMESLOT_ID, std::list<SCIP_VAR *> > personalExamIsAtVariables(Person * person);
+
 
 };
 
