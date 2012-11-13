@@ -141,15 +141,15 @@ void Optimizer::releaseOverloadConstraints()
     for ( std::unordered_map< Person::PERSON_ID, std::unordered_map<Day::DAY_ID, SCIP_CONS *> >::iterator pit = overloadCon_.begin();
     	pit != overloadCon_.end(); pit++)
     {
-    	if (shouldPrint_)
-    		std::cout << "\t for person " << pit->first << std::endl;
+    	//if (shouldPrint_)
+    	//	std::cout << "\t for person " << pit->first << std::endl;
 
     	std::unordered_map<Day::DAY_ID, SCIP_CONS*> theMap = pit->second;
     	for (std::unordered_map<Day::DAY_ID, SCIP_CONS*>::iterator mapIt = theMap.begin(); 
     		mapIt != theMap.end(); mapIt++)
     	{
-    		if (shouldPrint_)
-	    		std::cout << " \t\t day " << mapIt->first << std::endl;
+    		//if (shouldPrint_)
+	    	//	std::cout << " \t\t day " << mapIt->first << std::endl;
     		SCIPreleaseCons(scip_, & mapIt->second );
     	}
     }
