@@ -48,36 +48,43 @@ private:
     //SCIP problem information
     SCIP* scip_;
 
+
+    // VARIABLES
     // exam is at time variables
-    std::unordered_map< Exam::EXAM_ID, std::unordered_map<TimeSlot::TIMESLOT_ID, SCIP_VAR *> > examIsAt;
+    std::unordered_map< Exam::EXAM_ID, std::unordered_map<TimeSlot::TIMESLOT_ID, SCIP_VAR *> > examIsAt_;
 
     // person has two or more exams in one day variables
-    std::unordered_map <Person::PERSON_ID, SCIP_VAR * > twoPlus;
+    std::unordered_map <Person::PERSON_ID, SCIP_VAR * > twoPlus_;
 
     // person has three or more exams in one dat variables
-    std::unordered_map <Person::PERSON_ID, SCIP_VAR * > threePlus;
+    std::unordered_map <Person::PERSON_ID, SCIP_VAR * > threePlus_;
 
+    // CONSTRAINTS
     // exam can meet at exactly one time constraint
-    std::unordered_map< Exam::EXAM_ID, SCIP_CONS *> onceCon;
+    std::unordered_map< Exam::EXAM_ID, SCIP_CONS *> onceCon_;
 
     // set the two plus and three plus variables constraint
-    std::unordered_map< Person::PERSON_ID, std::unordered_map<Day::DAY_ID, SCIP_CONS *> >overloadCon;
+    std::unordered_map< Person::PERSON_ID, std::unordered_map<Day::DAY_ID, SCIP_CONS *> >overloadCon_;
+
+
+    // OTHER DATA
+    // holds the days you can schedule exams over. 
+    std::vector<Day> days_;
 
     // keep track of pointers to people objects so we can figure out what exams they have
-    std::unordered_map< Person::PERSON_ID, Person* > allPeople;
+    std::unordered_map< Person::PERSON_ID, Person* > allPeople_;
 
 
-
-    void loadExamIsAtVariables(const std::vector<Exam> & exams, const std::vector<Day> & days);
+    // LOADING SCIP INFO
+    void loadExamIsAtVariables(const std::vector<Exam> & exams);
     void loadTwoPlusVariables(const std::vector<Person* > & people);
     void loadThreePlusVariables(const std::vector<Person* > & people);
 
-    // doesn't need parameters because just uses examIsAtVariables
     void loadOnceConstraints();
-    void loadOverloadConstraints(const std::vector<Day> & days);
+    void loadOverloadConstraints();
 
 
-    // For releasing scip variables and constraints when done
+    // RELEASING SCIP INFO
     void releaseExamIsAtVariables();
     void releaseTwoPlusVariables();
     void releaseThreePlusVariables();
@@ -85,6 +92,7 @@ private:
     void releaseOnceConstraints();
     void releaseOverloadConstraints();
     
+    // NAME SCIP VARIABLES
     // used for naming variables and constraints for SCIP. const char *'s are needed for SCIP
     static const char* examAtVariableName(const Exam & exam, const TimeSlot & timeslot);
     static const char* onceConName( const Exam::EXAM_ID & eid);
@@ -93,11 +101,16 @@ private:
     static const char* threePlusVariableName(Person * person);
     static const char* overloadConName( Person::PERSON_ID pID, const Day & day );
 
-    // set up the allPeople map
+    // OTHER HELPER FUNCTIONS
+    void loadDays( int numDays, int slotsPerDay);
     void loadAllPeople( const std::vector<Person*> & people);
 
     // true if the person must take the exam
     bool personHasExam(Person::PERSON_ID personID, Exam::EXAM_ID examID);
+
+    // true if the day contains the time slot
+    bool dayHasSlot(Day::DAY_ID dayID, TimeSlot::TIMESLOT_ID tsID);
+
 };
 
 #endif
