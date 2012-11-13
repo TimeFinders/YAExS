@@ -25,7 +25,7 @@ class Instructor : public Person
 		Instructor(std::string id, std::vector<Exam> theExams) : 
 			identifier(id), exams(theExams) {};
 
-		std::string getId() { return identifier; };
+		std::string getId() const { return identifier; };
 		std::vector<Exam> getExams() { return exams; };	
 };
 #endif

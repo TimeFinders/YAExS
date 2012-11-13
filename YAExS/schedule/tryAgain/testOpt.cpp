@@ -21,6 +21,18 @@ int main(int argc, char* argv[])
     Exam e(5, "CLA");
 
     std::vector<Person* > people = GetSome::getSomePeople();
+    /*
+    for (int i = 0; i < people.size(); i++)
+    {
+        std::cout << people[i]->getId() << "'s exams:" <<std::endl;
+        std::vector<Exam> e = people[i]->getExams();
+        for(int j = 0; j < e.size(); j++)
+        {
+            std::cout << '\t' << e[j].getId() << std::endl;
+        }
+    }
+    */
+
 
     std::vector<Exam> exams = GetSome::getSomeExams();
     

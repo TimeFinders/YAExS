@@ -9,6 +9,7 @@
 
 #include <string>
 #include <vector>
+#include "exam.h"
 
 class Person
 {
@@ -18,5 +19,22 @@ class Person
 		
 		virtual PERSON_ID getId() const = 0;
 		virtual std::vector<Exam> getExams() = 0;
+
+		static bool personHasExam(Person * p, Exam::EXAM_ID examID)
+		{
+			if (p == NULL)
+			{
+				std::cerr << "person is null, returning false" << std::endl;
+				return false;
+			}
+
+			std::vector<Exam> exams = p->getExams();
+			for (std::vector<Exam>::iterator it = exams.begin(); it != exams.end(); it++)
+			{
+				if ( it->getId() == examID)
+					return true;
+			}
+			return false;
+		}
 };
 #endif

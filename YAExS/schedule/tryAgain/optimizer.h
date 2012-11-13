@@ -63,20 +63,18 @@ private:
     // set the two plus and three plus variables constraint
     std::unordered_map< Person::PERSON_ID, std::unordered_map<Day::DAY_ID, SCIP_CONS *> >overloadCon;
 
+    // keep track of pointers to people objects so we can figure out what exams they have
+    std::unordered_map< Person::PERSON_ID, Person* > allPeople;
+
+
+
     void loadExamIsAtVariables(const std::vector<Exam> & exams, const std::vector<Day> & days);
     void loadTwoPlusVariables(const std::vector<Person* > & people);
     void loadThreePlusVariables(const std::vector<Person* > & people);
 
     // doesn't need parameters because just uses examIsAtVariables
     void loadOnceConstraints();
-    void loadOverloadConstraints();
-
-    // used for naming variables and constraints. const char *'s are needed for SCIP
-    static const char* examAtVariableName(const Exam & exam, const TimeSlot & timeslot);
-    static const char* onceConName( const Exam::EXAM_ID & eid);
-    static const char* onceConName( const Exam & exam);
-    static const char* twoPlusVariableName(Person * person);
-    static const char* threePlusVariableName(Person * person);
+    void loadOverloadConstraints(const std::vector<Day> & days);
 
 
     // For releasing scip variables and constraints when done
@@ -87,6 +85,19 @@ private:
     void releaseOnceConstraints();
     void releaseOverloadConstraints();
     
+    // used for naming variables and constraints for SCIP. const char *'s are needed for SCIP
+    static const char* examAtVariableName(const Exam & exam, const TimeSlot & timeslot);
+    static const char* onceConName( const Exam::EXAM_ID & eid);
+    static const char* onceConName( const Exam & exam);
+    static const char* twoPlusVariableName(Person * person);
+    static const char* threePlusVariableName(Person * person);
+    static const char* overloadConName( Person::PERSON_ID pID, const Day & day );
+
+    // set up the allPeople map
+    void loadAllPeople( const std::vector<Person*> & people);
+
+    // true if the person must take the exam
+    bool personHasExam(Person::PERSON_ID personID, Exam::EXAM_ID examID);
 };
 
 #endif

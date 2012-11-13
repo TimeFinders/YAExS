@@ -5,8 +5,8 @@ Just a helper class for testing SCIP
 #include "exam.h"
 #include "student.h"
 #include <vector>
-
-class Person;
+#include "person.h"
+#include "instructor.h"
 
 class GetSome
 {
@@ -62,6 +62,16 @@ public:
     	andrewExams.erase(andrewExams.begin());
     	Person * andrewPtr = new Student("Andrew", andrewExams);
     	people.push_back(andrewPtr);
+
+    	std::vector<Exam> austonExams = andrewExams;
+    	austonExams.erase(austonExams.begin());
+    	austonExams.erase(austonExams.begin());
+    	Person * austonPtr = new Student("Auston", austonExams);
+    	people.push_back(austonPtr);
+
+    	std::vector<Exam> johnExams(austonExams);
+    	Person * johnPtr = new Instructor("John", johnExams);
+    	people.push_back(johnPtr);
 
     	
     	std::vector<Exam> jeffExams = getSomeExams();
