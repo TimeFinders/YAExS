@@ -39,8 +39,13 @@ public:
     //Runs the solver
     void schedule();
 
-    // print the solution and the values of the variables where they are nonzero
+    //print each exam with its assigned time slot;
+    void printExamSchedule();
+
+    // print the SCIP solution information
+    // and the values of the variables where they are nonzero
     void printSolutionAndNonzeroValues();
+
 
     //Returns the generated schedules
     std::string getBestSolution();

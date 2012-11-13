@@ -568,14 +568,16 @@ void Optimizer::loadConflictConstraints(Person * person)
 	// exam is at variables for that time slot that that person takes.
 	std::unordered_map<TimeSlot::TIMESLOT_ID, std::list<SCIP_VAR *> > personalExamVarMap;
 	personalExamVarMap = personalExamIsAtVariables(person);
-	
+
+	// note if the person only has one exam we dont have to bother making conflict constraints;
+
 	/*
 	if (shouldPrint_)
 	{
 		std::cout << " we will be using the followig variables:" << std::endl;
 		for (std::unordered_map<TimeSlot::TIMESLOT_ID, std::list<SCIP_VAR*> >::iterator it = variables.begin();
 			it != variables.end(); it++)
-		{
+		{void printExamSchedule
 			std::cout << "\ttime: " << it->first << std::endl;
 			std::list<SCIP_VAR*> varList = it->second;
 			for (std::list<SCIP_VAR*>::iterator varIt = varList.begin();
@@ -617,7 +619,7 @@ void Optimizer::loadConflictConstraints(Person * person)
 
 		// conflict variable
 		if(shouldPrint_)
-				std::cout << "\t\t\t adding conflict variable";
+				std::cout << "\t\t\t adding conflict variable" << std::endl;
 		SCIP_VAR * conflictVariable = conflictVarIt->second;
 		SCIPaddCoefLinear(scip_, constraintPointer, conflictVariable, conflictCoef);
 
@@ -628,7 +630,7 @@ void Optimizer::loadConflictConstraints(Person * person)
 			examVarIt != examVariables.end(); examVarIt++)
 		{
 			if(shouldPrint_)
-				std::cout << "\t\t\t adding an exam is at variable ";
+				std::cout << "\t\t\t adding an exam is at variable " << std::endl;
 
 			SCIPaddCoefLinear(scip_, constraintPointer, *examVarIt, examCoef);
 		} // end exam is at variable loop
@@ -775,6 +777,11 @@ void Optimizer::loadOverloadConstraints()
 	} // end person loop
 }
 
+void Optimizer::printExamSchedule()
+{
+	SCIP_SOL* sol = SCIPgetBestSol(scip_);
+	printExamIsAtVariables(sol);
+}
 
 void Optimizer::printSolutionAndNonzeroValues()
 {
@@ -817,9 +824,7 @@ void Optimizer::printExamIsAtVariables(SCIP_SOL* sol)
 			{
 				std::cout << "\t" << "exam " << examIt->first;
 				std::cout << " is scheduled at time " << tsIt->first;
-
-				std::cout << " (because examIsAt variable has value ";
-				std::cout << value << ")" << std::endl; 
+				std::cout << std::endl;
 			}
 		}
 	}
@@ -839,10 +844,8 @@ void Optimizer::printConflictVariables(SCIP_SOL * sol)
 			if (value != 0.0)
 			{
 				std::cout << "\t" << "person " << personIt->first;
-				std::cout << " has a conflict at time " << tsIt->first;
-
-				std::cout << " (because conflictAt variable has value ";
-				std::cout << value << ")" << std::endl; 
+				std::cout << " has " << value << " conflict(s) at time ";
+				std::cout << tsIt->first << std::endl;
 			}
 		}
 	}

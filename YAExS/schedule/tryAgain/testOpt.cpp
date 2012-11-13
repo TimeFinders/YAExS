@@ -13,12 +13,7 @@ static bool deleteAll( Person * p ) { delete p; return true; }
 int main(int argc, char* argv[])
 {
 
-    //Create an Optimizer
-    Optimizer scipScheduler(true);
-
-    std::string solution;
-    //Load a model
-    Exam e(5, "CLA");
+    // Set up a test example
 
     std::vector<Person* > people = GetSome::getSomePeople();
     
@@ -32,23 +27,26 @@ int main(int argc, char* argv[])
         }
     }
     
-
-
     std::vector<Exam> exams = GetSome::getSomeExams();
     
-    int numDays = 2;
+    int numDays = 1;
     int slotsPerDay = 2;
+
+
+    //Create an Optimizer
+    Optimizer scipScheduler(true);
+        //Load a model
     scipScheduler.loadModel(exams, people, numDays, slotsPerDay);
     
     //Get the best solution
     scipScheduler.schedule();
     
     scipScheduler.printSolutionAndNonzeroValues();
-	//solution = scipScheduler.getBestSolution();
-
-    //Print the solution to cout
-    //std::cout << solution << std::endl;
-
+	
+    // print just the exam schedule
+    std::cout << "\n_________________________\n" << std::endl;
+    scipScheduler.printExamSchedule();
+    std::cout << "\n_________________________\n" << std::endl;
 
     std::remove_if( people.begin(), people.end(), deleteAll );
 	
