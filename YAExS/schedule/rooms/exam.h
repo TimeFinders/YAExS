@@ -36,6 +36,7 @@ class Exam
 		TimeSlot getTime(){return timeSlot;};
 		void assignLocation(ExamLocation * examLocation);
 		ExamLocation * getLocation() { return examLocation; };
+                const std::string & getName() {return name;}
 
 		bool hasLocation();
 		
