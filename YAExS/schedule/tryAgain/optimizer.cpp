@@ -141,12 +141,15 @@ void Optimizer::releaseOverloadConstraints()
     for ( std::unordered_map< Person::PERSON_ID, std::unordered_map<Day::DAY_ID, SCIP_CONS *> >::iterator pit = overloadCon_.begin();
     	pit != overloadCon_.end(); pit++)
     {
+    	if (shouldPrint_)
+    		std::cout << "\t for person " << pit->first << std::endl;
+
     	std::unordered_map<Day::DAY_ID, SCIP_CONS*> theMap = pit->second;
     	for (std::unordered_map<Day::DAY_ID, SCIP_CONS*>::iterator mapIt = theMap.begin(); 
     		mapIt != theMap.end(); mapIt++)
     	{
     		if (shouldPrint_)
-	    		std::cout << " releasing overload constraint" << std::endl;
+	    		std::cout << " \t\t day " << mapIt->first << std::endl;
     		SCIPreleaseCons(scip_, & mapIt->second );
     	}
     }
@@ -199,16 +202,19 @@ void Optimizer::loadExamIsAtVariables(const std::vector<Exam> & exams)
 		bool isInitial = true;
 		bool canRemoveInAging = false;
 
+		if (shouldPrint_)
+			std::cout << "\nloading exam is at variables" << std::endl;
+
 		for (std::vector<Exam>::const_iterator examIt = exams.begin(); 
 			examIt != exams.end(); examIt++)
 		{	
+			std::unordered_map<TimeSlot::TIMESLOT_ID,  SCIP_VAR *> aMap;
 
 			for (std::vector<Day>::const_iterator dayIt = days_.begin();
 				dayIt != days_.end(); dayIt++)
 			{
 				std::vector<TimeSlot> slots = dayIt->getSlots();
 
-				std::unordered_map<TimeSlot::TIMESLOT_ID,  SCIP_VAR *> aMap;
 				for (std::vector<TimeSlot>::iterator tsIt = slots.begin(); 
 						tsIt != slots.end(); tsIt++)
 				{
@@ -221,21 +227,28 @@ void Optimizer::loadExamIsAtVariables(const std::vector<Exam> & exams)
 
 					const char * name = examAtVariableName(*examIt, *tsIt);
 
-					// just for testing, remove later
-					double objCoefExam = 1 + 5 * (tsIt->getId());
+					// for now we don't care what time an exam is scheduled in particular
+					double objCoefExam = 0.0;
 
+					// create the exam is at variable
 					SCIP_VAR * examVar;
 					SCIPcreateVar(scip_, & examVar, name, 0.0, 1.0,
 							objCoefExam, SCIP_VARTYPE_BINARY,
 							isInitial, canRemoveInAging,
 							NULL, NULL, NULL, NULL, NULL);
+
+					// add exam is at variable to SCIP
 					SCIPaddVar(scip_, examVar);
 
+					// store exam is at variable point for later use
 					aMap[tsIt->getId()] = examVar;
 
 				} // end time slot for loop
-				examIsAt_[examIt->getId()] = aMap;
+				
 			} // end day for loop
+
+			// store the exam is at variables for this exam for later use
+			examIsAt_[examIt->getId()] = aMap;
 		} // end exam for loop
 
 	} // end else
@@ -255,6 +268,9 @@ void Optimizer::loadOnceConstraints()
 	}
 	else 
 	{
+		if(shouldPrint_)
+			std::cout << "\nloading the once constraints." << std::endl;
+
 		bool isInitial = true;
 		double lbound = 1.0;
 		double ubound = 1.0;
@@ -263,7 +279,12 @@ void Optimizer::loadOnceConstraints()
 		for (std::unordered_map<Exam::EXAM_ID, std::unordered_map<TimeSlot::TIMESLOT_ID, SCIP_VAR*> >::iterator examIt = examIsAt_.begin();
 			examIt != examIsAt_.end(); examIt++)
 		{
+
 			Exam::EXAM_ID eid = examIt->first;
+
+			if (shouldPrint_)
+				std::cout << "creating once constraint for exam " << eid << std::endl;
+
 			SCIP_CONS * constraintPointer;
 			const char * conName = onceConName(eid);
 			SCIPcreateConsLinear(scip_, & constraintPointer, conName,
@@ -279,7 +300,7 @@ void Optimizer::loadOnceConstraints()
 				if (shouldPrint_)
 				{
 					std::cout << " adding variable to once constraint for exam " << examIt->first;
-					std::cout << " and time " << tsIt ->first;
+					std::cout << " and time " << tsIt ->first << std::endl;
 				}
 				double coef = 1.0;
 				SCIPaddCoefLinear(scip_, constraintPointer, tsIt->second, coef);
@@ -503,6 +524,9 @@ void Optimizer::printSolutionAndNonzeroValues()
 	else 
 	{
 		std::cout << "\nSolution found!" << std::endl;
+
+		std::cout << "Objective value: " << SCIPgetSolOrigObj(scip_, sol) << std::endl;
+
 		
 		// print the exam is at variables
 		for (std::unordered_map<Exam::EXAM_ID, std::unordered_map<TimeSlot::TIMESLOT_ID, SCIP_VAR*> >::iterator examIt = examIsAt_.begin();

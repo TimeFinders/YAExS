@@ -13,7 +13,6 @@ class GetSome
 
 public:
 
-
 	// EXAMS
 	static std::vector<Exam> getFourExams()
 	{
@@ -60,12 +59,15 @@ public:
 
     	std::vector<Exam> andrewExams = getSomeExams();
     	andrewExams.erase(andrewExams.begin());
+    	Exam * ccn = new Exam(andrewExams.back());
+    	andrewExams.pop_back();
+    	andrewExams.pop_back();
+    	andrewExams.push_back(*ccn);
     	Person * andrewPtr = new Student("Andrew", andrewExams);
     	people.push_back(andrewPtr);
 
     	std::vector<Exam> austonExams = andrewExams;
-    	austonExams.erase(austonExams.begin());
-    	austonExams.erase(austonExams.begin());
+    	austonExams.pop_back();
     	Person * austonPtr = new Student("Auston", austonExams);
     	people.push_back(austonPtr);
 
