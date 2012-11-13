@@ -96,6 +96,11 @@ private:
 
     void releaseOnceConstraints();
     void releaseOverloadConstraints();
+
+    // PRINT VALUES OF (NONZERO) VARIABLES in a solution
+    void printExamIsAtVariables(SCIP_SOL* sol);
+    void printTwoPlusVariables(SCIP_SOL* sol);
+    void printThreePlusVariables(SCIP_SOL* sol);
     
     // NAME SCIP VARIABLES
     // used for naming variables and constraints for SCIP. const char *'s are needed for SCIP

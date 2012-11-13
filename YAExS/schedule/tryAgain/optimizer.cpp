@@ -523,72 +523,89 @@ void Optimizer::printSolutionAndNonzeroValues()
 	}
 	else 
 	{
-		std::cout << "\nSolution found!" << std::endl;
+		std::cout << "\n\nSolution found!" << std::endl;
 
 		std::cout << "Objective value: " << SCIPgetSolOrigObj(scip_, sol) << std::endl;
-
 		
-		// print the exam is at variables
-		for (std::unordered_map<Exam::EXAM_ID, std::unordered_map<TimeSlot::TIMESLOT_ID, SCIP_VAR*> >::iterator examIt = examIsAt_.begin();
-			examIt != examIsAt_.end(); examIt++)
-		{
-			std::unordered_map<TimeSlot::TIMESLOT_ID, SCIP_VAR *> theMap;
-			theMap  = examIt->second;
-			for (std::unordered_map<TimeSlot::TIMESLOT_ID, SCIP_VAR *>::iterator tsIt= theMap.begin();
-				tsIt != theMap.end(); tsIt++)
-			{	
-				double value =  SCIPgetSolVal(scip_, sol, tsIt->second);
-				if (value != 0.0)
-				{
-					std::cout << "\t" << "exam " << examIt->first;
-					std::cout << " is scheduled at time " << tsIt->first;
+		printExamIsAtVariables(sol);
+		
+		printTwoPlusVariables(sol);
+		printThreePlusVariables(sol);
+		
+		std::cout << std::endl;
+	} // end else
+}
 
-					std::cout << " (because examIsAt variable has value ";
-					std::cout << SCIPgetSolVal(scip_, sol, tsIt->second) << ")";
-					std::cout << std::endl; 
-				}
+// print the nonzero values of the exam is at variables
+void Optimizer::printExamIsAtVariables(SCIP_SOL* sol)
+{
+	for (std::unordered_map<Exam::EXAM_ID, std::unordered_map<TimeSlot::TIMESLOT_ID, SCIP_VAR*> >::iterator examIt = examIsAt_.begin();
+		examIt != examIsAt_.end(); examIt++)
+	{
+		std::unordered_map<TimeSlot::TIMESLOT_ID, SCIP_VAR *> theMap;
+		theMap  = examIt->second;
+		for (std::unordered_map<TimeSlot::TIMESLOT_ID, SCIP_VAR *>::iterator tsIt= theMap.begin();
+			tsIt != theMap.end(); tsIt++)
+		{	
+			double value =  SCIPgetSolVal(scip_, sol, tsIt->second);
+			if (value != 0.0)
+			{
+				std::cout << "\t" << "exam " << examIt->first;
+				std::cout << " is scheduled at time " << tsIt->first;
+
+				std::cout << " (because examIsAt variable has value ";
+				std::cout << SCIPgetSolVal(scip_, sol, tsIt->second) << ")";
+				std::cout << std::endl; 
 			}
 		}
+	}
+}
 
-		
-		// Print the two plus variables
-	 	//std::unordered_map <PERSON_ID, SCIP_VAR * > twoPlus;
-		for (std::unordered_map <Person::PERSON_ID, SCIP_VAR *>::iterator twoIt = twoPlus_.begin();
-			 twoIt != twoPlus_.end(); twoIt++)
+// Print the nonzero values of the two plus variables
+void Optimizer::printTwoPlusVariables(SCIP_SOL* sol)
+{
+ 	//std::unordered_map <PERSON_ID, SCIP_VAR * > twoPlus;
+	for (std::unordered_map <Person::PERSON_ID, SCIP_VAR *>::iterator twoIt = twoPlus_.begin();
+		 twoIt != twoPlus_.end(); twoIt++)
+	{
+		double value =  SCIPgetSolVal(scip_, sol, twoIt->second);
+		if (value != 0.0)
 		{
-			double value =  SCIPgetSolVal(scip_, sol, twoIt->second);
-			if (value != 0.0)
-			{
-				std::cout << '\t' << twoIt->first << " (Person)";
-				std::cout << " has two or more exams on some day!"<< std::endl;
-			}
-			else
-			{
-				std::cout << '\t' << twoIt->first << " (Person)";
-				std::cout << " never has two or more exams in one day" << std::endl;
-			}
-		} // end two plus for loop
-
-
-		// Print the three plus variables
-	 	//std::unordered_map <PERSON_ID, SCIP_VAR * > threePlus;
-		for (std::unordered_map <Person::PERSON_ID, SCIP_VAR *>::iterator threeIt = threePlus_.begin();
-			 threeIt != threePlus_.end(); threeIt++)
+			std::cout << '\t' << twoIt->first << " (Person)";
+			std::cout << " has two or more exams on some day!"<< std::endl;
+		}
+		/*
+		else
 		{
-			double value =  SCIPgetSolVal(scip_, sol, threeIt->second);
-			if (value != 0.0)
-			{
-				std::cout << '\t' << threeIt->first << " (Person)";
-				std::cout << " has three or more exams on some day!"<< std::endl;
-			}
-			else
-			{
-				std::cout << '\t' << threeIt->first << " (Person)";
-				std::cout << " never has three or more exams in one day" << std::endl;
-			}
-		} // end three plus for loop
-		
-	} // end else
+			std::cout << '\t' << twoIt->first << " (Person)";
+			std::cout << " never has two or more exams in one day" << std::endl;
+		}
+		*/
+	} // end two plus for loop
+}
+
+
+// Print the nonzero values of the three plus variables
+void Optimizer::printThreePlusVariables(SCIP_SOL* sol)
+{
+ 	//std::unordered_map <PERSON_ID, SCIP_VAR * > threePlus;
+	for (std::unordered_map <Person::PERSON_ID, SCIP_VAR *>::iterator threeIt = threePlus_.begin();
+		 threeIt != threePlus_.end(); threeIt++)
+	{
+		double value =  SCIPgetSolVal(scip_, sol, threeIt->second);
+		if (value != 0.0)
+		{
+			std::cout << '\t' << threeIt->first << " (Person)";
+			std::cout << " has three or more exams on some day!"<< std::endl;
+		}
+		/*
+		else
+		{
+			std::cout << '\t' << threeIt->first << " (Person)";
+			std::cout << " never has three or more exams in one day" << std::endl;
+		}
+		*/
+	} // end three plus for loop
 }
 
 
