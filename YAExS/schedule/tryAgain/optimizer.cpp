@@ -51,7 +51,7 @@ Optimizer::~Optimizer()
 	releaseExamIsAtVariables();
 	releaseTwoPlusVariables();
 	releaseThreePlusVariables();
-
+	releaseConflictAtVariables();
 	
 	// release constaints
 	releaseOnceConstraints();
@@ -113,6 +113,29 @@ void Optimizer::releaseThreePlusVariables()
 
 }
 
+void Optimizer::releaseConflictAtVariables()
+{
+	if (shouldPrint_)
+	{
+		std::cout << "releasing conflict at variables" << std::endl;
+	}
+
+	for (std::unordered_map<Person::PERSON_ID, std::unordered_map<TimeSlot::TIMESLOT_ID, SCIP_VAR*> >::iterator personIt = conflictAt_.begin();
+		personIt != conflictAt_.end(); personIt++)
+	{
+		std::unordered_map<TimeSlot::TIMESLOT_ID, SCIP_VAR *> theMap;
+		theMap  = personIt->second;
+		for (std::unordered_map<TimeSlot::TIMESLOT_ID, SCIP_VAR *>::iterator tsIt= theMap.begin();
+			tsIt != theMap.end(); tsIt++)
+		{	
+			//if (shouldPrint_)
+			//	std::cout << "\t" << personIt->first << " at time " << tsIt->first << std::endl;
+			
+			SCIPreleaseVar(scip_, & tsIt->second);
+		}
+	}
+}
+
 void Optimizer::releaseOnceConstraints()
 {
 
@@ -169,6 +192,8 @@ void Optimizer::loadModel(const std::vector<Exam> & exams,
 
 	// set up the days
 	loadDays(numDays, slotsPerDay);
+		// set up the people
+	loadAllPeople(people);
 
 	// load the exam is at variables
 	loadExamIsAtVariables(exams);
@@ -183,11 +208,14 @@ void Optimizer::loadModel(const std::vector<Exam> & exams,
 	loadTwoPlusVariables(people);
 	loadThreePlusVariables(people);
 
-	loadAllPeople(people);
-
 	// load the overload constraints to constrain the two and three plus variables
 	loadOverloadConstraints();
 
+	// load conflict  at variables
+	loadConflictAtVariables(people);
+
+	// set the conflict at variables with conflict constraints
+	// loadConflictConstraints;
 }
 
 
@@ -221,8 +249,8 @@ void Optimizer::loadExamIsAtVariables(const std::vector<Exam> & exams)
 					if (shouldPrint_)
 					{
 						std::cout << "adding " << examIt->getId();
-						std::cout << " exam variable for time slot "  << tsIt->getId();
-						std::cout << " on day " << dayIt->getId() << std::endl;
+						std::cout << " exam variable for time slot ";
+						std::cout  << tsIt->getId() << std::endl;
 					}
 
 					const char * name = examAtVariableName(*examIt, *tsIt);
@@ -249,6 +277,66 @@ void Optimizer::loadExamIsAtVariables(const std::vector<Exam> & exams)
 
 			// store the exam is at variables for this exam for later use
 			examIsAt_[examIt->getId()] = aMap;
+		} // end exam for loop
+
+	} // end else
+}
+
+void Optimizer::loadConflictAtVariables(const std::vector<Person *> & people)
+{
+	// check that the variables haven't been loaded already;
+	if ( !conflictAt_.empty() )
+		std::cerr << " conflict at variable map is NOT empty. Only call loadConflictAtVariables once." << std::endl;
+
+	else 
+	{
+		bool isInitial = true;
+		bool canRemoveInAging = false;
+
+		if (shouldPrint_)
+			std::cout << "\nloading conflict  at variables" << std::endl;
+
+	// std::unordered_map <Person::PERSON_ID, std::unordered_map <TimeSlot::TIMESLOT_ID, SCIP_VAR *> > conflictAt_;
+	
+		for (std::vector<Person *>::const_iterator personIt = people.begin(); 
+			personIt != people.end(); personIt++)
+		{	
+			std::unordered_map<TimeSlot::TIMESLOT_ID,  SCIP_VAR *> aMap;
+			Person::PERSON_ID personID = (*personIt)->getId();
+
+			// loop through the time slots, creating conflict variable for each
+			for (std::vector<TimeSlot>::iterator tsIt = allTimeSlots_.begin(); 
+					tsIt != allTimeSlots_.end(); tsIt++)
+			{
+				if (shouldPrint_)
+				{
+					std::cout << "adding " << personID << "'s";
+					std::cout << " 'conflict at' variable for time slot "  << tsIt->getId();
+				}
+
+				const char * name = conflictAtVariableName(personID, tsIt->getId());
+
+				// Conflicts are worth 20
+				double objCoefConflict = 20.0;
+
+				// create the exam is at variable
+				SCIP_VAR * conflictVar;
+				SCIPcreateVar(scip_, & conflictVar, name, 0.0, 1.0,
+						objCoefConflict, SCIP_VARTYPE_BINARY,
+						isInitial, canRemoveInAging,
+						NULL, NULL, NULL, NULL, NULL);
+
+				// add exam is at variable to SCIP
+				SCIPaddVar(scip_, conflictVar);
+
+				// store exam is at variable point for later use
+				aMap[tsIt->getId()] = conflictVar;
+
+			} // end time slot for loop
+				
+			
+			// store the exam is at variables for this exam for later use
+			conflictAt_[personID] = aMap;
 		} // end exam for loop
 
 	} // end else
@@ -572,7 +660,7 @@ void Optimizer::printTwoPlusVariables(SCIP_SOL* sol)
 		if (value != 0.0)
 		{
 			std::cout << '\t' << twoIt->first << " (Person)";
-			std::cout << " has two or more exams on some day!"<< std::endl;
+			std::cout << " has two or more exams on some day."<< std::endl;
 		}
 		/*
 		else
@@ -641,21 +729,13 @@ const char* Optimizer::examAtVariableName(const Exam & exam, const TimeSlot & ti
 
    std::stringstream ss;
    ss << exam.getId() << "_" << timeslot.getId();
+   ss << "_examAt";
    std::string str(ss.str());
    const char* name = str.c_str();
 
    return name;
 }
 
-const char* Optimizer::onceConName( const Exam::EXAM_ID & eid)
-{
-	return (eid + "_once").c_str();
-}
-
-const char* Optimizer::onceConName( const Exam & exam)
-{
-	return onceConName(exam.getId());
-}
 
 const char* Optimizer::twoPlusVariableName( Person * person)
 {
@@ -665,6 +745,27 @@ const char* Optimizer::twoPlusVariableName( Person * person)
 const char* Optimizer::threePlusVariableName( Person * person)
 {
 	return (person->getId() + "_threePlus").c_str();
+}
+
+const char * Optimizer::conflictAtVariableName(Person::PERSON_ID pID, TimeSlot::TIMESLOT_ID tsID)
+{
+	std::stringstream ss;
+	ss << pID << "_" << tsID;
+	ss << "_conflictAt";
+	std::string str(ss.str());
+	const char* name = str.c_str();
+
+	return name;
+}
+
+const char* Optimizer::onceConName( Exam::EXAM_ID eid )
+{
+	return ("once_" + eid).c_str();
+}
+
+const char* Optimizer::onceConName( const Exam & exam )
+{
+	return onceConName(exam.getId());
 }
 
 const char* Optimizer::overloadConName( Person::PERSON_ID pID, const Day & day )
@@ -678,6 +779,11 @@ const char* Optimizer::overloadConName( Person::PERSON_ID pID, const Day & day )
 // set up the days with their time slots
 void Optimizer::loadDays( int numDays, int slotsPerDay)
 {
+	if (!days_.empty())
+		std::cerr << "days is not empty. only call loadDays once." << std::endl;
+	if (!allTimeSlots_.empty())
+		std::cerr << "all time slots is not empty. only call loadDays once." << std::endl;
+
 	int slotId = 0;
 	for (int dayNum = 0; dayNum < numDays; dayNum++)
 	{
@@ -686,6 +792,8 @@ void Optimizer::loadDays( int numDays, int slotsPerDay)
 		{
 			TimeSlot s(slotId);
 			slots.push_back(s);
+
+			allTimeSlots_.push_back(s);
 
 			slotId++;
 		}

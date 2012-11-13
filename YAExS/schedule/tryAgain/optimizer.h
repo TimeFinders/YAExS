@@ -64,6 +64,9 @@ private:
     // person has three or more exams in one dat variables
     std::unordered_map <Person::PERSON_ID, SCIP_VAR * > threePlus_;
 
+    // conflict variables
+    std::unordered_map <Person::PERSON_ID, std::unordered_map <TimeSlot::TIMESLOT_ID, SCIP_VAR *> > conflictAt_;
+
     // CONSTRAINTS
     // exam can meet at exactly one time constraint
     std::unordered_map< Exam::EXAM_ID, SCIP_CONS *> onceCon_;
@@ -71,10 +74,15 @@ private:
     // set the two plus and three plus variables constraint
     std::unordered_map< Person::PERSON_ID, std::unordered_map<Day::DAY_ID, SCIP_CONS *> >overloadCon_;
 
+    // conflict constraints
+    // time requirement constraints
 
     // OTHER DATA
     // holds the days you can schedule exams over. 
     std::vector<Day> days_;
+
+    // holds all the time slots over all the days
+    std::vector<TimeSlot> allTimeSlots_;
 
     // keep track of pointers to people objects so we can figure out what exams they have
     std::unordered_map< Person::PERSON_ID, Person* > allPeople_;
@@ -82,34 +90,39 @@ private:
 
     // LOADING SCIP INFO
     void loadExamIsAtVariables(const std::vector<Exam> & exams);
-    void loadTwoPlusVariables(const std::vector<Person* > & people);
-    void loadThreePlusVariables(const std::vector<Person* > & people);
+    void loadTwoPlusVariables(const std::vector<Person*> & people);
+    void loadThreePlusVariables(const std::vector<Person*> & people);
+    void loadConflictAtVariables(const std::vector<Person*> & people);
 
     void loadOnceConstraints();
     void loadOverloadConstraints();
-
+    void loadConflictConstraints(); // WRITE
 
     // RELEASING SCIP INFO
     void releaseExamIsAtVariables();
     void releaseTwoPlusVariables();
     void releaseThreePlusVariables();
+    void releaseConflictAtVariables();
 
     void releaseOnceConstraints();
     void releaseOverloadConstraints();
+    void releaseConflictConstraints(); // WRITE
 
     // PRINT VALUES OF (NONZERO) VARIABLES in a solution
     void printExamIsAtVariables(SCIP_SOL* sol);
     void printTwoPlusVariables(SCIP_SOL* sol);
     void printThreePlusVariables(SCIP_SOL* sol);
     
-    // NAME SCIP VARIABLES
+    // NAME SCIP VARIABLES AND CONSTRAINTS
     // used for naming variables and constraints for SCIP. const char *'s are needed for SCIP
-    static const char* examAtVariableName(const Exam & exam, const TimeSlot & timeslot);
-    static const char* onceConName( const Exam::EXAM_ID & eid);
-    static const char* onceConName( const Exam & exam);
-    static const char* twoPlusVariableName(Person * person);
-    static const char* threePlusVariableName(Person * person);
+    static const char* examAtVariableName( const Exam & exam, const TimeSlot & timeslot );
+    static const char * conflictAtVariableName( Person::PERSON_ID pID, TimeSlot::TIMESLOT_ID tsID );
+    static const char* twoPlusVariableName( Person * person );
+    static const char* threePlusVariableName( Person * person );
+    static const char* onceConName( Exam::EXAM_ID eid );
+    static const char* onceConName( const Exam & exam );
     static const char* overloadConName( Person::PERSON_ID pID, const Day & day );
+    static const char* conflictConName( Person::PERSON_ID pID, TimeSlot::TIMESLOT_ID tsID ); // WRITE
 
     // OTHER HELPER FUNCTIONS
     void loadDays( int numDays, int slotsPerDay);
