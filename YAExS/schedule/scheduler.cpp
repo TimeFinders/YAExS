@@ -58,15 +58,22 @@ bool Scheduler::loadStudents()
         std::uniform_int_distribution<int> rand_exam(0,exams_.size()-1);
         std::uniform_int_distribution<int> rand_courseload(1,5);
 
-        //Create 30 students
+        //Create 100 students
         std::remove_if( people_.begin(), people_.end(), deleteAll );
         people_.clear();
         
-        for (int i = 0; i < 30; i++)
+        for (int i = 0; i < 80; i++)
         {
                 //Create a vector of exams for this person
                 std::vector<Exam> exams;
                 size_t num_exams = rand_courseload(gen);
+
+                if (num_exams == 0)
+                {
+                    std::cout << "no exams" << std::endl;
+                    continue;
+                }
+
                 while (exams.size() < num_exams)
                 {
                         int index = rand_exam(gen);
@@ -78,6 +85,7 @@ bool Scheduler::loadStudents()
                         if (skip) continue;
                         exams.push_back(Exam(1, exams_[index].getId()));
                 }
+
 
                 char id[3];
                 id[0] = i/10 + '0';
@@ -93,8 +101,11 @@ bool Scheduler::loadStudents()
 //Loads the exams and students into SCIP and begins the scheduling
 bool Scheduler::startScheduling()
 {
+        int numDays = 3;
+        int slotsPerDay = 3;
+
         //Load the model
-        optimizer_->loadModel(exams_, people_, 5, 4);
+        optimizer_->loadModel(exams_, people_, numDays, slotsPerDay);
 
         //Run it
         optimizer_->schedule();
