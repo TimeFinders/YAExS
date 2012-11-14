@@ -16,7 +16,7 @@ import pytz
 from django.http import HttpResponse
 from django.core.mail import send_mail
 from django.conf import settings
-from django.db import connections
+from django.db import connection
 
 from courses.models import (Semester, Course, Department, Section,
     Period, SectionPeriod, OfferedFor, SemesterDepartment, ExamMapping)
@@ -434,29 +434,28 @@ def add_cross_listing():
 
         Two criteria are used - same course and same professor or different course and same meeting time/place/instuctor.
     """
-    from itertools import combinations
     from collections import Counter
+    visited = []
     compare = lambda x, y: Counter(x) == Counter(y)
     sections = Semester.objects.order_by('year', 'month')[0].sections.all().prefetch_related('section_times')
     for s1 in sections.filter(visited=0):
         found = False
-        for s2 in sections.filter(visited=2):
+        for s2 in visited:
             if s1 != s2 and s1.section_times.all() and s2.section_times.all() \
             and ((s1.course == s2.course and compare(s1.section_times.all().values_list('instructor'), s2.section_times.all().values_list('instructor'))) \
             or (compare(s1.section_times.all(), s2.section_times.all()))):
                 found = True
                 print s1.course, s1, "crosslisted as", s2.course, s2
                 ExamMapping(crn=s1.crn, examID=s2.pk).save()
-                s1.visited=1
+                s1.visited = 1
                 s1.save()
                 break
         if not found:
             print "No match for", s1.course, s1
-            s1.visited=2
+            s1.visited = 2
             s1.save()
+            visited.append(s1)
             ExamMapping(crn=s1.crn, examID=s1.pk).save()
-
-    print connections.queries, len(connections.queries)
 
 
 def export_schedule(crns):
