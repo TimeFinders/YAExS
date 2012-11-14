@@ -9,7 +9,7 @@
 class ExamLocation;
 
 #include <string>
-#include "timeslot.h"
+#include "../time/timeslot.h"
 
 
 class Exam

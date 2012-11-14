@@ -12,9 +12,9 @@
 #include <sstream>
 #include <iostream>
 #include <unordered_map>
-#include "exam.h"
-#include "person.h"
-#include "day.h"
+#include "exams/exam.h"
+#include "people/person.h"
+#include "time/day.h"
 
 #include <objscip/objscip.h>
 #include <objscip/objscipdefplugins.h>

@@ -2,11 +2,11 @@
 Just a helper class for testing SCIP
 */
 
-#include "exam.h"
-#include "student.h"
+#include "../exams/exam.h"
+#include "../people/student.h"
 #include <vector>
-#include "person.h"
-#include "instructor.h"
+#include "../people/person.h"
+#include "../people/instructor.h"
 
 class GetSome
 {

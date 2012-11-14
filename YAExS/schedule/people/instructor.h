@@ -6,7 +6,7 @@
 #ifndef _instructor_h_
 #define _instructor_h_
 
-#include "exam.h"
+#include "../exams/exam.h"
 #include <string>
 #include <vector>
 #include "person.h"

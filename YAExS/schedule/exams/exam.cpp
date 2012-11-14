@@ -4,7 +4,7 @@
 */
 
 #include "exam.h"
-#include "timeslot.h"
+#include "../time/timeslot.h"
 
 //for debugging
 #include <iostream>
