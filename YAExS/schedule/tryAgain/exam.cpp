@@ -47,8 +47,8 @@ bool Exam::isLargerByTime(Exam e1, Exam e2)
 		return true;
 	if (e1.timeSlot == e2.timeSlot)
 		return ( e1.numStudents > e2.numStudents );
-	else
-		return false;
+		
+	return false;
 }
 
 //for debugging

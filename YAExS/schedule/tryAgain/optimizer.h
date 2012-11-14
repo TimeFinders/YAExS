@@ -47,11 +47,6 @@ public:
     void printSolutionAndNonzeroValues();
 
 
-    //Returns the generated schedules
-    std::string getBestSolution();
-    //Currently not sure how to get the number of solutions...
-    //std::vector<SCIP_SOL*> getSolutions();
-
 private:
     // if true lots of debugging info will print to standard out
     bool shouldPrint_;
@@ -73,6 +68,7 @@ private:
     // conflict variables
     std::unordered_map <Person::PERSON_ID, std::unordered_map <TimeSlot::TIMESLOT_ID, SCIP_VAR *> > conflictAt_;
 
+
     // CONSTRAINTS
     // exam can meet at exactly one time constraint
     std::unordered_map< Exam::EXAM_ID, SCIP_CONS *> onceCon_;
@@ -82,6 +78,7 @@ private:
 
     // conflict constraints
     std::unordered_map <Person::PERSON_ID, std::unordered_map <TimeSlot::TIMESLOT_ID, SCIP_CONS *> > conflictCon_;
+
 
     // OTHER DATA
     // holds the days you can schedule exams over. 
@@ -106,6 +103,7 @@ private:
     // load the conflict constraints for a single person (one for each time slot)
     void loadConflictConstraints(Person * p);
 
+
     // RELEASING SCIP INFO
     void releaseExamIsAtVariables();
     void releaseTwoPlusVariables();
@@ -116,11 +114,13 @@ private:
     void releaseOverloadConstraints();
     void releaseConflictConstraints();
 
+
     // PRINT VALUES OF (NONZERO) VARIABLES in a solution
     void printExamIsAtVariables(SCIP_SOL* sol);
     void printTwoPlusVariables(SCIP_SOL* sol);
     void printThreePlusVariables(SCIP_SOL* sol);
     void printConflictVariables(SCIP_SOL * sol);
+
     
     // NAME SCIP VARIABLES AND CONSTRAINTS
     // used for naming variables and constraints for SCIP. const char *'s are needed for SCIP
@@ -133,21 +133,19 @@ private:
     static const char* overloadConName( Person::PERSON_ID personID, Day::DAY_ID dayID );
     static const char* conflictConName( Person::PERSON_ID personID, TimeSlot::TIMESLOT_ID tsID ); // WRITE
 
+
     // OTHER HELPER FUNCTIONS
     void loadDays( int numDays, int slotsPerDay);
     void loadAllPeople( const std::vector<Person*> & people);
 
-    // true if the person must take the exam
-    bool personHasExam(Person::PERSON_ID personID, Exam::EXAM_ID examID);
-
     // true if the day contains the time slot
     bool dayHasSlot(Day::DAY_ID dayID, TimeSlot::TIMESLOT_ID tsID);
 
-    // the exam is at variables for this person, keyed by their time slot
+    // the exam is at variables for this person, keyed by their time slot id
     std::unordered_map<TimeSlot::TIMESLOT_ID, std::list<SCIP_VAR *> > personalExamIsAtVariables(Person * person);
 
-    SCIP_CONS * personalOverloadConstraint(Person::PERSON_ID personID, const Day & day);
-
+    // create an overload constraint for an individual person on one day
+    SCIP_CONS * createPersonalOverloadConstraint(Person::PERSON_ID personID, const Day & day);
 
 };
 

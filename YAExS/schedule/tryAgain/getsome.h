@@ -57,34 +57,34 @@ public:
 	{
    	 	std::vector<Person *> people;
 
-    	std::vector<Exam> andrewExams = getSomeExams();
-    	andrewExams.erase(andrewExams.begin());
-    	Exam * ccn = new Exam(andrewExams.back());
-    	andrewExams.pop_back();
-    	andrewExams.pop_back();
-    	andrewExams.push_back(*ccn);
-    	Person * andrewPtr = new Student("Andrew", andrewExams);
-    	people.push_back(andrewPtr);
+	    	std::vector<Exam> andrewExams = getSomeExams();
+	    	andrewExams.erase(andrewExams.begin());
+	    	Exam * ccn = new Exam(andrewExams.back());
+	    	andrewExams.pop_back();
+	    	andrewExams.pop_back();
+	    	andrewExams.push_back(*ccn);
+	    	Person * andrewPtr = new Student("Andrew", andrewExams);
+	    	people.push_back(andrewPtr);
 
-    	std::vector<Exam> austonExams = andrewExams;
-    	austonExams.pop_back();
-    	Person * austonPtr = new Student("Auston", austonExams);
-    	people.push_back(austonPtr);
+	    	std::vector<Exam> austonExams = andrewExams;
+	    	austonExams.pop_back();
+	    	Person * austonPtr = new Student("Auston", austonExams);
+	    	people.push_back(austonPtr);
 
-    	std::vector<Exam> johnExams(austonExams);
-    	Person * johnPtr = new Instructor("John", johnExams);
-    	people.push_back(johnPtr);
+	    	std::vector<Exam> johnExams(austonExams);
+	    	Person * johnPtr = new Instructor("John", johnExams);
+	    	people.push_back(johnPtr);
 
-    	
-    	std::vector<Exam> jeffExams = getSomeExams();
-    	jeffExams.erase(jeffExams.begin());
-    	Person * jeffPtr = new Student("Jeff", jeffExams);
-    	people.push_back(jeffPtr);
+	    	
+	    	std::vector<Exam> jeffExams = getSomeExams();
+	    	jeffExams.erase(jeffExams.begin());
+	    	Person * jeffPtr = new Student("Jeff", jeffExams);
+	    	people.push_back(jeffPtr);
 
-    	std::vector<Exam> veraExams = getSomeExams();
-    	veraExams.pop_back();
-    	Person * veraPtr = new Student("Vera", veraExams);
-    	people.push_back(veraPtr);
+	    	std::vector<Exam> veraExams = getSomeExams();
+	    	veraExams.pop_back();
+	    	Person * veraPtr = new Student("Vera", veraExams);
+	    	people.push_back(veraPtr);
 
 		return people;
 	}

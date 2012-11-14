@@ -69,7 +69,7 @@ void Optimizer::releaseExamIsAtVariables()
 		std::cout << "releasing exam is at variables" << std::endl;
 	}
 
-	for (std::unordered_map<Exam::EXAM_ID, std::unordered_map<TimeSlot::TIMESLOT_ID, SCIP_VAR*> >::iterator examIt = examIsAt_.begin();
+	for (std::unordered_map<Exam::EXAM_ID, std::unordered_map<TimeSlot::TIMESLOT_ID, SCIP_VAR*> >::const_iterator examIt = examIsAt_.begin();
 		examIt != examIsAt_.end(); examIt++)
 	{
 		std::unordered_map<TimeSlot::TIMESLOT_ID, SCIP_VAR *> theMap;
@@ -121,7 +121,7 @@ void Optimizer::releaseConflictAtVariables()
 		std::cout << "releasing conflict at variables" << std::endl;
 	}
 
-	for (std::unordered_map<Person::PERSON_ID, std::unordered_map<TimeSlot::TIMESLOT_ID, SCIP_VAR*> >::iterator personIt = conflictAt_.begin();
+	for (std::unordered_map<Person::PERSON_ID, std::unordered_map<TimeSlot::TIMESLOT_ID, SCIP_VAR*> >::const_iterator personIt = conflictAt_.begin();
 		personIt != conflictAt_.end(); personIt++)
 	{
 		std::unordered_map<TimeSlot::TIMESLOT_ID, SCIP_VAR *> theMap;
@@ -666,8 +666,14 @@ void Optimizer::loadConflictConstraints()
 
 }
 
-SCIP_CONS * Optimizer::personalOverloadConstraint(Person::PERSON_ID personID, const Day & day)
+// create a single overload constraint for the given person and the  day
+SCIP_CONS * Optimizer::createPersonalOverloadConstraint(Person::PERSON_ID personID, const Day & day)
 {
+	//in zimpl:
+	//subto overload: 
+	//	forall <p,d> in PEOPLE cross DAYS do
+	//		sum <e> in EXAMS[p]: 
+	//			(sum <t> in DAYSLOT[d]: examIsAt [e,t] - twoPlus[p] - threePlus[p]) <= 1;
 
 	bool isInitial = true;
 	// there is no lower bound, so use negative infinity
@@ -693,48 +699,46 @@ SCIP_CONS * Optimizer::personalOverloadConstraint(Person::PERSON_ID personID, co
 
 	std::vector<TimeSlot> slots = day.getSlots();
 
-	// REWRITE THIS SO THAT WE ONLY LOOK AT EXAMS THAT THIS PERSON TAKES
+	Person * person = allPeople_[personID];
+	std::vector<Exam> exams = person->getExams();
 
-
-	// loop over examIsAt variables for this day, 
-	for (std::unordered_map<Exam::EXAM_ID, std::unordered_map<TimeSlot::TIMESLOT_ID, SCIP_VAR*> >::iterator eIt = examIsAt_.begin();
-			eIt != examIsAt_.end(); eIt++)
+	for (std::vector<Exam>::const_iterator examIt = exams.begin(); 
+		examIt != exams.end(); examIt++)
 	{
-		// we only add an exam for this person if they have this exam!
-		if ( personHasExam(personID, eIt->first) )
+		Exam::EXAM_ID examID = examIt->getId();
+		std::unordered_map<TimeSlot::TIMESLOT_ID, SCIP_VAR*> examIsAtVariableMap;
+		examIsAtVariableMap = examIsAt_[examID];
+
+
+		for (std::unordered_map<TimeSlot::TIMESLOT_ID, SCIP_VAR*>::const_iterator tsIt = examIsAtVariableMap.begin();
+			tsIt != examIsAtVariableMap.end(); tsIt++)
 		{
-
-			std::unordered_map<TimeSlot::TIMESLOT_ID, SCIP_VAR*> theMap = eIt->second;
-
-			for (std::unordered_map<TimeSlot::TIMESLOT_ID, SCIP_VAR*>::iterator tsIt = theMap.begin();
-				tsIt != theMap.end(); tsIt++)
+			// only add the variable for this time slot if the time slot is on the proper day 
+			TimeSlot::TIMESLOT_ID tsID = tsIt->first;
+			if ( dayHasSlot(dayID, tsID) )
 			{
-				// only add the variable for this time slot if the time slot is on the proper day 
-				TimeSlot::TIMESLOT_ID tsID = tsIt->first;
-				if ( dayHasSlot(dayID, tsID) )
+				if (shouldPrint_)
 				{
-					if (shouldPrint_)
-					{
-						std::cout << "\t adding exam is at variable for exam " << eIt->first;
-						std::cout << " at timeslot " << tsID << std::endl;
-					}
-
-					//add examIsAt variable to constraint
-					double coef = 1.0;
-					SCIPaddCoefLinear(scip_, constraintPointer, tsIt->second, coef);
+					std::cout << "\t adding exam is at variable for exam " << examID;
+					std::cout << " at timeslot " << tsID << std::endl;
 				}
 
-			} // end time slot loop
-		}
-	} // end time slot loop
+				//add examIsAt variable to constraint
+				double examIsAtCoefficient = 1.0;
+				SCIPaddCoefLinear(scip_, constraintPointer, tsIt->second, examIsAtCoefficient);
+			}
+
+		} // end time slot loop
+		
+	} // end exam slot loop
 
 	// add two plus variables
-	double coef = -1.0;
-	SCIPaddCoefLinear(scip_, constraintPointer, twoPlus_[personID], coef);
+	double twoPlusCoefficient = -1.0;
+	SCIPaddCoefLinear(scip_, constraintPointer, twoPlus_[personID], twoPlusCoefficient);
 
 	// add three plus variables
-	coef = -1.0;
-	SCIPaddCoefLinear(scip_, constraintPointer, threePlus_[personID], coef);
+	double threePlusCoefficient = -1.0;
+	SCIPaddCoefLinear(scip_, constraintPointer, threePlus_[personID], threePlusCoefficient);
 
 	// add the constraint to the problem
  	SCIPaddCons(scip_, constraintPointer);
@@ -756,7 +760,7 @@ void Optimizer::loadOverloadConstraints()
 	//			(sum <t> in DAYSLOT[d]: examIsAt [e,t] - twoPlus[p] - threePlus[p]) <= 1;
 
 	// loop over people
-	for (std::unordered_map <Person::PERSON_ID, SCIP_VAR *>::iterator pIt= twoPlus_.begin();
+	for (std::unordered_map <Person::PERSON_ID, SCIP_VAR *>::const_iterator pIt= twoPlus_.begin();
 			pIt != twoPlus_.end(); pIt++)
 	{
 		std::unordered_map<Day::DAY_ID, SCIP_CONS *> personConMap;
@@ -768,7 +772,7 @@ void Optimizer::loadOverloadConstraints()
 		{
 			Day::DAY_ID dayID = dIt->getId(); 
 			 	//save this pointer for later use
-			SCIP_CONS * constraintPointer = personalOverloadConstraint(personID, *dIt);
+			SCIP_CONS * constraintPointer = createPersonalOverloadConstraint(personID, *dIt);
 			personConMap[dayID] = constraintPointer;
 			
 		 } // end day loop
@@ -813,7 +817,7 @@ void Optimizer::printSolutionAndNonzeroValues()
 // print the nonzero values of the exam is at variables
 void Optimizer::printExamIsAtVariables(SCIP_SOL* sol)
 {
-	for (std::unordered_map<Exam::EXAM_ID, std::unordered_map<TimeSlot::TIMESLOT_ID, SCIP_VAR*> >::iterator examIt = examIsAt_.begin();
+	for (std::unordered_map<Exam::EXAM_ID, std::unordered_map<TimeSlot::TIMESLOT_ID, SCIP_VAR*> >::const_iterator examIt = examIsAt_.begin();
 		examIt != examIsAt_.end(); examIt++)
 	{
 		std::unordered_map<TimeSlot::TIMESLOT_ID, SCIP_VAR *> theMap;
@@ -834,12 +838,12 @@ void Optimizer::printExamIsAtVariables(SCIP_SOL* sol)
 
 void Optimizer::printConflictVariables(SCIP_SOL * sol)
 {
-	for (std::unordered_map<Person::PERSON_ID, std::unordered_map<TimeSlot::TIMESLOT_ID, SCIP_VAR*> >::iterator personIt = conflictAt_.begin();
+	for (std::unordered_map<Person::PERSON_ID, std::unordered_map<TimeSlot::TIMESLOT_ID, SCIP_VAR*> >::const_iterator personIt = conflictAt_.begin();
 		personIt != conflictAt_.end(); personIt++)
 	{
 		std::unordered_map<TimeSlot::TIMESLOT_ID, SCIP_VAR *> theMap;
 		theMap  = personIt->second;
-		for (std::unordered_map<TimeSlot::TIMESLOT_ID, SCIP_VAR *>::iterator tsIt= theMap.begin();
+		for (std::unordered_map<TimeSlot::TIMESLOT_ID, SCIP_VAR *>::const_iterator tsIt= theMap.begin();
 			tsIt != theMap.end(); tsIt++)
 		{	
 			double value =  SCIPgetSolVal(scip_, sol, tsIt->second);
@@ -857,7 +861,7 @@ void Optimizer::printConflictVariables(SCIP_SOL * sol)
 void Optimizer::printTwoPlusVariables(SCIP_SOL* sol)
 {
  	//std::unordered_map <PERSON_ID, SCIP_VAR * > twoPlus;
-	for (std::unordered_map <Person::PERSON_ID, SCIP_VAR *>::iterator twoIt = twoPlus_.begin();
+	for (std::unordered_map <Person::PERSON_ID, SCIP_VAR *>::const_iterator twoIt = twoPlus_.begin();
 		 twoIt != twoPlus_.end(); twoIt++)
 	{
 		double value =  SCIPgetSolVal(scip_, sol, twoIt->second);
@@ -881,7 +885,7 @@ void Optimizer::printTwoPlusVariables(SCIP_SOL* sol)
 void Optimizer::printThreePlusVariables(SCIP_SOL* sol)
 {
  	//std::unordered_map <PERSON_ID, SCIP_VAR * > threePlus;
-	for (std::unordered_map <Person::PERSON_ID, SCIP_VAR *>::iterator threeIt = threePlus_.begin();
+	for (std::unordered_map <Person::PERSON_ID, SCIP_VAR *>::const_iterator threeIt = threePlus_.begin();
 		 threeIt != threePlus_.end(); threeIt++)
 	{
 		double value =  SCIPgetSolVal(scip_, sol, threeIt->second);
@@ -906,26 +910,6 @@ void Optimizer::schedule()
 {
     SCIPsolve(scip_);
 }
-
-//Return the best solution as a string
-std::string Optimizer::getBestSolution()
-{
-    //Create a stringstream to redirect cout to a string
-    std::stringstream redir;
-
-    //Store the old streambuf while linking cout to the stringstream
-    std::streambuf* old = std::cout.rdbuf(redir.rdbuf());
-
-    //Print the solution to the stringstream
-    SCIPprintBestSol(scip_, NULL, false);
-
-    //Restore the old streambuf
-    std::cout.rdbuf(old);
-
-    //Return the string stored in redir
-    return redir.str();
-}
-
 
 const char* Optimizer::examAtVariableName(const Exam & exam, const TimeSlot & timeslot)
 {
@@ -1015,12 +999,12 @@ void Optimizer::loadDays( int numDays, int slotsPerDay)
 	if (shouldPrint_)
 	{
 		std::cout << "the following days were created:" << std::endl;
-		for (std::vector<Day>::iterator dIt = days_.begin(); 
+		for (std::vector<Day>::const_iterator dIt = days_.begin(); 
 				dIt != days_.end(); dIt++)
 		{
 			std::cout << "\tday: " << dIt->getId() << std::endl;
 			std::vector<TimeSlot> slots = dIt->getSlots();
-			for(std::vector<TimeSlot>::iterator tsIt = slots.begin();
+			for(std::vector<TimeSlot>::const_iterator tsIt = slots.begin();
 				 tsIt != slots.end(); tsIt++)
 			{
 				std::cout << "\t\ttimeslot: " << tsIt->getId() << std::endl;
@@ -1043,29 +1027,18 @@ void Optimizer::loadDays( int numDays, int slotsPerDay)
  		allPeople_[pId] = *it;
  	}
  }
- 	
-bool Optimizer::personHasExam(Person::PERSON_ID personID, Exam::EXAM_ID examID)
-{
-	Person * p = allPeople_[personID];
-	if (p == NULL)
-	{
-		std::cerr << "person not found in allPeople map. Call loadAllPeople before personHasExam." << std::endl;
-		return false;
-	}
 
-	return Person::personHasExam(p, examID);
-}
 
 bool Optimizer::dayHasSlot(Day::DAY_ID dayID, TimeSlot::TIMESLOT_ID tsID)
 {
-	for (std::vector<Day>::iterator dayIt = days_.begin();
+	for (std::vector<Day>::const_iterator dayIt = days_.begin();
 			dayIt != days_.end(); dayIt++)
 	{
 		// if we are at the right day, check the time slots
 		if (dayIt->getId() == dayID)
 		{
 			std::vector<TimeSlot> slots = dayIt->getSlots();
-			for (std::vector<TimeSlot>::iterator tsIt = slots.begin();
+			for (std::vector<TimeSlot>::const_iterator tsIt = slots.begin();
 					tsIt != slots.end(); tsIt++)
 			{
 				if (tsIt->getId() == tsID)

@@ -91,7 +91,7 @@ var twoPlus[<p> in PEOPLE] binary;
 var threePlus[<p> in PEOPLE] binary;
 # Binary variable, equals 1 if person p THREE OR MORE exams on any, 0 otherwise.
 
-var conflict [<p, t> in PEOPLE cross TSLOT] >= 0;  # conflict[t,p]=0 if person p has no conflicts at time t (zero or one exams)
+var conflictAt [<p, t> in PEOPLE cross TSLOT] >= 0;  # conflict[t,p]=0 if person p has no conflicts at time t (zero or one exams)
 # and conflict[p,t] will be set to - 1 + (number of exams person p has at time t) otherwise when optimizing.
 # cross is the cartesian product, so t is in TSLOT, p in PEOPLE
 
@@ -101,7 +101,7 @@ var conflict [<p, t> in PEOPLE cross TSLOT] >= 0;  # conflict[t,p]=0 if person p
 
 minimize clashes: 
     sum <p> in PEOPLE : threePlus[p]
- +  sum <t> in TSLOT : (sum<p> in PEOPLE : conflict[p,t])
+ +  sum <t> in TSLOT : (sum<p> in PEOPLE : conflictAt[p,t])
  +  (1/5) * sum <e> in ALL_EXAMS : ( sum <t> in dontMeetAt[e] : examIsAt[e,t] ) 
  - (1/10) * sum <e> in ALL_EXAMS : ( sum <t> in pleaseMeetAt[e] : examIsAt[e,t] )
  + (1/10) * sum<p> in PEOPLE : twoPlus[p];
@@ -125,11 +125,11 @@ subto onlyOnce:
 
 subto penalizeConflicts:
 	forall <t,p> in TSLOT cross PEOPLE do
-		 -conflict[p,t] + (sum <e> in EXAMS[p]: examIsAt[e,t]) <= 1;
+		 -conflictAt[p,t] + (sum <e> in EXAMS[p]: examIsAt[e,t]) <= 1;
 
-# If person p is scheduled for one or fewer exams at time t, then conflict[p,t] = 0
+# If person p is scheduled for one or fewer exams at time t, then conflictAt[p,t] = 0
 # If person p is scheduled for more than one exam at time t, then
-#		 when optimizing conflict[p,t] = - 1 + (that number of exams)
+#		 when optimizing conflictAt[p,t] = - 1 + (that number of exams)
 
 
 subto overload: 

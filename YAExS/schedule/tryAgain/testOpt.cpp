@@ -29,7 +29,7 @@ int main(int argc, char* argv[])
     
     std::vector<Exam> exams = GetSome::getSomeExams();
     
-    int numDays = 1;
+    int numDays = 2;
     int slotsPerDay = 2;
 
 
