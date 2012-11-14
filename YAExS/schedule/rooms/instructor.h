@@ -9,8 +9,9 @@
 #include "exam.h"
 #include <string>
 #include <vector>
+#include "person.h"
 
-class Instructor
+class Instructor : public Person
 {
 	private:
 		std::string identifier;
@@ -22,6 +23,9 @@ class Instructor
 		Instructor(std::string id) : identifier(id), exams(0) {};
 		
 		Instructor(std::string id, std::vector<Exam> theExams) : 
-			identifier(id), exams(theExams) {};	
+			identifier(id), exams(theExams) {};
+
+		std::string getId() const { return identifier; };
+		std::vector<Exam> getExams() { return exams; };	
 };
 #endif

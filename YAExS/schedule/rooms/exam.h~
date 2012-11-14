@@ -37,7 +37,6 @@ class Exam
 
 		void assignTime(TimeSlot timeSlot);
 		TimeSlot getTime(){return timeSlot;};
-
 		void assignLocation(ExamLocation * examLocation);
 		ExamLocation * getLocation() { return examLocation; };
 

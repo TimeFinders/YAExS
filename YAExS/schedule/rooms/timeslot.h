@@ -16,6 +16,8 @@ class TimeSlot
 		
 		
 	public:
+		typedef int TIMESLOT_ID;
+
 		TimeSlot() : id(-1) {};
 
 		TimeSlot(int id) : id(id) {};
@@ -32,9 +34,10 @@ class TimeSlot
 		// compare by id
 		bool operator> (const TimeSlot & other){ return this->id > other.id; }; 
 
+		int getId() const { return id; };
 
 		// for debugging
-		int toPrint() { return id; }
+		int toPrint() const { return id; }
 		
 };
 #endif
