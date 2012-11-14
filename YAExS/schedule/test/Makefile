@@ -1,6 +1,7 @@
 # we need -std=c++0x for unordered_map (used in optimizer)
 CC = g++ -std=c++0x 
-CFLAGS = -I../exams -I../people -I../time -I../locations -I.. -g -Wall -Wextra
+INCLUDE = -I../exams -I../people -I../time -I../locations -I..
+CFLAGS = $(INCLUDE) -g -Wall -Wextra
 SCIP_LFLAGS =  -L/usr/lib  -lscip -lreadline  -lgmp -lz  -llpispx  -lsoplex -lobjscip -lnlpi.cppad
 
 # if you change anything in these files, it will re-make I think
