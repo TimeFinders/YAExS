@@ -9,6 +9,7 @@
 #include "dbreader.h"
 #include "optimizer.h"
 #include "exams/exam.h"
+#include "people/student.h"
 
 class Scheduler
 {
@@ -18,7 +19,7 @@ public:
         Scheduler(DBReader* dbIn, Optimizer* optIn);
 
         //Destructor
-        //~Scheduler();
+        ~Scheduler();
 
         //Setup functions
         bool loadExams();
@@ -29,6 +30,7 @@ public:
         bool startScheduling();
         std::string status();
         bool stopScheduling();
+        void printSchedule();
 
 private:
         //Pointer to a DBReader
@@ -40,8 +42,11 @@ private:
         //Current state of the scheduling process
         std::string state_;
 
-        //A vector of exams on their way between the scheduler or database
+        //A vector of exams on their way between the optimizer or database
         std::vector<Exam> exams_;
+
+        //A vector of people pointers to use in the optimizer
+        std::vector<Person*> people_;
 };
 
 
