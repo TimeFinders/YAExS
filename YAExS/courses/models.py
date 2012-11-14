@@ -15,7 +15,7 @@ WARN_EXTRA_QUERIES = getattr(settings, 'COURSES_WARN_EXTRA_QUERIES', DEBUG)
 
 
 __all__ = ['Department', 'Semester', 'Period', 'Section',
-    'Course', 'OfferedFor', 'SectionPeriod']
+    'Course', 'OfferedFor', 'SectionPeriod', 'ExamMapping']
 
 
 def has_model(select_related, model):
@@ -202,7 +202,9 @@ class Section(models.Model):
     course = models.ForeignKey('Course', related_name='sections')
     semester = models.ForeignKey(Semester, related_name='sections')
     periods = models.ManyToManyField(Period, through='SectionPeriod', related_name='sections')
-    examwith = models.ManyToManyField("self")
+    visited = models.IntegerField(default=0, choices=((0, "unvisited"),
+                                                    (1, "visited"),
+                                                    (2, "moved")))
 
     seats_taken = models.IntegerField('Seats Taken')
     seats_total = models.IntegerField('Seats Total')
@@ -492,3 +494,7 @@ class SemesterDepartment(models.Model):
 
     class Meta:
         unique_together = ('department', 'semester')
+
+class ExamMapping(models.Model):
+    crn = models.IntegerField(unique=True)
+    examID = models.IntegerField()
