@@ -5,14 +5,13 @@
 #include "optimizer.h"
 #include <iostream>
 #include <vector>
-#include "getsome.h"
+#include "test/getsome.h"
 #include <algorithm>
 
 static bool deleteAll( Person * p ) { delete p; return true; }
 
 int main(int argc, char* argv[])
 {
-
     // Set up a test example
 
     std::vector<Person* > people = GetSome::getSomePeople();
