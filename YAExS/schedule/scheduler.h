@@ -8,7 +8,7 @@
 
 #include "dbreader.h"
 #include "optimizer.h"
-#include "rooms/exam.h"
+#include "exams/exam.h"
 
 class Scheduler
 {

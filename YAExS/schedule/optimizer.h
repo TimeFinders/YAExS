@@ -19,7 +19,6 @@
 #include <objscip/objscip.h>
 #include <objscip/objscipdefplugins.h>
 
-
 class Optimizer
 {
 public:
