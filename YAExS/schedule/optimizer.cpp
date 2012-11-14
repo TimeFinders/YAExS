@@ -379,8 +379,8 @@ void Optimizer::loadTwoPlusVariables(const std::vector<Person* > & people)
 		bool isInitial = true;
 		bool canRemoveInAging = false;
 
-		// two exams in one day is worth 1;
-		double objCoefTwo = 1.0;
+		// two exams in one day is worth very little in the objective
+		double objCoefTwo = 0.1;
 
 		 //std::unordered_map <PERSON_ID, SCIP_VAR * > twoPlus;
 		for (std::vector<Person*>::const_iterator it = people.begin(); it!=people.end(); it++)

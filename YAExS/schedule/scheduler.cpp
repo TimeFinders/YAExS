@@ -62,7 +62,7 @@ bool Scheduler::loadStudents()
         std::remove_if( people_.begin(), people_.end(), deleteAll );
         people_.clear();
         
-        for (int i = 0; i < 80; i++)
+        for (int i = 0; i < 60; i++)
         {
                 //Create a vector of exams for this person
                 std::vector<Exam> exams;
