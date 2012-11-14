@@ -1,7 +1,7 @@
 CC = g++ -std=c++0x 
 CFLAGS = -g -Wall -Wextra -c
 SCIP_ZIMPL = 
-SCIP_LFLAGS = -L/usr/lib -lscip -lreadline -lgmp $(SCIP_ZIMPL) -lz -lsoplex -llpispx -lobjscip -lnlpi.cppad
+SCIP_LFLAGS = -L/usr/lib -lscip $(SCIP_ZIMPL) -lreadline  -lgmp -lz -llpispx  -lsoplex  -lobjscip -lnlpi.cppad
 PQXX_LFLAGS = -lpqxx
 
 TESTOPT_OBJ = testOpt.cpp optimizer.o exam.o
