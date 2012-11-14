@@ -428,13 +428,21 @@ def import_catalog(a=False):
 
 
 def add_cross_listing():
-    from itertools import product
-    sections = Sections.all().prefetch_related('periods', 'section_times')
-    for s1, s2 in product(sections, sections):
-        if s1.conflicts_with(s2) and s1.instructors == s2.instructors:
-            print s1.
-            s1.crosslisted.add(s2)
-            s2.crosslisted.add(s1)
+    """
+        Determines which sections should have exams together.
+
+        Two criteria are used - same course and same professor or different course and same meeting time/place/instuctor.
+    """
+    from itertools import combinations
+    from collections import Counter
+    compare = lambda x, y: Counter(x) == Counter(y)
+    sections = Semester.objects.order_by('year', 'month')[0].sections.all().prefetch_related('section_times')
+    for s1, s2 in combinations(sections, 2):
+        if s1 != s2 and s1.section_times.all() and s2.section_times.all() \
+        and ((s1.course == s2.course and compare(s1.section_times.all().values_list('instructor'), s2.section_times.all().values_list('instructor'))) \
+        or (compare(s1.section_times.all(), s2.section_times.all()))):
+            print s1.course,s1,"crosslisted as",s2.course,s2
+            s1.examwith.add(s2)
 
 def export_schedule(crns):
     weekday_offset = {}

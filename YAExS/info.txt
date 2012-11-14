@@ -1,0 +1,3 @@
+b =Department.objects.get(code="CSCI").courses.filter(number=4800)[0].section_times
+
+a = Department.objects.get(code="MATH").courses.filter(number=4800)[0].section_times

@@ -202,7 +202,7 @@ class Section(models.Model):
     course = models.ForeignKey('Course', related_name='sections')
     semester = models.ForeignKey(Semester, related_name='sections')
     periods = models.ManyToManyField(Period, through='SectionPeriod', related_name='sections')
-    crosslisted = models.ManyToManyField("self")
+    examwith = models.ManyToManyField("self")
 
     seats_taken = models.IntegerField('Seats Taken')
     seats_total = models.IntegerField('Seats Total')
@@ -451,6 +451,14 @@ class SectionPeriod(models.Model):
 
     objects = managers.QuerySetManager(managers.SectionPeriodQuerySet)
 
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.semester == other.semester \
+            and self.period == other.period and self.instructor == other.instructor \
+            and self.location == other.location and self.kind == other.kind
+
+    def __hash__(self):
+        s = ":".join([str(self.semester), str(self.period), self.instructor, self.location, self.kind])
+        return s.__hash__()
     class Meta:
         unique_together = (
             ('period', 'section', 'semester'),
