@@ -11,6 +11,7 @@
 //TESTING
 #include <random>
 #include <chrono>
+#include <set>
 #define TIMESEED std::chrono::system_clock::now().time_since_epoch().count()
 
 //Constructors
@@ -65,10 +66,17 @@ bool Scheduler::loadStudents()
         {
                 //Create a vector of exams for this person
                 std::vector<Exam> exams;
-                int num_exams = rand_courseload(gen);
-                for (int j = 0; j < num_exams; j++)
+                size_t num_exams = rand_courseload(gen);
+                while (exams.size() < num_exams)
                 {
-                        exams.push_back(Exam(1, exams_[rand_exam(gen)].getId()));
+                        int index = rand_exam(gen);
+                        bool skip = false;
+                        for (size_t j = 0; j < exams.size(); j++)
+                        {
+                                if (exams[j].getId() == exams_[index].getId()) skip=true;
+                        }
+                        if (skip) continue;
+                        exams.push_back(Exam(1, exams_[index].getId()));
                 }
 
                 char id[3];
