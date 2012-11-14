@@ -125,13 +125,13 @@ private:
     // NAME SCIP VARIABLES AND CONSTRAINTS
     // used for naming variables and constraints for SCIP. const char *'s are needed for SCIP
     static const char* examAtVariableName( const Exam & exam, const TimeSlot & timeslot );
-    static const char* conflictAtVariableName( Person::PERSON_ID pID, TimeSlot::TIMESLOT_ID tsID );
+    static const char* conflictAtVariableName( Person::PERSON_ID personID, TimeSlot::TIMESLOT_ID tsID );
     static const char* twoPlusVariableName( Person * person );
     static const char* threePlusVariableName( Person * person );
     static const char* onceConName( Exam::EXAM_ID eid );
     static const char* onceConName( const Exam & exam );
-    static const char* overloadConName( Person::PERSON_ID pID, const Day & day );
-    static const char* conflictConName( Person::PERSON_ID pID, TimeSlot::TIMESLOT_ID tsID ); // WRITE
+    static const char* overloadConName( Person::PERSON_ID personID, Day::DAY_ID dayID );
+    static const char* conflictConName( Person::PERSON_ID personID, TimeSlot::TIMESLOT_ID tsID ); // WRITE
 
     // OTHER HELPER FUNCTIONS
     void loadDays( int numDays, int slotsPerDay);
@@ -145,6 +145,8 @@ private:
 
     // the exam is at variables for this person, keyed by their time slot
     std::unordered_map<TimeSlot::TIMESLOT_ID, std::list<SCIP_VAR *> > personalExamIsAtVariables(Person * person);
+
+    SCIP_CONS * personalOverloadConstraint(Person::PERSON_ID personID, const Day & day);
 
 
 };

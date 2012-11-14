@@ -263,42 +263,35 @@ void Optimizer::loadExamIsAtVariables(const std::vector<Exam> & exams)
 		{	
 			std::unordered_map<TimeSlot::TIMESLOT_ID,  SCIP_VAR *> aMap;
 
-			for (std::vector<Day>::const_iterator dayIt = days_.begin();
-				dayIt != days_.end(); dayIt++)
+			for (std::vector<TimeSlot>::iterator tsIt = allTimeSlots_.begin(); 
+					tsIt != allTimeSlots_.end(); tsIt++)
 			{
-				std::vector<TimeSlot> slots = dayIt->getSlots();
-
-				for (std::vector<TimeSlot>::iterator tsIt = slots.begin(); 
-						tsIt != slots.end(); tsIt++)
+				if (shouldPrint_)
 				{
-					if (shouldPrint_)
-					{
-						std::cout << "adding " << examIt->getId();
-						std::cout << " exam variable for time slot ";
-						std::cout  << tsIt->getId() << std::endl;
-					}
+					std::cout << "adding " << examIt->getId();
+					std::cout << " exam variable for time slot ";
+					std::cout  << tsIt->getId() << std::endl;
+				}
 
-					const char * name = examAtVariableName(*examIt, *tsIt);
+				const char * name = examAtVariableName(*examIt, *tsIt);
 
-					// for now we don't care what time an exam is scheduled in particular
-					double objCoefExam = 0.0;
+				// for now we don't care what time an exam is scheduled in particular
+				double objCoefExam = 0.0;
 
-					// create the exam is at variable
-					SCIP_VAR * examVar;
-					SCIPcreateVar(scip_, & examVar, name, 0.0, 1.0,
-							objCoefExam, SCIP_VARTYPE_BINARY,
-							isInitial, canRemoveInAging,
-							NULL, NULL, NULL, NULL, NULL);
+				// create the exam is at variable
+				SCIP_VAR * examVar;
+				SCIPcreateVar(scip_, & examVar, name, 0.0, 1.0,
+						objCoefExam, SCIP_VARTYPE_BINARY,
+						isInitial, canRemoveInAging,
+						NULL, NULL, NULL, NULL, NULL);
 
-					// add exam is at variable to SCIP
-					SCIPaddVar(scip_, examVar);
+				// add exam is at variable to SCIP
+				SCIPaddVar(scip_, examVar);
 
-					// store exam is at variable point for later use
-					aMap[tsIt->getId()] = examVar;
+				// store exam is at variable point for later use
+				aMap[tsIt->getId()] = examVar;
 
-				} // end time slot for loop
-				
-			} // end day for loop
+			} // end time slot for loop
 
 			// store the exam is at variables for this exam for later use
 			examIsAt_[examIt->getId()] = aMap;
@@ -673,6 +666,82 @@ void Optimizer::loadConflictConstraints()
 
 }
 
+SCIP_CONS * Optimizer::personalOverloadConstraint(Person::PERSON_ID personID, const Day & day)
+{
+
+	bool isInitial = true;
+	// there is no lower bound, so use negative infinity
+	double lBound = -SCIPinfinity(scip_);
+	double uBound = 1.0;
+
+	Day::DAY_ID dayID = day.getId();
+
+	// create a constraint
+	SCIP_CONS * constraintPointer;
+	const char* constraintName = overloadConName( personID, dayID );
+
+	if (shouldPrint_)
+	{
+		std::cout << "creating an overload constraint for person " << personID;
+		std::cout << " and day " << dayID << std::endl;
+	}
+
+	SCIPcreateConsLinear(scip_, & constraintPointer, constraintName,
+		0, NULL, NULL, lBound, uBound, isInitial,
+		TRUE, TRUE, TRUE, TRUE, FALSE,
+		FALSE, FALSE, FALSE, FALSE);
+
+	std::vector<TimeSlot> slots = day.getSlots();
+
+	// REWRITE THIS SO THAT WE ONLY LOOK AT EXAMS THAT THIS PERSON TAKES
+
+
+	// loop over examIsAt variables for this day, 
+	for (std::unordered_map<Exam::EXAM_ID, std::unordered_map<TimeSlot::TIMESLOT_ID, SCIP_VAR*> >::iterator eIt = examIsAt_.begin();
+			eIt != examIsAt_.end(); eIt++)
+	{
+		// we only add an exam for this person if they have this exam!
+		if ( personHasExam(personID, eIt->first) )
+		{
+
+			std::unordered_map<TimeSlot::TIMESLOT_ID, SCIP_VAR*> theMap = eIt->second;
+
+			for (std::unordered_map<TimeSlot::TIMESLOT_ID, SCIP_VAR*>::iterator tsIt = theMap.begin();
+				tsIt != theMap.end(); tsIt++)
+			{
+				// only add the variable for this time slot if the time slot is on the proper day 
+				TimeSlot::TIMESLOT_ID tsID = tsIt->first;
+				if ( dayHasSlot(dayID, tsID) )
+				{
+					if (shouldPrint_)
+					{
+						std::cout << "\t adding exam is at variable for exam " << eIt->first;
+						std::cout << " at timeslot " << tsID << std::endl;
+					}
+
+					//add examIsAt variable to constraint
+					double coef = 1.0;
+					SCIPaddCoefLinear(scip_, constraintPointer, tsIt->second, coef);
+				}
+
+			} // end time slot loop
+		}
+	} // end time slot loop
+
+	// add two plus variables
+	double coef = -1.0;
+	SCIPaddCoefLinear(scip_, constraintPointer, twoPlus_[personID], coef);
+
+	// add three plus variables
+	coef = -1.0;
+	SCIPaddCoefLinear(scip_, constraintPointer, threePlus_[personID], coef);
+
+	// add the constraint to the problem
+ 	SCIPaddCons(scip_, constraintPointer);
+
+	return constraintPointer;
+}
+
 // constraints that set up the two plus and three plus values
 void Optimizer::loadOverloadConstraints()
 {
@@ -686,91 +755,24 @@ void Optimizer::loadOverloadConstraints()
 	//		sum <e> in EXAMS[p]: 
 	//			(sum <t> in DAYSLOT[d]: examIsAt [e,t] - twoPlus[p] - threePlus[p]) <= 1;
 
-	bool isInitial = true;
-	// there is no lower bound, so use negative infinity
-	double lBound = -SCIPinfinity(scip_);
-	double uBound = 1.0;
-
 	// loop over people
 	for (std::unordered_map <Person::PERSON_ID, SCIP_VAR *>::iterator pIt= twoPlus_.begin();
 			pIt != twoPlus_.end(); pIt++)
 	{
 		std::unordered_map<Day::DAY_ID, SCIP_CONS *> personConMap;
-
 		Person::PERSON_ID personID = pIt->first;
 
 		// loop over days
 		for (std::vector<Day>::const_iterator dIt = days_.begin();
 			dIt != days_.end(); dIt++)
 		{
-			Day::DAY_ID dayId = dIt->getId(); 
-
-			// create a constraint
-			SCIP_CONS * constraintPointer;
-			const char* conName = overloadConName( personID, *dIt );
-
-			if (shouldPrint_)
-			{
-				std::cout << "creating an overload constraint for person " << personID;
-				std::cout << " and day " << dayId << std::endl;
-			}
-
-			SCIPcreateConsLinear(scip_, & constraintPointer, conName,
-				0, NULL, NULL, lBound, uBound, isInitial,
-				TRUE, TRUE, TRUE, TRUE, FALSE,
-				FALSE, FALSE, FALSE, FALSE);
-
-			std::vector<TimeSlot> slots = dIt->getSlots();
-
-			// loop over examIsAt variables for this day, 
-			for (std::unordered_map<Exam::EXAM_ID, std::unordered_map<TimeSlot::TIMESLOT_ID, SCIP_VAR*> >::iterator eIt = examIsAt_.begin();
-					eIt != examIsAt_.end(); eIt++)
-			{
-				// we only add an exam for this person if they have this exam!
-				if ( personHasExam(personID, eIt->first) )
-				{
-
-					std::unordered_map<TimeSlot::TIMESLOT_ID, SCIP_VAR*> theMap = eIt->second;
-
-					for (std::unordered_map<TimeSlot::TIMESLOT_ID, SCIP_VAR*>::iterator tsIt = theMap.begin();
-						tsIt != theMap.end(); tsIt++)
-					{
-						// only add the variable for this time slot if the time slot is on the proper day 
-						TimeSlot::TIMESLOT_ID tsID = tsIt->first;
-						if ( dayHasSlot(dayId, tsID) )
-						{
-							if (shouldPrint_)
-							{
-								std::cout << "\t adding exam is at variable for exam " << eIt->first;
-								std::cout << " at timeslot " << tsID << std::endl;
-							}
-
-							//add examIsAt variable to constraint
-							double coef = 1.0;
-							SCIPaddCoefLinear(scip_, constraintPointer, tsIt->second, coef);
-						}
-
-					} // end time slot loop
-				}
-			}
-			// add two plus variables
-			double coef = -1.0;
-			SCIPaddCoefLinear(scip_, constraintPointer, twoPlus_[personID], coef);
-
-			// add three plus variables
-			coef = -1.0;
-			SCIPaddCoefLinear(scip_, constraintPointer, threePlus_[personID], coef);
-
-			// add the constraint to the problem
-		 	SCIPaddCons(scip_, constraintPointer);
-
-		 	//save this pointer for later use
-			personConMap[dayId] = constraintPointer;
-
+			Day::DAY_ID dayID = dIt->getId(); 
+			 	//save this pointer for later use
+			SCIP_CONS * constraintPointer = personalOverloadConstraint(personID, *dIt);
+			personConMap[dayID] = constraintPointer;
 			
 		 } // end day loop
 
-		
 		 // keep track of the all the constraints for this person for later
 		 overloadCon_[personID] = personConMap;
 
@@ -970,10 +972,10 @@ const char* Optimizer::onceConName( const Exam & exam )
 	return onceConName(exam.getId());
 }
 
-const char* Optimizer::overloadConName( Person::PERSON_ID pID, const Day & day )
+const char* Optimizer::overloadConName( Person::PERSON_ID personID, Day::DAY_ID dayID )
 {
-	std::string s = "overload_" + pID;
-	s += "_" + day.getId();
+	std::string s = "overload_" + personID;
+	s += "_" + dayID;
 	return s.c_str();
 }
 
