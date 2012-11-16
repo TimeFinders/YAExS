@@ -836,18 +836,28 @@ void Optimizer::printExamIsAtVariables()
 	}
 }
 
+// assign times to all exams based on the scip solution_
+// this will overwrite previous exam time assignments.
 void Optimizer::assignExamTimes()
 {
 	// loop through exams
 	for (std::vector<Exam>::iterator examIt = exams_.begin();
 		examIt!=exams_.end(); examIt++)
 	{
-		void assignTime(TimeSlot timeSlot);
+		TimeSlot slot = getOptimalExamTime(*examIt);
+		examIt->assignTime(slot);
+
+		std::cout << std::endl;
+		TimeSlot::TIMESLOT_ID t= slot.getId();
+		std::cout << "assigning time " << t;
+		std::cout << " to exam " << examIt->getId() << std::endl;
+		TimeSlot::TIMESLOT_ID s = (examIt->getTime()).getId();
+		std::cout << "exam " << examIt->getId() << " has time " << s << std::endl;
 	}
 
 }
 
-TimeSlot Optimizer::getOptimalExamTime(const Exam & exam)
+TimeSlot Optimizer::getOptimalExamTime(Exam & exam)
 {
 	if (examIsAt_.empty())
 	{
