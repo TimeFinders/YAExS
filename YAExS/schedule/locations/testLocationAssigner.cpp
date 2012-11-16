@@ -103,7 +103,7 @@ int main()
 	exams.push_front(ml);
 
 	Exam e;
-	/*
+	/**/
 	e = Exam(25, "e25a");
 	e.assignTime(3);
 	exams.push_front(e);
@@ -112,7 +112,9 @@ int main()
 	exams.push_front(e);
 	e = Exam(25, "e25c");
 	e.assignTime(3);
+
 	exams.push_front(e);
+
 	e = Exam(35, "e35a");
 	e.assignTime(3);
 	exams.push_front(e);
@@ -128,7 +130,7 @@ int main()
 	e = Exam(55, "e55");
 	e.assignTime(3);
 	exams.push_front(e);
-	*/
+	
 	e = Exam(65, "e65");
 	e.assignTime(3);
 	exams.push_front(e);
@@ -149,20 +151,21 @@ int main()
 	e.assignTime(3);
 
 	/*
+	// not enough space for these:
+
 	exams.push_front(e);
 	e = Exam(175, "e175");
 	e.assignTime(3);
 	exams.push_front(e);
 
-	
 	e = Exam(205, "e205");
 		e.assignTime(3);
 		exams.push_front(e);
 	e = Exam(255, "e255");
 		e.assignTime(3);
 		exams.push_front(e);
-	
 	*/
+	
 	e = Exam(305, "e305");
 		e.assignTime(3);
 		exams.push_front(e);
