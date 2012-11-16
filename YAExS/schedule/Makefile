@@ -24,8 +24,8 @@ optimizer.o: optimizer.cpp optimizer.h
 dbreader.o: dbreader.cpp dbreader.h
 	$(CC) dbreader.cpp $(CFLAGS)
 
-exam.o: exams/exam.cpp exams/exam.h
-	$(CC) exams/exam.cpp exams/exam.h $(CFLAGS)
+exam.o: exams/exam.cpp exams/exam.h locations/locationreader.cpp locations/locationreader.h
+	$(CC) exams/exam.cpp exams/exam.h locations/locationreader.cpp locations/locationreader.h $(CFLAGS)
 
 scheduleData.o: scheduleData/scheduleData.cpp scheduleData/scheduleData.h
 	$(CC) scheduleData/scheduleData.cpp scheduleData/scheduleData.h $(CFLAGS)
