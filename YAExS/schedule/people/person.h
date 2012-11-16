@@ -19,7 +19,7 @@ class Person
 		typedef std::string PERSON_ID;
 		
 		virtual PERSON_ID getId() const = 0;
-		virtual std::vector<Exam> getExams() = 0;
+		virtual std::vector<Exam> getExams() const = 0;
                 virtual Person* clone() const = 0;
                 virtual ~Person() {};
 

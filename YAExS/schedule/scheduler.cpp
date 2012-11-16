@@ -4,15 +4,10 @@
 */
 
 #include <algorithm>
+#include <fstream>
+#include <map>
 
 #include "scheduler.h"
-
-
-//TESTING
-#include <random>
-#include <chrono>
-#include <set>
-#define TIMESEED std::chrono::system_clock::now().time_since_epoch().count()
 
 //Constructors
 Scheduler::Scheduler(DBReader* dbIn, Optimizer* optIn) : db_(dbIn), optimizer_(optIn)
@@ -40,56 +35,93 @@ bool Scheduler::loadExams()
         return true;
 }
 
-//Adds the exam in data_ at the given index to the inputted exams
-//as long as it's not already there
-void Scheduler::addExamIfUnique(std::vector<Exam>& exams, int index)
+//Adds an entry in the Registrations for the line
+void Scheduler::parseLine(Registrations & reg, const std::string & line)
 {
-        bool skip = false;
-        for (size_t j = 0; j < exams.size(); j++)
-        {
-                if (exams[j].getId() == data_.examID(index)) skip=true;
-        }
-        if (skip) return;
-        exams.push_back(Exam(1, data_.examID(index)));
+        //Split up the string into Student ID and CRN
+        std::string studentID, crn;
+        size_t comma = line.find(',');
+        studentID = line.substr(0, comma);
+        crn = line.substr(comma+1, line.size()-1);
+
+        //Add it
+        reg[studentID].push_back(crn);
 }
 
-//Creates a random student, adding it to data
-void Scheduler::createRandomStudent(int id)
+//Returns how many students are enrolled in the given class
+int Scheduler::studentsInClass(const Scheduler::Registrations & reg, const std::string & crn)
 {
-        //Set up random number generation
-        std::default_random_engine gen(TIMESEED);
-        std::uniform_int_distribution<int> rand_exam(0,data_.numExams()-1);
-        std::uniform_int_distribution<int> rand_courseload(1,5);
-
-        //Create a vector of exams for this person
-        std::vector<Exam> exams;
-        size_t num_exams = rand_courseload(gen);
-
-        while (exams.size() < num_exams)
+        int count = 0;
+        for (Scheduler::Registrations::const_iterator i = reg.begin(); i != reg.end(); i++)
         {
-                int index = rand_exam(gen);
-                addExamIfUnique(exams, index);
+                if (std::find(i->second.begin(), i->second.end(), crn) != i->second.end()) count++;
         }
 
-
-        char idc[3];
-        idc[0] = id/10 + '0';
-        idc[1] = id%10 + '0';
-        idc[2] = '\0';
-        Student add(idc, exams);
-        data_.addPerson(&add);
+        return count;
 }
 
-//Loads students from the database
-//For now, they are just randomly generated from the exams
-bool Scheduler::loadStudents()
+//Converts a vector of strings into a vector of Exams
+std::vector<Exam> Scheduler::convertToExam(const Scheduler::Registrations & reg, const std::vector<std::string> & input)
 {
-        //Create 100 students
+        //Create the output vector
+        std::vector<Exam> out;
+        
+        //Cycle over each entry
+        for (size_t i = 0; i < input.size(); i++)
+        {
+                out.push_back(Exam(studentsInClass(reg, input[i]), input[i]));
+        }
+
+        return out;
+}
+
+//Loads students from a file
+//Each row should be StudentID,CRN
+//Returns true if everything worked okay
+bool Scheduler::loadStudents(std::string filename)
+{
+        //Create a file stream
+        std::ifstream fin(filename);
+
+        //Make sure it opened
+        if (!fin) return false;
+
+        //Set up storage for information
+        Scheduler::Registrations reg;
+
+        //Read every line
+        std::cout << "Parsing lines" << std::endl;
+        while (!fin.eof())
+        {
+                std::string line;
+                fin >> line;
+                parseLine(reg, line);
+        }
+
+        //Clear the people first
         data_.clearPeople();
         
-        for (int i = 0; i < 60; i++)
+        //Add each student to the ScheduleData
+        std::cout << "Adding students to data." << std::endl;
+        for (Scheduler::Registrations::iterator i = reg.begin(); i != reg.end(); i++)
         {
-                createRandomStudent(i);
+                Student add(i->first, convertToExam(reg, i->second));
+                data_.addPerson(&add);
+        }
+
+        //TEST: Print out all the information
+        for(int i = 0; i < data_.numPeople(); i++)
+        {
+                //Get the exams
+                std::vector<Exam> exams = data_.people()[i]->getExams();
+
+                //Print out information
+                std::cout << "Student ID: " << data_.people()[i]->getId() << std::endl;
+
+                for (size_t j = 0; j < exams.size(); j++)
+                {
+                        std::cout << "  " << exams[j].getId() << std::endl;
+                }
         }
 
         return true;

@@ -21,7 +21,7 @@ public:
 
         //Setup functions
         bool loadExams();
-        bool loadStudents();
+        bool loadStudents(std::string filename);
         bool loadInstructors();
 
         //Scheduling functions
@@ -30,10 +30,12 @@ public:
         bool stopScheduling();
         void printSchedule();
 
+        typedef std::map<std::string, std::vector<std::string> > Registrations;
 private:
-        //Helper functions for loadStudents()
-        void createRandomStudent(int id);
-        void addExamIfUnique(std::vector<Exam>& exams, int index);
+        //Helpers for loadStudents()
+        void parseLine(Registrations & reg, const std::string & line);
+        int studentsInClass(const Registrations & reg, const std::string & crn);
+        std::vector<Exam> convertToExam(const Registrations & reg, const std::vector<std::string> & input);
         
         //Pointer to a DBReader
         DBReader* db_;

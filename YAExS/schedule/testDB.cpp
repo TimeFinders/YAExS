@@ -18,7 +18,10 @@ int main(int argc, char* argv[])
 
         //Try to load exams and students
         sched.loadExams();
-        sched.loadStudents();
+        sched.loadStudents("StudentIDs2012CRNs.csv");
+
+        //TEST: Return early since courses aren't properly set up
+        return 0;
 
         //Run it!
         sched.startScheduling();
