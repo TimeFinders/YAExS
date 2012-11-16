@@ -28,7 +28,11 @@ int main(int argc, char* argv[])
 
     
 
-    std::vector<Exam> exams = GetSome::getSomeExams();
+    std::vector<Exam> someexams = GetSome::getSomeExams();
+    std::vector<Exam> otherExams = GetSome::getOtherExams();
+    std::vector<Exam> exams;
+    exams.insert( exams.end(), someexams.begin(), someexams.end() );
+    exams.insert( exams.end(), otherExams.begin(), otherExams.end() );
 
     for (int i = 0; i < exams.size(); i++)
     {
@@ -37,15 +41,25 @@ int main(int argc, char* argv[])
         std::cout << "exam " << e.getId() << " scheduled at " << t.getId() << std::endl;
     }
 
-    
+
+
+
     int numDays = 2;
     int slotsPerDay = 2;
 
 
     //Create an Optimizer
-    Optimizer scipScheduler(false);
+    Optimizer scipScheduler(true);
         //Load a model
     scipScheduler.loadModel(exams, people, numDays, slotsPerDay);
+
+    for (int i = 0; i < exams.size(); i++)
+    {
+        Exam e = exams[i];
+        TimeSlot t = e.getTime();
+        std::cout << "exam " << e.getId() << " scheduled at " << t.getId() << std::endl;
+    }
+
     
     //Get the best solution
     scipScheduler.schedule();
@@ -59,7 +73,6 @@ int main(int argc, char* argv[])
 
     std::remove_if( people.begin(), people.end(), deleteAll );
 
-    std::cout << "hello" << exams.size() << std::endl;
     for (int i = 0; i < exams.size(); i++)
     {
         Exam e = exams[i];

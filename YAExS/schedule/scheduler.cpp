@@ -182,3 +182,16 @@ void Scheduler::printSchedule()
         optimizer_->printExamSchedule();
         std::cout << "\n_________________________\n" << std::endl;
 }
+
+bool Scheduler::assignRooms()
+{
+    // this is not very efficient. Perhaps we can make everything to be a list
+    // so we dont have to this this conversation here.
+
+    std::list<Exam> examList(  data_.exams().begin(),  data_.exams().end() );
+
+    int status = LocationAssigner::assignLocations(examList, locations_);
+
+    return (status == 0);
+
+}

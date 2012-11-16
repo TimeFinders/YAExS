@@ -12,6 +12,7 @@
 #include "people/student.h"
 #include "scheduleData/scheduleData.h"
 #include "locations/locationreader.h"
+#include "locations/locationassigner.h"
 
 class Scheduler
 {
@@ -32,7 +33,7 @@ public:
         bool stopScheduling();
         void printSchedule();
 
-        //bool assignRooms();
+        bool assignRooms();
         //bool printRooms();
 
         typedef std::map<std::string, std::vector<std::string> > Registrations;

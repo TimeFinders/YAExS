@@ -10,7 +10,7 @@
 
 #include <list>
 
-#include "exam.h"
+#include "../exams/exam.h"
 //#include "examlocation.h"
 #include "room.h"
 
