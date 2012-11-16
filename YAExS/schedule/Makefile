@@ -19,7 +19,7 @@ scheduler.o: scheduler.cpp scheduler.h optimizer.o dbreader.o
 	$(CC) scheduler.cpp $(CFLAGS)
 
 optimizer.o: optimizer.cpp optimizer.h
-	$(CC) optimizer.cpp $(CFLAGS)
+	$(CC) optimizer.cpp optimizer.h $(CFLAGS)
 
 dbreader.o: dbreader.cpp dbreader.h
 	$(CC) dbreader.cpp $(CFLAGS)

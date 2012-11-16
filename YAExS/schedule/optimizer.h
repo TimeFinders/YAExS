@@ -31,7 +31,8 @@ public:
     ~Optimizer();
 
     //Setup function
-    void loadModel(const std::vector<Exam> & exams, 
+    // exams are not const because we will need to assign times to them.
+    void loadModel(std::vector<Exam> & exams, 
             const std::vector<Person*> & people,
             int numDays, int slotsPerDay);
 
@@ -89,9 +90,12 @@ private:
     // keep track of pointers to people objects so we can figure out what exams they have
     std::unordered_map< Person::PERSON_ID, Person* > allPeople_;
 
+    // keep track of exam objects so we can assign them times
+    std::vector<Exam> exams_;
+
 
     // LOADING SCIP INFO
-    void loadExamIsAtVariables(const std::vector<Exam> & exams);
+    void loadExamIsAtVariables();
     void loadTwoPlusVariables(const std::vector<Person*> & people);
     void loadThreePlusVariables(const std::vector<Person*> & people);
     void loadConflictAtVariables(const std::vector<Person*> & people);
@@ -136,6 +140,9 @@ private:
     void loadDays( int numDays, int slotsPerDay);
     void loadAllPeople( const std::vector<Person*> & people);
 
+    // assign times to exams using the examIsAtVariable values in the solution_
+    void assignExamTimes();
+
     // true if the day contains the time slot
     bool dayHasSlot(Day::DAY_ID dayID, TimeSlot::TIMESLOT_ID tsID);
 
@@ -144,6 +151,10 @@ private:
 
     // create an overload constraint for an individual person on one day
     SCIP_CONS * createPersonalOverloadConstraint(Person::PERSON_ID personID, const Day & day);
+
+    TimeSlot getTimeSlotById(TimeSlot::TIMESLOT_ID timeID);
+
+    TimeSlot getOptimalExamTime(const Exam & exam);
 
 };
 

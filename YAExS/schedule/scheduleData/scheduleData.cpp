@@ -71,7 +71,7 @@ Person::PERSON_ID ScheduleData::examID(int index)
 }
 
 //Returns the exams for viewing
-const std::vector<Exam>& ScheduleData::exams()
+std::vector<Exam>& ScheduleData::exams()
 {
   return exams_;
 }

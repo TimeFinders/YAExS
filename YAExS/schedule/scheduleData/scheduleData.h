@@ -25,7 +25,7 @@ public:
         void addPerson(Person* person);
         bool containsExamID(Person::PERSON_ID compare);
         Person::PERSON_ID examID(int index);
-        const std::vector<Exam>& exams();
+        std::vector<Exam>& exams();
         const std::vector<Person*>& people();
   
 private:

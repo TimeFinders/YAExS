@@ -207,7 +207,7 @@ void Optimizer::releaseConflictConstraints()
 
 
 //Load a model into SCIP
-void Optimizer::loadModel(const std::vector<Exam> & exams, 
+void Optimizer::loadModel(std::vector<Exam> & exams, 
 		const std::vector<Person* > & people,
 		int numDays, int slotsPerDay)
 {
@@ -216,13 +216,16 @@ void Optimizer::loadModel(const std::vector<Exam> & exams,
 		std::cout << "loading model into SCIP" << std::endl;
 	}
 
+	// save the exams for later;
+	this->exams_ = exams;
+
 	// set up the days
 	loadDays(numDays, slotsPerDay);
 		// set up the people
 	loadAllPeople(people);
 
 	// load the exam is at variables
-	loadExamIsAtVariables(exams);
+	loadExamIsAtVariables();
 
 
 	// load the once constraints (each exam meets at exactly one time slot)
@@ -244,7 +247,7 @@ void Optimizer::loadModel(const std::vector<Exam> & exams,
 }
 
 
-void Optimizer::loadExamIsAtVariables(const std::vector<Exam> & exams)
+void Optimizer::loadExamIsAtVariables()
 {
 	// check that the variables haven't been loaded already;
 	if ( !examIsAt_.empty() )
@@ -258,8 +261,8 @@ void Optimizer::loadExamIsAtVariables(const std::vector<Exam> & exams)
 		if (shouldPrint_)
 			std::cout << "\nloading exam is at variables" << std::endl;
 
-		for (std::vector<Exam>::const_iterator examIt = exams.begin(); 
-			examIt != exams.end(); examIt++)
+		for (std::vector<Exam>::const_iterator examIt = exams_.begin(); 
+			examIt != exams_.end(); examIt++)
 		{	
 			std::unordered_map<TimeSlot::TIMESLOT_ID,  SCIP_VAR *> aMap;
 
@@ -833,6 +836,64 @@ void Optimizer::printExamIsAtVariables()
 	}
 }
 
+void Optimizer::assignExamTimes()
+{
+	// loop through exams
+	for (std::vector<Exam>::iterator examIt = exams_.begin();
+		examIt!=exams_.end(); examIt++)
+	{
+		void assignTime(TimeSlot timeSlot);
+	}
+
+}
+
+TimeSlot Optimizer::getOptimalExamTime(const Exam & exam)
+{
+	if (examIsAt_.empty())
+	{
+		std::cerr << "must load the model and create exam is at variables before getting optimal exam time" << std::endl;
+		return TimeSlot(-1);
+	}
+	if (solution_ == NULL)
+	{
+		std::cerr << "must schedule and get solution before getting optimal exam time" << std::endl;
+		return TimeSlot(-1);
+	}
+
+	Exam::EXAM_ID examID = exam.getId();
+	std::unordered_map<TimeSlot::TIMESLOT_ID, SCIP_VAR *> variableMap;
+	variableMap = examIsAt_[examID];
+	if (variableMap.empty())
+	{
+		std::cerr << "error invalid exam with id " << examID <<  std::endl;
+		return TimeSlot(-1);
+	}
+
+	TimeSlot::TIMESLOT_ID timeID = -1;
+
+	for (std::unordered_map<TimeSlot::TIMESLOT_ID, SCIP_VAR*>::const_iterator varIt = variableMap.begin();
+		varIt != variableMap.end(); varIt++)
+	{
+		double value =  SCIPgetSolVal(scip_, solution_, varIt->second);
+		if (value != 0.0)
+		{
+			timeID = varIt->first;
+			break;
+		}
+	}
+
+	if (timeID == -1)
+	{
+		std::cerr << "error no best time found." << std::endl;
+		return TimeSlot(-1);
+	}
+	else
+	{
+		return getTimeSlotById(timeID);
+	}
+}
+
+
 void Optimizer::printConflictVariables()
 {
 	for (std::unordered_map<Person::PERSON_ID, std::unordered_map<TimeSlot::TIMESLOT_ID, SCIP_VAR*> >::const_iterator personIt = conflictAt_.begin();
@@ -908,6 +969,7 @@ void Optimizer::schedule()
 {
     SCIPsolve(scip_);
     solution_ = SCIPgetBestSol (scip_);
+    assignExamTimes();
 }
 
 const char* Optimizer::examAtVariableName(const Exam & exam, const TimeSlot & timeslot)
@@ -1048,4 +1110,18 @@ bool Optimizer::dayHasSlot(Day::DAY_ID dayID, TimeSlot::TIMESLOT_ID tsID)
 		}
 	}
 	return false;
+}
+
+
+TimeSlot Optimizer::getTimeSlotById(TimeSlot::TIMESLOT_ID timeID)
+{
+	for (std::vector<TimeSlot>::iterator it = allTimeSlots_.begin(); 
+		it != allTimeSlots_.end(); it++)
+	{
+		if (it->getId() == timeID)
+			return *it;
+	}
+
+	std::cerr << "no time slot found" << std::endl;
+	return TimeSlot(-1);
 }
