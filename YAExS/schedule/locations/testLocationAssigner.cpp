@@ -13,7 +13,8 @@ int main()
 {
 
 	/// test locationReader
-	std::list<ExamLocation*> rooms  = LocationReader::readRooms("Rooms.csv");
+	LocationReader lr;
+	std::list<ExamLocation*> rooms  = lr.readLocations("Rooms.csv", "groupedRoomsSHORT.csv");
 	for (std::list<ExamLocation*>::iterator it = rooms.begin(); it != rooms.end(); it++)
 	{
 		(*it)->print();
