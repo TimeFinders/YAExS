@@ -10,7 +10,7 @@
 #define _room_h_
 
 #include <string>
-#include "exam.h"
+#include "../exams/exam.h"
 #include "examlocation.h"
 
 // for debugging

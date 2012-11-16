@@ -9,7 +9,7 @@
 
 #include <string>
 #include <vector>
-#include "exam.h"
+#include "../exams/exam.h"
 #include "room.h"
 
 // for debugging
