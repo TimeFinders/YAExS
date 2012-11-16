@@ -9,6 +9,7 @@
 
 #include <string>
 #include <vector>
+#include <iostream>
 #include "../exams/exam.h"
 
 class Person
@@ -19,6 +20,8 @@ class Person
 		
 		virtual PERSON_ID getId() const = 0;
 		virtual std::vector<Exam> getExams() = 0;
+                virtual Person* clone() const = 0;
+                virtual ~Person() {};
 
 		static bool personHasExam(Person * p, Exam::EXAM_ID examID)
 		{

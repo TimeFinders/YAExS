@@ -5,7 +5,7 @@ SCIP_LFLAGS = -L/usr/lib -lscip $(SCIP_ZIMPL) -lreadline  -lgmp -lz -llpispx  -l
 PQXX_LFLAGS = -lpqxx
 
 TESTOPT_OBJ = testOpt.cpp optimizer.o exam.o
-TESTDB_OBJ = testDB.cpp scheduler.o optimizer.o dbreader.o
+TESTDB_OBJ = testDB.cpp scheduler.o optimizer.o dbreader.o scheduleData.o
 
 test: testOpt testDB
 
@@ -26,3 +26,6 @@ dbreader.o: dbreader.cpp dbreader.h
 
 exam.o: exams/exam.cpp exams/exam.h
 	$(CC) exams/exam.cpp exams/exam.h $(CFLAGS)
+
+scheduleData.o: scheduleData/scheduleData.cpp scheduleData/scheduleData.h
+	$(CC) scheduleData/scheduleData.cpp scheduleData/scheduleData.h $(CFLAGS)

@@ -26,6 +26,7 @@ class Instructor : public Person
 			identifier(id), exams(theExams) {};
 
 		std::string getId() const { return identifier; };
-		std::vector<Exam> getExams() { return exams; };	
+		std::vector<Exam> getExams() { return exams; };
+                Person* clone() const {return new Instructor(identifier, exams);}
 };
 #endif
