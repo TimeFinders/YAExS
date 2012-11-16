@@ -217,7 +217,8 @@ void Optimizer::loadModel(std::vector<Exam> & exams,
 	}
 
 	// save the exams for later;
-	this->exams_ = exams;
+	std::vector<Exam> * examPointer = &exams;
+	this->exams_ = examPointer;
 
 	// set up the days
 	loadDays(numDays, slotsPerDay);
@@ -261,8 +262,8 @@ void Optimizer::loadExamIsAtVariables()
 		if (shouldPrint_)
 			std::cout << "\nloading exam is at variables" << std::endl;
 
-		for (std::vector<Exam>::const_iterator examIt = exams_.begin(); 
-			examIt != exams_.end(); examIt++)
+		for (std::vector<Exam>::const_iterator examIt = exams_->begin(); 
+			examIt != exams_->end(); examIt++)
 		{	
 			std::unordered_map<TimeSlot::TIMESLOT_ID,  SCIP_VAR *> aMap;
 
@@ -524,11 +525,13 @@ void Optimizer::loadConflictAtVariables(const std::vector<Person *> & people)
 				double objCoefConflict = 20.0;
 
 				// create the exam is at variable
+			
 				SCIP_VAR * conflictVar;
 				SCIPcreateVar(scip_, & conflictVar, name, 0.0, 1.0,
 						objCoefConflict, SCIP_VARTYPE_BINARY,
 						isInitial, canRemoveInAging,
 						NULL, NULL, NULL, NULL, NULL);
+
 
 				// add exam is at variable to SCIP
 				SCIPaddVar(scip_, conflictVar);
@@ -841,8 +844,8 @@ void Optimizer::printExamIsAtVariables()
 void Optimizer::assignExamTimes()
 {
 	// loop through exams
-	for (std::vector<Exam>::iterator examIt = exams_.begin();
-		examIt!=exams_.end(); examIt++)
+	for (std::vector<Exam>::iterator examIt = exams_->begin();
+		examIt!=exams_->end(); examIt++)
 	{
 		TimeSlot slot = getOptimalExamTime(*examIt);
 		examIt->assignTime(slot);
@@ -857,7 +860,7 @@ void Optimizer::assignExamTimes()
 
 }
 
-TimeSlot Optimizer::getOptimalExamTime(Exam & exam)
+TimeSlot Optimizer::getOptimalExamTime(const Exam & exam)
 {
 	if (examIsAt_.empty())
 	{

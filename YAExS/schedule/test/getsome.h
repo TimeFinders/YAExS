@@ -44,6 +44,21 @@ public:
 		return getFourExams();
 	}
 
+	static std::vector<Exam> getOtherExams()
+	{
+		std::vector<Exam> exams;
+
+		Exam diff(98, "DIFFEQ");
+		diff.assignTime(2);
+		exams.push_back(diff);
+
+		Exam algo(45, "aglo");
+		algo.assignTime(2);
+		exams.push_back(algo);
+
+		return exams;
+	}
+
 	static std::vector<TimeSlot> getSomeTimeSlots()
 	{
 		std::vector<TimeSlot> ts;
@@ -85,6 +100,10 @@ public:
 	    	veraExams.pop_back();
 	    	Person * veraPtr = new Student("Vera", veraExams);
 	    	people.push_back(veraPtr);
+
+    	std::vector<Exam> zachExams = getOtherExams();
+    	Person * zachPtr = new Student("Zach", zachExams);
+    	people.push_back(zachPtr);
 
 		return people;
 	}

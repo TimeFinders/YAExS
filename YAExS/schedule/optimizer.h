@@ -91,7 +91,7 @@ private:
     std::unordered_map< Person::PERSON_ID, Person* > allPeople_;
 
     // keep track of exam objects so we can assign them times
-    std::vector<Exam> exams_;
+    std::vector<Exam> * exams_;
 
 
     // LOADING SCIP INFO
