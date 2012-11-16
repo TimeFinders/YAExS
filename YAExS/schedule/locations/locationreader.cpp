@@ -85,7 +85,7 @@ std::list<ExamLocation*>  LocationReader::readRooms(std::string roomFilePath)
 // building room,building room, building room
 // there can be as many buildings in a line as necessary.
 // e.g. AmosEaton 214,Troy 2012,Troy 2018,Low 4050,Sage 4101,Sage 5101
-// these rooms must be listed in the rooms file to get the capacities
+// these rooms must be listed in the rooms file to get the capacities.
 //
 // you must read the rooms before you can read the room groups
 // so call readRooms before readRoomGroups
@@ -166,14 +166,14 @@ std::list<ExamLocation*>  LocationReader::readRoomGroups(std::string roomGroupFi
 			     	containedRooms.push_back(*room);
 
 			     	//std::cout << "\tadding";
-			     	room->print();
+			     //	room->print();
 				   
 				     
 				     roomss.clear();
 
 
 		     	}
-		     	std::cout << std::endl;
+		     	//std::cout << std::endl;
 
 		     	ExamLocation * roomGroup = new RoomGroup(containedRooms);
 		     	roomGroups.push_back(roomGroup);
