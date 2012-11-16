@@ -18,20 +18,12 @@
 Scheduler::Scheduler(DBReader* dbIn, Optimizer* optIn) : db_(dbIn), optimizer_(optIn)
 {}
 
-//Destructor, cleans up People vector
-static bool deleteAll( Person * p ) { delete p; return true; }
-
-Scheduler::~Scheduler()
-{
-            std::remove_if( people_.begin(), people_.end(), deleteAll );
-}
-
 //Load classes which have exams into the vector
 //Returns true as long as any exams were put in the vector
 bool Scheduler::loadExams()
 {
         //Clear any old data
-        exams_.clear();
+        data_.clearExams();
         
         //Get the list of exam ID's marked as 'hasexam'
         pqxx::result dbresult = db_->execute("SELECT DISTINCT \"examID\" FROM courses_course, courses_exammapping, courses_section WHERE courses_course.id = courses_section.course_id AND courses_section.crn = courses_exammapping.crn AND courses_course.status='hasexam'");
@@ -42,57 +34,62 @@ bool Scheduler::loadExams()
         //Store them
         for (size_t i = 0; i < dbresult.size(); i++)
         {
-                exams_.push_back(Exam(0,dbresult[i][0].c_str()));
+                data_.addExam(Exam(0,dbresult[i][0].c_str()));
         }
   
         return true;
 }
 
-//Loads students from the database
-//For now, they are just randomly generated from the exams
-//
-bool Scheduler::loadStudents()
+//Adds the exam in data_ at the given index to the inputted exams
+//as long as it's not already there
+void Scheduler::addExamIfUnique(std::vector<Exam>& exams, int index)
+{
+        bool skip = false;
+        for (size_t j = 0; j < exams.size(); j++)
+        {
+                if (exams[j].getId() == data_.examID(index)) skip=true;
+        }
+        if (skip) return;
+        exams.push_back(Exam(1, data_.examID(index)));
+}
+
+//Creates a random student, adding it to data
+void Scheduler::createRandomStudent(int id)
 {
         //Set up random number generation
         std::default_random_engine gen(TIMESEED);
-        std::uniform_int_distribution<int> rand_exam(0,exams_.size()-1);
-        std::uniform_int_distribution<int> rand_courseload(1,5);
+        std::uniform_int_distribution<int> rand_exam(0,data_.numExams()-1);
+        std::uniform_int_distribution<int> rand_courseload(0,data_.numExams()-1);
 
+        //Create a vector of exams for this person
+        std::vector<Exam> exams;
+        size_t num_exams = rand_courseload(gen);
+
+        while (exams.size() < num_exams)
+        {
+                int index = rand_exam(gen);
+                addExamIfUnique(exams, index);
+        }
+
+
+        char idc[3];
+        idc[0] = id/10 + '0';
+        idc[1] = id%10 + '0';
+        idc[2] = '\0';
+        Student add(idc, exams);
+        data_.addPerson(&add);
+}
+
+//Loads students from the database
+//For now, they are just randomly generated from the exams
+bool Scheduler::loadStudents()
+{
         //Create 100 students
-        std::remove_if( people_.begin(), people_.end(), deleteAll );
-        people_.clear();
+        data_.clearPeople();
         
         for (int i = 0; i < 60; i++)
         {
-                //Create a vector of exams for this person
-                std::vector<Exam> exams;
-                size_t num_exams = rand_courseload(gen);
-
-                if (num_exams == 0)
-                {
-                    std::cout << "no exams" << std::endl;
-                    continue;
-                }
-
-                while (exams.size() < num_exams)
-                {
-                        int index = rand_exam(gen);
-                        bool skip = false;
-                        for (size_t j = 0; j < exams.size(); j++)
-                        {
-                                if (exams[j].getId() == exams_[index].getId()) skip=true;
-                        }
-                        if (skip) continue;
-                        exams.push_back(Exam(1, exams_[index].getId()));
-                }
-
-
-                char id[3];
-                id[0] = i/10 + '0';
-                id[1] = i%10 + '0';
-                id[2] = '\0';
-                Student* add = new Student(id, exams);
-                people_.push_back(add);
+                createRandomStudent(i);
         }
 
         return true;
@@ -105,7 +102,7 @@ bool Scheduler::startScheduling()
         int slotsPerDay = 3;
 
         //Load the model
-        optimizer_->loadModel(exams_, people_, numDays, slotsPerDay);
+        optimizer_->loadModel(data_.exams(), data_.people(), numDays, slotsPerDay);
 
         //Run it
         optimizer_->schedule();

@@ -10,6 +10,7 @@
 #include "optimizer.h"
 #include "exams/exam.h"
 #include "people/student.h"
+#include "scheduleData/scheduleData.h"
 
 class Scheduler
 {
@@ -17,9 +18,6 @@ public:
         //Constructors
         Scheduler();
         Scheduler(DBReader* dbIn, Optimizer* optIn);
-
-        //Destructor
-        ~Scheduler();
 
         //Setup functions
         bool loadExams();
@@ -33,6 +31,10 @@ public:
         void printSchedule();
 
 private:
+        //Helper functions for loadStudents()
+        void createRandomStudent(int id);
+        void addExamIfUnique(std::vector<Exam>& exams, int index);
+        
         //Pointer to a DBReader
         DBReader* db_;
 
@@ -42,11 +44,8 @@ private:
         //Current state of the scheduling process
         std::string state_;
 
-        //A vector of exams on their way between the optimizer or database
-        std::vector<Exam> exams_;
-
-        //A vector of people pointers to use in the optimizer
-        std::vector<Person*> people_;
+        //Storage for any data being transferred around
+        ScheduleData data_;
 };
 
 
