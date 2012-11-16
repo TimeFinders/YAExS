@@ -23,6 +23,7 @@ public:
         bool loadExams();
         bool loadStudents(std::string filename);
         bool loadInstructors();
+        bool loadRooms();
 
         //Scheduling functions
         bool startScheduling();

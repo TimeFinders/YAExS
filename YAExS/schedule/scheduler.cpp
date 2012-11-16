@@ -127,6 +127,11 @@ bool Scheduler::loadStudents(std::string filename)
         return true;
 }
 
+bool Scheduler::loadRooms()
+{
+    return true;
+}
+
 //Loads the exams and students into SCIP and begins the scheduling
 bool Scheduler::startScheduling()
 {
