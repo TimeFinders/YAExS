@@ -43,27 +43,28 @@ std::list<ExamLocation*>  LocationReader::readRooms(std::string roomFilePath)
 		int roomSize;
 		while ( roomFile.good() )
 	    {
-	    	// read in a whole line
+	    	// read in a whole line (one room)
 	    	while (getline(roomFile, line))
 	    	{
+	    		// split information about the room
 	    		iss << line;
 		     	getline (iss, building, ',');
 		     	getline (iss, room, ',');
 		     	getline (iss, capacity, ',');
 		     	
-		     	roomName = building + "_" + room;
+		     	roomName = roomID(building, room);
 		     	std::istringstream buffer(capacity);
 		     	buffer >> roomSize;
 
-		     	//std::cout << "\tcreating a new room with name " << roomName;
-		     	//std::cout << " and size " << roomSize << std::endl;
+		     	//create a room object
 		     	Room * theRoom = new Room(roomName, roomSize);
+		     	// add to rooms_ map for the RoomGroup objects to use
+		     	rooms_[roomName] = theRoom;
 
 		     	ExamLocation * elRoom = theRoom;
 		     	roomList.push_back(elRoom);
-
-		     	rooms_[roomName] = theRoom;
 		     	
+		     	// clear the stream for the next line
 		     	iss.clear();
 	     	}
 	     	
@@ -79,6 +80,8 @@ std::list<ExamLocation*>  LocationReader::readRooms(std::string roomFilePath)
 		return emptyList;
 	}
 }
+
+
 
 // read in room group information from the room group file at roomGroupFilePath and create room groups.
 // roomGroup FilePath should be a directory to a file with format:
@@ -104,27 +107,21 @@ std::list<ExamLocation*>  LocationReader::readRoomGroups(std::string roomGroupFi
 		std::list<ExamLocation *> roomGroups;
 		std::stringstream liness, roomss;
 
-		
-		Room::ROOM_ID roomName;
-
 		while ( roomGroupFile.good() )
 	    {
 	    	
-	    	// read in a whole line
+	    	// read in a whole line ( a single room group)
 	    	std::string line;
 	    	while (getline(roomGroupFile, line))
 	    	{
 	    		std::vector<Room> containedRooms;
-	    		//std::cout << "LINE:" << line << std::endl;
 	    		liness << line;
 
+	    		// read in information about a constituent room
 	    		std::string roomString;
 	    		while( getline(liness, roomString, ','))
 	    		{
-	    			
 	    			roomss << roomString;
-
-	    			//std::cout << "ROOMSTRING:" << roomString << std::endl;
 
 	    			std::string building, roomNumber;
 			     	getline(roomss, building, ' ');
@@ -132,28 +129,17 @@ std::list<ExamLocation*>  LocationReader::readRoomGroups(std::string roomGroupFi
 
 			     	// clear out for next time;
 			     	roomss.clear();
+			     	
 
 			     	if (roomNumber.length() < 1)
 			     	{
 			     		std::cerr << "invalid room number" << std::endl;
 			     		continue;
 			     	}
-			     	
-			     	char lastChar;
-			     	do
-			     	{
-				     	lastChar = roomNumber.at( roomNumber.length() - 1 );	
-				     	if (!isalnum(lastChar))
-				     	{
-				     		roomNumber = roomNumber.substr(0, roomNumber.size()-1);
-				     	}
-				    } while (!isalnum(lastChar)); 
 
-			     	//std::cout << "building:" << building << ".....room:" << roomNumber << "...." << std::endl;
-			     	
-			     	roomName = building + "_" + roomNumber;
-
-			     	//std::cout << roomName << std::endl;
+			     	//add the room to the contained rooms list if valid
+			     	roomNumber = fixRoomNumber( roomNumber);
+			        Room::ROOM_ID roomName = roomID(building, roomNumber);
 
 			     	Room * room = rooms_[roomName];
 			     	if (room == NULL)
@@ -163,17 +149,9 @@ std::list<ExamLocation*>  LocationReader::readRoomGroups(std::string roomGroupFi
 			     		continue;
 			     	}
 
-			     	containedRooms.push_back(*room);
-
-			     	//std::cout << "\tadding";
-			     //	room->print();
-				   
+			     	containedRooms.push_back(*room);		   
 				     
-				     roomss.clear();
-
-
 		     	}
-		     	//std::cout << std::endl;
 
 		     	ExamLocation * roomGroup = new RoomGroup(containedRooms);
 		     	roomGroups.push_back(roomGroup);
@@ -191,4 +169,26 @@ std::list<ExamLocation*>  LocationReader::readRoomGroups(std::string roomGroupFi
 		std::list<ExamLocation *> emptyList;
 		return emptyList;
 	}
+}
+
+// remove non-alphanumeric characters at the end of the roomNumber
+std::string LocationReader::fixRoomNumber(std::string roomNumber)
+{
+ 	char lastChar;
+ 	do
+ 	{
+     	lastChar = roomNumber.at( roomNumber.length() - 1 );	
+     	if (!isalnum(lastChar))
+     	{
+     		roomNumber = roomNumber.substr(0, roomNumber.size()-1);
+     	}
+    } while (!isalnum(lastChar)); 
+
+    return roomNumber;
+}
+
+// return a room_id used to create a Room object from the building a room number
+Room::ROOM_ID LocationReader::roomID(std::string building, std::string roomNumber)
+{
+	return building + "_" + roomNumber;
 }
