@@ -21,11 +21,8 @@ class Room : public ExamLocation
 	friend class RoomGroup;
 
 	private:	
-		// e.g AmosEaton
-		std::string building;
-
-		// e.g. 214
-		 std::string roomAddress;
+		// name for the room, e.g. AmosEaton_214
+		std::string roomID;
 
 		// half the number of total seats, 
 		// e.g. AmosEaton 214 has 162 seats so capacity is 81
@@ -35,15 +32,20 @@ class Room : public ExamLocation
 		int getCapacity() const { return capacity; };
 
 	public:
+		typedef std::string ROOM_ID;
+
 		//bool isOverlapping(ExamLocation * e) {return false;};
 
-		Room() : building(""), roomAddress(""), capacity(0) {};
+		Room() :roomID(""), capacity(0) {};
 
 		// e.g. new Room("AmosEaton", "214", 162) 
-		Room(std::string building, std::string roomAddress, int totalSeats) : 
-			building(building), 
-			roomAddress(roomAddress), 
-			capacity(totalSeats / 2) {};
+		Room(std::string building, std::string roomAddress, int capacity) : 
+			roomID(building + "_" + roomAddress), 
+			capacity(capacity) {};
+
+		Room(std::string roomName, int capacity) : 
+			roomID(roomName), 
+			capacity(capacity) {};
 
 		// Return true if the given exam can fit in this room, false otherwise.
 		bool willExamFit(Exam exam) const { return this->capacity >= exam.size(); };
@@ -51,12 +53,12 @@ class Room : public ExamLocation
 		std::vector<Room> contains() const { return std::vector<Room>(1,*this); }; 
 
 		// for debugging
-		void print() const { std::cout << building << " " << roomAddress;
+		void print() const { std::cout << roomID;
 			std::cout << " " << " capacity: " << capacity << std::endl; };	
 
 		bool operator== (const Room & r) 
 		{	
-			return (r.building == this-> building && r.roomAddress == this->roomAddress);
+			return (r.roomID == this->roomID);
 		}
 
 		bool static overlaps(const ExamLocation * e1, const ExamLocation * e2) 

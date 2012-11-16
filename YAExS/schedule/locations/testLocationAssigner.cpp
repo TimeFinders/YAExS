@@ -6,10 +6,20 @@ Test location assignment
 #include "room.h"
 #include "exam.h"
 #include "roomgroup.h"
+#include "locationreader.h"
 #include <typeinfo>
 
 int main()
 {
+
+	/// test locationReader
+	std::list<ExamLocation*> rooms  = LocationReader::readRooms("Rooms.csv");
+	for (std::list<ExamLocation*>::iterator it = rooms.begin(); it != rooms.end(); it++)
+	{
+		(*it)->print();
+	}
+
+	return 0;
 	//exams 1: 25, 15, 100
 	//exams 2: 80, 55
 
