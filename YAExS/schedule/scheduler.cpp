@@ -59,7 +59,7 @@ void Scheduler::createRandomStudent(int id)
         //Set up random number generation
         std::default_random_engine gen(TIMESEED);
         std::uniform_int_distribution<int> rand_exam(0,data_.numExams()-1);
-        std::uniform_int_distribution<int> rand_courseload(0,data_.numExams()-1);
+        std::uniform_int_distribution<int> rand_courseload(1,5);
 
         //Create a vector of exams for this person
         std::vector<Exam> exams;
