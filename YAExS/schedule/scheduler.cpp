@@ -61,7 +61,9 @@ int Scheduler::studentsInClass(const Scheduler::Registrations & reg, const std::
 }
 
 //Converts a vector of strings into a vector of Exams
-std::vector<Exam> Scheduler::convertToExam(const Scheduler::Registrations & reg, const std::vector<std::string> & input)
+//Queries the database to use the exam id's instead of CRN's and
+//to reference exams
+std::vector<Exam> Scheduler::convertToExam(const Scheduler::Registrations & reg, const std::vector<std::string> & input, std::map<std::string,std::string> & match)
 {
         //Create the output vector
         std::vector<Exam> out;
@@ -69,7 +71,8 @@ std::vector<Exam> Scheduler::convertToExam(const Scheduler::Registrations & reg,
         //Cycle over each entry
         for (size_t i = 0; i < input.size(); i++)
         {
-                out.push_back(Exam(studentsInClass(reg, input[i]), input[i]));
+                if (match[input[i]] == "") continue;
+                out.push_back(Exam(studentsInClass(reg, input[i]), match[input[i]]));
         }
 
         return out;
@@ -98,6 +101,14 @@ bool Scheduler::loadStudents(std::string filename)
                 parseLine(reg, line);
         }
 
+        //Get the conversions from crn to exam id
+        pqxx::result dbresult = db_->execute("SELECT courses_section.crn, \"examID\" FROM courses_course, courses_exammapping, courses_section WHERE courses_course.id = courses_section.course_id AND courses_section.crn = courses_exammapping.crn AND courses_course.status='hasexam'");
+        std::map<std::string, std::string> match;
+        for (size_t i = 0; i < dbresult.size(); i++)
+        {
+                match[dbresult[i][0].c_str()] = dbresult[i][1].c_str();
+        }
+
         //Clear the people first
         data_.clearPeople();
         
@@ -105,7 +116,7 @@ bool Scheduler::loadStudents(std::string filename)
         std::cout << "Adding students to data." << std::endl;
         for (Scheduler::Registrations::iterator i = reg.begin(); i != reg.end(); i++)
         {
-                Student add(i->first, convertToExam(reg, i->second));
+                Student add(i->first, convertToExam(reg, i->second, match));
                 data_.addPerson(&add);
         }
 
