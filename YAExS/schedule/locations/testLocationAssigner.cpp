@@ -9,19 +9,21 @@ Test location assignment
 #include "locationreader.h"
 #include <typeinfo>
 
+#include <sstream>
+
 int main()
 {
 
 	/// test locationReader
 	LocationReader lr;
-	std::list<ExamLocation*> rooms  = lr.readLocations("Rooms.csv", "groupedRooms.csv");
+	std::list<ExamLocation*> locs  = lr.readLocations("Rooms.csv", "groupedRooms.csv");
 	std::cout << "read in locations:" << std::endl;
-	for (std::list<ExamLocation*>::iterator it = rooms.begin(); it != rooms.end(); it++)
+	for (std::list<ExamLocation*>::iterator it = locs.begin(); it != locs.end(); it++)
 	{
 		(*it)->print();
 	}
 
-	return 0;
+	/*
 	//exams 1: 25, 15, 100
 	//exams 2: 80, 55
 
@@ -75,7 +77,7 @@ int main()
 
 	ExamLocation * VCC = new RoomGroup(vcc);
 	locs.push_back(VCC);
-
+	*/
 
 	// EXAMS
 	std::list<Exam> exams;
@@ -99,6 +101,76 @@ int main()
 	Exam ml(55, "MachineLearning");
 	ml.assignTime(2);
 	exams.push_front(ml);
+
+	Exam e;
+	/*
+	e = Exam(25, "e25a");
+	e.assignTime(3);
+	exams.push_front(e);
+	e = Exam(25, "e25b");
+	e.assignTime(3);
+	exams.push_front(e);
+	e = Exam(25, "e25c");
+	e.assignTime(3);
+	exams.push_front(e);
+	e = Exam(35, "e35a");
+	e.assignTime(3);
+	exams.push_front(e);
+	e = Exam(35, "e35b");
+	e.assignTime(3);
+	exams.push_front(e);
+	e = Exam(35, "e35c");
+	e.assignTime(3);
+	exams.push_front(e);
+	e = Exam(45, "e45");
+	e.assignTime(3);
+	exams.push_front(e);
+	e = Exam(55, "e55");
+	e.assignTime(3);
+	exams.push_front(e);
+	*/
+	e = Exam(65, "e65");
+	e.assignTime(3);
+	exams.push_front(e);
+	e = Exam(75, "e75");
+	e.assignTime(3);
+	exams.push_front(e);
+	e = Exam(85, "e85");
+	e.assignTime(3);
+	exams.push_front(e);
+	exams.push_front(e);
+	e = Exam(105, "e105");
+	e.assignTime(3);
+	exams.push_front(e);
+	e = Exam(155, "e155");
+	e.assignTime(3);
+	exams.push_front(e);
+	e = Exam(165, "e165");
+	e.assignTime(3);
+
+	/*
+	exams.push_front(e);
+	e = Exam(175, "e175");
+	e.assignTime(3);
+	exams.push_front(e);
+
+	
+	e = Exam(205, "e205");
+		e.assignTime(3);
+		exams.push_front(e);
+	e = Exam(255, "e255");
+		e.assignTime(3);
+		exams.push_front(e);
+	
+	*/
+	e = Exam(305, "e305");
+		e.assignTime(3);
+		exams.push_front(e);
+
+	e = Exam(355, "e355");
+		e.assignTime(3);
+		exams.push_front(e);
+		
 
 
 

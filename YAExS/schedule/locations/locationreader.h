@@ -19,7 +19,7 @@
 class LocationReader
 {
 public:
-	// read in both rooms and room groups, return a list of Rooms followed by RoomGroups
+	// read in both rooms and room groups, return a list of Rooms and RoomGroups
 	std::list<ExamLocation*> readLocations(std::string roomFilePath, std::string roomGroupFilePath);
 
 private:

@@ -9,12 +9,13 @@ groups to create exam location objects.
 #include <string.h>
 #include <sstream>
 
+// read in both rooms and room groups, return a list of Rooms and RoomGroups
 std::list<ExamLocation*> LocationReader::readLocations(std::string roomFilePath, std::string roomGroupFilePath)
 {	
 	std::list<ExamLocation*> rooms = readRooms(roomFilePath);
 	std::list<ExamLocation*> roomGroups  = readRoomGroups(roomGroupFilePath);
 	
-	rooms.splice(rooms.end(), roomGroups);
+	rooms.splice(rooms.begin(), roomGroups);
 	return rooms;
 }
 

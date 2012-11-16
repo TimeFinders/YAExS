@@ -8,16 +8,24 @@ Ricketts 203,Sage 3510
 Troy 2012,Troy 2018
 AmosEaton 214,Troy 2012,Troy 2018,Low 4050,Sage 4101,Sage 5101
 AmosEaton 214,Darrin 308,Sage 3510,Sage 4101,Sage 5101
-Darrin 308,Darrin 318
 Darrin 337,Low 3051,Sage 4101,Sage 5101
-Darrin 308,Darrin 318,Darrin 324,Darrin 330,Darrin 337
-Darrin 308,Darrin 318,Darrin 324
-Darrin 308,Darrin 318,Darrin 324,Darrin 330
-Darrin 308,Darrin 318,Darrin 324,Darrin 330,Darrin 337,Low 3051
 Darrin 330,Darrin 337
 Darrin 330,Darrin 337,Darrin 324
+Darrin 337,Darrin 324
+Darrin 308,Darrin 318
+Darrin 308,West Auditorium
+Darrin 308,Darrin 318,Darrin 324
+Darrin 318,Darrin 324
+Darrin 308,Darrin 318,Darrin 324,Darrin 330
+Darrin 318,Darrin 324,Darrin 330
+Darrin 308,Darrin 318,Darrin 324,Darrin 330,Darrin 337
+Darrin 318,Darrin 324,Darrin 330,Darrin 337
+Darrin 308,Darrin 318,Darrin 324,Darrin 330,Darrin 337,Low 3051
+Darrin 318,Darrin 324,Darrin 330,Darrin 337,Low 3051
 Sage 3303,Sage 5101
+Darrin 308,West Auditorium
+Darrin 308,Sage 3303,West Auditorium
 Darrin 324,Low 4050,Sage 3303,Darrin 330,Low 3051,AmosEaton 214,Darrin 318
 Darrin 324,Darrin 330
 Low 4050,Sage 4101,Sage 5101,Troy 2012
-Darrin 308,Darrin 318,Darrin 324
+
