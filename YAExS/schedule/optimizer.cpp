@@ -785,16 +785,13 @@ void Optimizer::loadOverloadConstraints()
 
 void Optimizer::printExamSchedule()
 {
-	SCIP_SOL* sol = SCIPgetBestSol(scip_);
-	printExamIsAtVariables(sol);
+	printExamIsAtVariables();
 }
 
 void Optimizer::printSolutionAndNonzeroValues()
 {
 
-	SCIP_SOL* sol = SCIPgetBestSol(scip_);
-
-	if (sol == NULL)
+	if (solution_ == NULL)
 	{
 		std::cout << "no solution!" << std::endl;
 	}
@@ -802,20 +799,20 @@ void Optimizer::printSolutionAndNonzeroValues()
 	{
 		std::cout << "\n\nSolution found!" << std::endl;
 
-		std::cout << "Objective value: " << SCIPgetSolOrigObj(scip_, sol) << std::endl;
+		std::cout << "Objective value: " << SCIPgetSolOrigObj(scip_, solution_) << std::endl;
 		
-		printExamIsAtVariables(sol);
+		printExamIsAtVariables();
 		
-		printTwoPlusVariables(sol);
-		printThreePlusVariables(sol);
-		printConflictVariables(sol);
+		printTwoPlusVariables();
+		printThreePlusVariables();
+		printConflictVariables();
 		
 		std::cout << std::endl;
 	} // end else
 }
 
 // print the nonzero values of the exam is at variables
-void Optimizer::printExamIsAtVariables(SCIP_SOL* sol)
+void Optimizer::printExamIsAtVariables()
 {
 	for (std::unordered_map<Exam::EXAM_ID, std::unordered_map<TimeSlot::TIMESLOT_ID, SCIP_VAR*> >::const_iterator examIt = examIsAt_.begin();
 		examIt != examIsAt_.end(); examIt++)
@@ -825,7 +822,7 @@ void Optimizer::printExamIsAtVariables(SCIP_SOL* sol)
 		for (std::unordered_map<TimeSlot::TIMESLOT_ID, SCIP_VAR *>::iterator tsIt= theMap.begin();
 			tsIt != theMap.end(); tsIt++)
 		{	
-			double value =  SCIPgetSolVal(scip_, sol, tsIt->second);
+			double value =  SCIPgetSolVal(scip_, solution_, tsIt->second);
 			if (value != 0.0)
 			{
 				std::cout << "\t" << "exam " << examIt->first;
@@ -836,7 +833,7 @@ void Optimizer::printExamIsAtVariables(SCIP_SOL* sol)
 	}
 }
 
-void Optimizer::printConflictVariables(SCIP_SOL * sol)
+void Optimizer::printConflictVariables()
 {
 	for (std::unordered_map<Person::PERSON_ID, std::unordered_map<TimeSlot::TIMESLOT_ID, SCIP_VAR*> >::const_iterator personIt = conflictAt_.begin();
 		personIt != conflictAt_.end(); personIt++)
@@ -846,7 +843,7 @@ void Optimizer::printConflictVariables(SCIP_SOL * sol)
 		for (std::unordered_map<TimeSlot::TIMESLOT_ID, SCIP_VAR *>::const_iterator tsIt= theMap.begin();
 			tsIt != theMap.end(); tsIt++)
 		{	
-			double value =  SCIPgetSolVal(scip_, sol, tsIt->second);
+			double value =  SCIPgetSolVal(scip_, solution_, tsIt->second);
 			if (value != 0.0)
 			{
 				std::cout << "\t" << "person " << personIt->first;
@@ -858,13 +855,13 @@ void Optimizer::printConflictVariables(SCIP_SOL * sol)
 }
 
 // Print the nonzero values of the two plus variables
-void Optimizer::printTwoPlusVariables(SCIP_SOL* sol)
+void Optimizer::printTwoPlusVariables()
 {
  	//std::unordered_map <PERSON_ID, SCIP_VAR * > twoPlus;
 	for (std::unordered_map <Person::PERSON_ID, SCIP_VAR *>::const_iterator twoIt = twoPlus_.begin();
 		 twoIt != twoPlus_.end(); twoIt++)
 	{
-		double value =  SCIPgetSolVal(scip_, sol, twoIt->second);
+		double value =  SCIPgetSolVal(scip_, solution_, twoIt->second);
 		if (value != 0.0)
 		{
 			std::cout << '\t' << twoIt->first << " (Person)";
@@ -882,18 +879,19 @@ void Optimizer::printTwoPlusVariables(SCIP_SOL* sol)
 
 
 // Print the nonzero values of the three plus variables
-void Optimizer::printThreePlusVariables(SCIP_SOL* sol)
+void Optimizer::printThreePlusVariables()
 {
  	//std::unordered_map <PERSON_ID, SCIP_VAR * > threePlus;
 	for (std::unordered_map <Person::PERSON_ID, SCIP_VAR *>::const_iterator threeIt = threePlus_.begin();
 		 threeIt != threePlus_.end(); threeIt++)
 	{
-		double value =  SCIPgetSolVal(scip_, sol, threeIt->second);
+		double value =  SCIPgetSolVal(scip_, solution_, threeIt->second);
 		if (value != 0.0)
 		{
 			std::cout << '\t' << threeIt->first << " (Person)";
 			std::cout << " has three or more exams on some day!"<< std::endl;
 		}
+		
 		/*
 		else
 		{
@@ -909,6 +907,7 @@ void Optimizer::printThreePlusVariables(SCIP_SOL* sol)
 void Optimizer::schedule()
 {
     SCIPsolve(scip_);
+    solution_ = SCIPgetBestSol (scip_);
 }
 
 const char* Optimizer::examAtVariableName(const Exam & exam, const TimeSlot & timeslot)

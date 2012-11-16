@@ -127,8 +127,23 @@ bool Scheduler::loadStudents(std::string filename)
         return true;
 }
 
-bool Scheduler::loadRooms()
+bool Scheduler::loadLocations(std::string roomFilePath, std::string roomGroupFilePath)
 {
+    if (!locations_.empty())
+    {
+        std::cerr << "Locations list is not empty. Only loadLocations once" << std::endl;
+        return false;   
+    }
+    
+   LocationReader lr;
+   locations_  = lr.readLocations(roomFilePath, roomGroupFilePath);
+   
+    if(locations_.empty())
+    {
+        std::cerr << "no locations were added" << std::endl;
+        return false;
+    }
+
     return true;
 }
 

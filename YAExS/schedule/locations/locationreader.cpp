@@ -134,7 +134,7 @@ std::list<ExamLocation*>  LocationReader::readRoomGroups(std::string roomGroupFi
 
 			     	if (roomNumber.length() < 1)
 			     	{
-			     		std::cerr << "invalid room number" << std::endl;
+			     		std::cerr << "invalid room number on line:" << line << std::endl;
 			     		continue;
 			     	}
 

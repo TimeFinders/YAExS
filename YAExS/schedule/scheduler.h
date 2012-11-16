@@ -11,6 +11,7 @@
 #include "exams/exam.h"
 #include "people/student.h"
 #include "scheduleData/scheduleData.h"
+#include "locations/locationreader.h"
 
 class Scheduler
 {
@@ -23,13 +24,16 @@ public:
         bool loadExams();
         bool loadStudents(std::string filename);
         bool loadInstructors();
-        bool loadRooms();
+        bool loadLocations(std::string roomFilePath, std::string roomGroupFilePath);
 
         //Scheduling functions
         bool startScheduling();
         std::string status();
         bool stopScheduling();
         void printSchedule();
+
+        //bool assignRooms();
+        //bool printRooms();
 
         typedef std::map<std::string, std::vector<std::string> > Registrations;
 private:
@@ -49,6 +53,9 @@ private:
 
         //Storage for any data being transferred around
         ScheduleData data_;
+
+        //exam locations to be used by the roomAssigner
+        std::list<ExamLocation* > locations_;
 };
 
 

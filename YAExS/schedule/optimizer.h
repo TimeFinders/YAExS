@@ -45,7 +45,6 @@ public:
     // and the values of the variables where they are nonzero
     void printSolutionAndNonzeroValues();
 
-
 private:
     // if true lots of debugging info will print to standard out
     bool shouldPrint_;
@@ -53,6 +52,7 @@ private:
     //SCIP problem information
     SCIP* scip_;
 
+    SCIP_SOL * solution_;
 
     // VARIABLES
     // exam is at time variables
@@ -114,12 +114,11 @@ private:
     void releaseConflictConstraints();
 
 
-    // PRINT VALUES OF (NONZERO) VARIABLES in a solution
-    void printExamIsAtVariables(SCIP_SOL* sol);
-    void printTwoPlusVariables(SCIP_SOL* sol);
-    void printThreePlusVariables(SCIP_SOL* sol);
-    void printConflictVariables(SCIP_SOL * sol);
-
+    // PRINT VALUES OF (NONZERO) VARIABLES in the solution_
+    void printExamIsAtVariables();
+    void printTwoPlusVariables();
+    void printThreePlusVariables();
+    void printConflictVariables();
     
     // NAME SCIP VARIABLES AND CONSTRAINTS
     // used for naming variables and constraints for SCIP. const char *'s are needed for SCIP
