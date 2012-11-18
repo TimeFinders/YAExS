@@ -33,7 +33,7 @@ public:
         void printSchedule();
 
         bool assignRooms();
-        bool printRooms();
+        void printRooms();
 
         typedef std::map<std::string, std::vector<std::string> > Registrations;
 
