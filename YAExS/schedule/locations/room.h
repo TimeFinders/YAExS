@@ -32,6 +32,7 @@ class Room : public ExamLocation
 		int getCapacity() const { return capacity; };
 
 	public:
+		typedef std::string ROOM_ID;
 
 		//bool isOverlapping(ExamLocation * e) {return false;};
 
@@ -51,11 +52,18 @@ class Room : public ExamLocation
 
 		std::vector<Room> contains() const { return std::vector<Room>(1,*this); }; 
 
+		// for debugging
+		void print() const { std::cout << roomID;
+			std::cout << " " << " capacity: " << capacity << std::endl; };	
 
 
 		bool operator== (const Room & r)  {	return (r.roomID == this->roomID); }
 
 		ExamLocation::LOCATION_ID getId() const{ return roomID; };
+		bool operator== (const Room & r) 
+		{	
+			return (r.roomID == this->roomID);
+		}
 
 		bool static overlaps(const ExamLocation * e1, const ExamLocation * e2) 
 		{
@@ -72,8 +80,6 @@ class Room : public ExamLocation
 			return false;
 		};
 
-		// for debugging
-		void print() const { std::cout << roomID << " capacity: " << capacity << std::endl; };	
-		
+		ROOM_ID getId() const {return roomID;};
 };
 #endif

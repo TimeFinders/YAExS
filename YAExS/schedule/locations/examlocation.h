@@ -13,6 +13,7 @@
 // for debugging
 #include <iostream>
 #include <string>
+#include <string>
 
 class Exam;
 class Room;
@@ -36,8 +37,8 @@ class ExamLocation
 
 		//for debugging
 		virtual void print() const = 0;
-
 	
+		virtual std::string getId() const = 0;
 		
 	protected:
 		virtual int getCapacity() const = 0;

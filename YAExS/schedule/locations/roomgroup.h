@@ -24,17 +24,25 @@ class RoomGroup : public ExamLocation
 		// half the number of total seats in all constituent rooms
 		int capacity;
 
+		std::string id;
+
 	protected:
 		int getCapacity() const { return capacity; };
 
 	public:
-		RoomGroup() : rooms(), capacity(0) {};
+		RoomGroup() : rooms(), capacity(0), id("noName") {};
 
-		RoomGroup(std::vector<Room> constituentRooms) : rooms(constituentRooms)
+		RoomGroup(std::vector<Room> constituentRooms) : rooms(constituentRooms), id("noName")
 		{
-			int totalSize = 0;			
+			int totalSize = 0;
+			id = "";
 			for (unsigned i = 0; i < rooms.size(); i++)
+			{
 				totalSize += rooms[i].capacity;
+				if (i > 0)
+					id += "_";
+				id += rooms[i].getId();
+			}
 			capacity = totalSize;		
 		 };	
 
@@ -54,6 +62,8 @@ class RoomGroup : public ExamLocation
 
 		// Return true if the given exam can fit in this room group, false otherwise.
 		bool willExamFit(Exam exam) const { return this->capacity >= exam.size(); };
+
+		std::string getId() const { return id; };
 
 		// for debugging
 		void print() const

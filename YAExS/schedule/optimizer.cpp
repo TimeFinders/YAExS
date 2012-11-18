@@ -66,7 +66,7 @@ Optimizer::~Optimizer()
 	}
 	//close the SCIP environment:
 	//SCIPprintMemoryDiagnostic(scip_);	
-    SCIPfree(&scip_);
+    //SCIPfree(&scip_);
 
     // can use to double check that the memory was freed
     //SCIPprintMemoryDiagnostic(scip_);	

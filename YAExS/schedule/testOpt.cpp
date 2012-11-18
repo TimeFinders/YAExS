@@ -80,29 +80,14 @@ int main(int argc, char* argv[])
     LocationReader lr;
 
     std::list<ExamLocation*> locs = lr.readLocations("locations/Rooms.csv", "locations/groupedRooms.csv");
-    std::cout << "first location is ";
-    (locs.front())->print();
+    std::cout << "all exam locations are:" << std::endl;
+    for (std::list<ExamLocation*>::iterator it = locs.begin(); it!=locs.end(); it++)
+    {   
+        ExamLocation::LOCATION_ID id = (*it)->getId();
+        std::cout << id << std::endl;
+    }
 
-    /*
-    // this is no good because it probably makes a copy
-    std::list<Exam> examList( exams.begin(),  exams.end() );
-    std::cout << " first exam in the list ";
-    examList.front().print();
-    std::cout << " first exam in the vector ";
-    exams.front().print();
-    std::cout << " first exam in the list "; 
-    std::cout << examList.front().getTime().getId() << std::endl;
-    std::cout << " first exam in the vector ";
-    std::cout << exams.front().getTime().getId() << std::endl;
-    std::cout << " change first exam in the list\n";
-    examList.front().assignTime(10);
-    //std::cout << " first exam in the vector ";
-    //exams.front().assignTime(20);
-    std::cout << " first exam in the list "; 
-    std::cout << examList.front().getTime().getId() << std::endl;
-    std::cout << " first exam in the vector ";
-    std::cout << exams.front().getTime().getId() << std::endl;
-    */
+    
 
     int status = LocationAssigner::assignLocations(exams, locs);
     std::cout << " location assigner exited with status " << status << std::endl;

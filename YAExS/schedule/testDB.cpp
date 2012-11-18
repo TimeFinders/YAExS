@@ -11,7 +11,7 @@ int main(int argc, char* argv[])
 {
         //Create a DBReader and Optimizer
         DBReader dbReader("user=andrew password=andrew host=ec2-23-20-128-235.compute-1.amazonaws.com dbname=django port=5432");
-        Optimizer opt(true);
+        Optimizer opt(false);
 
         //Create a Scheduler
         Scheduler sched(&dbReader, &opt);
@@ -28,6 +28,10 @@ int main(int argc, char* argv[])
 
         //Print output
         sched.printSchedule();
+
+        std::cout << "now assigning the rooms and then printing them" << std::endl;
+        sched.assignRooms();
+        sched.printRooms();
 
         return 0;
 }

@@ -27,7 +27,7 @@ public:
 		sdd.assignTime(2);
 		exams.push_back(sdd);
 
-		Exam bio(126, "BIO");
+		Exam bio(226, "BIO");
 		bio.assignTime(1);
 		exams.push_back(bio);
 
@@ -47,7 +47,7 @@ public:
 	{
 		std::list<Exam> exams;
 
-		Exam diff(98, "DIFFEQ");
+		Exam diff(198, "DIFFEQ");
 		diff.assignTime(2);
 		exams.push_back(diff);
 

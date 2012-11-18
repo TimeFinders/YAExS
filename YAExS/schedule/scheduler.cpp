@@ -207,25 +207,23 @@ bool Scheduler::assignRooms()
 void Scheduler::printRooms()
 {
     std::cout << "\n_________________________\n" << std::endl;
-    for (std::list<Exam>::iterator it = data_.exams().begin(); it!= data_.exams().end(); it++)
+    for (std::list<Exam>::iterator it = (data_.exams()).begin(); it != (data_.exams()).end(); it++)
     {
-        Exam e = *it;
-        TimeSlot t = e.getTime();
-        std::cout << "exam " << e.getId();
-        std::cout << " has " << e.size() << " students ";
-        std::cout <<  " scheduled at time  " << t.getId();
-        
-        ExamLocation * l = e.getLocation();
-        if (l != NULL)
+        std::cout << "exam: " << it->getId() << " with " << it->size();
+        std::cout << " scheduled at " << (it->getTime()).getId();
+
+        if (it->hasLocation())
         {
-            std::cout << " in: ";
+            std::cout << " in ";
+            ExamLocation * l = it->getLocation();
             l->print();
         }
         else
         {
-            std::cout << " no location assigned";
+            std::cout << " has no location assigned";
         }
         std::cout << std::endl;
     }
-    std::cout << "\n_________________________\n" << std::endl;
+     std::cout << "\n_________________________\n" << std::endl;
+
 }
