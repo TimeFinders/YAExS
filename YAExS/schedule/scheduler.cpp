@@ -29,7 +29,8 @@ bool Scheduler::loadExams()
         //Store them
         for (size_t i = 0; i < dbresult.size(); i++)
         {
-                data_.addExam(Exam(0,dbresult[i][0].c_str()));
+            const char * examName = dbresult[i][0].c_str();
+            data_.addExam( Exam(0, examName) );
         }
   
         return true;
@@ -209,14 +210,14 @@ void Scheduler::printRooms()
     std::cout << "\n_________________________\n" << std::endl;
     for (std::list<Exam>::iterator it = (data_.exams()).begin(); it != (data_.exams()).end(); it++)
     {
-        std::cout << "exam: " << it->getId() << " with " << it->size();
-        std::cout << " scheduled at " << (it->getTime()).getId();
+        std::cout << "exam: " << it->getId() << " with " << it->size() << " students";
+        std::cout << " scheduled at time " << (it->getTime()).getId();
 
         if (it->hasLocation())
         {
             std::cout << " in ";
             ExamLocation * l = it->getLocation();
-            l->print();
+            std::cout << l->getId();
         }
         else
         {
