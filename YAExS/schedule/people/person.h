@@ -8,7 +8,7 @@
 #define _person_h_
 
 #include <string>
-#include <vector>
+#include <list>
 #include <iostream>
 #include "../exams/exam.h"
 
@@ -19,7 +19,7 @@ class Person
 		typedef std::string PERSON_ID;
 		
 		virtual PERSON_ID getId() const = 0;
-		virtual std::vector<Exam> getExams() const = 0;
+		virtual std::list<Exam> getExams() const = 0;
                 virtual Person* clone() const = 0;
                 virtual ~Person() {};
 
@@ -31,8 +31,8 @@ class Person
 				return false;
 			}
 
-			std::vector<Exam> exams = p->getExams();
-			for (std::vector<Exam>::iterator it = exams.begin(); it != exams.end(); it++)
+			std::list<Exam> exams = p->getExams();
+			for (std::list<Exam>::iterator it = exams.begin(); it != exams.end(); it++)
 			{
 				if ( it->getId() == examID)
 					return true;

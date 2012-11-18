@@ -207,7 +207,7 @@ void Optimizer::releaseConflictConstraints()
 
 
 //Load a model into SCIP
-void Optimizer::loadModel(std::vector<Exam> & exams, 
+void Optimizer::loadModel(std::list<Exam> & exams, 
 		const std::vector<Person* > & people,
 		int numDays, int slotsPerDay)
 {
@@ -217,7 +217,7 @@ void Optimizer::loadModel(std::vector<Exam> & exams,
 	}
 
 	// save the exams for later;
-	std::vector<Exam> * examPointer = &exams;
+	std::list<Exam> * examPointer = &exams;
 	this->exams_ = examPointer;
 
 	// set up the days
@@ -262,7 +262,7 @@ void Optimizer::loadExamIsAtVariables()
 		if (shouldPrint_)
 			std::cout << "\nloading exam is at variables" << std::endl;
 
-		for (std::vector<Exam>::const_iterator examIt = exams_->begin(); 
+		for (std::list<Exam>::const_iterator examIt = exams_->begin(); 
 			examIt != exams_->end(); examIt++)
 		{	
 			std::unordered_map<TimeSlot::TIMESLOT_ID,  SCIP_VAR *> aMap;
@@ -463,9 +463,9 @@ std::unordered_map<TimeSlot::TIMESLOT_ID, std::list<SCIP_VAR *> > Optimizer::per
 {
 	std::unordered_map<TimeSlot::TIMESLOT_ID, std::list<SCIP_VAR *> > variables;
 
-	std::vector<Exam> exams = person->getExams();
+	std::list<Exam> exams = person->getExams();
 
-	for (std::vector<Exam>::iterator examIt = exams.begin(); 
+	for (std::list<Exam>::iterator examIt = exams.begin(); 
 		examIt != exams.end(); examIt++)
 	{
 		Exam::EXAM_ID examID = examIt->getId();
@@ -706,9 +706,9 @@ SCIP_CONS * Optimizer::createPersonalOverloadConstraint(Person::PERSON_ID person
 	std::vector<TimeSlot> slots = day.getSlots();
 
 	Person * person = allPeople_[personID];
-	std::vector<Exam> exams = person->getExams();
+	std::list<Exam> exams = person->getExams();
 
-	for (std::vector<Exam>::const_iterator examIt = exams.begin(); 
+	for (std::list<Exam>::const_iterator examIt = exams.begin(); 
 		examIt != exams.end(); examIt++)
 	{
 		Exam::EXAM_ID examID = examIt->getId();
@@ -844,7 +844,7 @@ void Optimizer::printExamIsAtVariables()
 void Optimizer::assignExamTimes()
 {
 	// loop through exams
-	for (std::vector<Exam>::iterator examIt = exams_->begin();
+	for (std::list<Exam>::iterator examIt = exams_->begin();
 		examIt!=exams_->end(); examIt++)
 	{
 		TimeSlot slot = getOptimalExamTime(*examIt);

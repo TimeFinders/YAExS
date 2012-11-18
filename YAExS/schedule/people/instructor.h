@@ -8,25 +8,25 @@
 
 #include "../exams/exam.h"
 #include <string>
-#include <vector>
+#include <list>
 #include "person.h"
 
 class Instructor : public Person
 {
 	private:
 		std::string identifier;
-		std::vector<Exam> exams;
+		std::list<Exam> exams;
 	
 	public:
 		Instructor() :identifier(""), exams(0) {};
 
 		Instructor(std::string id) : identifier(id), exams(0) {};
 		
-		Instructor(std::string id, std::vector<Exam> theExams) : 
+		Instructor(std::string id, std::list<Exam> theExams) : 
 			identifier(id), exams(theExams) {};
 
 		std::string getId() const { return identifier; };
-		std::vector<Exam> getExams() const { return exams; };
+		std::list<Exam> getExams() const { return exams; };
                 Person* clone() const {return new Instructor(identifier, exams);}
 };
 #endif

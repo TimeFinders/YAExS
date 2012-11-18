@@ -30,9 +30,10 @@ public:
     //Destructor
     ~Optimizer();
 
+
     //Setup function
     // exams are not const because we will need to assign times to them.
-    void loadModel(std::vector<Exam> & exams, 
+    void loadModel(std::list<Exam> & exams, 
             const std::vector<Person*> & people,
             int numDays, int slotsPerDay);
 
@@ -91,7 +92,7 @@ private:
     std::unordered_map< Person::PERSON_ID, Person* > allPeople_;
 
     // keep track of exam objects so we can assign them times
-    std::vector<Exam> * exams_;
+    std::list<Exam> * exams_;
 
 
     // LOADING SCIP INFO

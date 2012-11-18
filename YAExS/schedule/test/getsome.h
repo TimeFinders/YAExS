@@ -5,6 +5,7 @@ Just a helper class for testing SCIP
 #include "../exams/exam.h"
 #include "../people/student.h"
 #include <vector>
+#include <list>
 #include "../people/person.h"
 #include "../people/instructor.h"
 
@@ -14,9 +15,9 @@ class GetSome
 public:
 
 	// EXAMS
-	static std::vector<Exam> getFourExams()
+	static std::list<Exam> getFourExams()
 	{
-		std::vector<Exam> exams;
+		std::list<Exam> exams;
 
 		Exam cla(25, "CLA");
 		cla.assignTime(1);
@@ -34,19 +35,17 @@ public:
 		ccn.assignTime(1);
 		exams.push_back(ccn);
 
-
-
 		return exams;
 	}
 
-	static std::vector<Exam> getSomeExams()
+	static std::list<Exam> getSomeExams()
 	{
 		return getFourExams();
 	}
 
-	static std::vector<Exam> getOtherExams()
+	static std::list<Exam> getOtherExams()
 	{
-		std::vector<Exam> exams;
+		std::list<Exam> exams;
 
 		Exam diff(98, "DIFFEQ");
 		diff.assignTime(2);
@@ -72,36 +71,37 @@ public:
 	{
    	 	std::vector<Person *> people;
 
-	    	std::vector<Exam> andrewExams = getSomeExams();
+	    	std::list<Exam> andrewExams = getSomeExams();
 	    	andrewExams.erase(andrewExams.begin());
 	    	Exam * ccn = new Exam(andrewExams.back());
 	    	andrewExams.pop_back();
 	    	andrewExams.pop_back();
 	    	andrewExams.push_back(*ccn);
+
 	    	Person * andrewPtr = new Student("Andrew", andrewExams);
 	    	people.push_back(andrewPtr);
 
-	    	std::vector<Exam> austonExams = andrewExams;
+	    	std::list<Exam> austonExams = andrewExams;
 	    	austonExams.pop_back();
-	    	Person * austonPtr = new Student("Auston", austonExams);
+	    Person * austonPtr = new Student("Auston", austonExams);
 	    	people.push_back(austonPtr);
 
-	    	std::vector<Exam> johnExams(austonExams);
+	    	std::list<Exam> johnExams(austonExams);
 	    	Person * johnPtr = new Instructor("John", johnExams);
 	    	people.push_back(johnPtr);
 
 	    	
-	    	std::vector<Exam> jeffExams = getSomeExams();
+	    	std::list<Exam> jeffExams = getSomeExams();
 	    	jeffExams.erase(jeffExams.begin());
 	    	Person * jeffPtr = new Student("Jeff", jeffExams);
 	    	people.push_back(jeffPtr);
 
-	    	std::vector<Exam> veraExams = getSomeExams();
+	    	std::list<Exam> veraExams = getSomeExams();
 	    	veraExams.pop_back();
 	    	Person * veraPtr = new Student("Vera", veraExams);
 	    	people.push_back(veraPtr);
 
-    	std::vector<Exam> zachExams = getOtherExams();
+    	std::list<Exam> zachExams = getOtherExams();
     	Person * zachPtr = new Student("Zach", zachExams);
     	people.push_back(zachPtr);
 

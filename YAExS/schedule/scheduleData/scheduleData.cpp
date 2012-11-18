@@ -54,24 +54,26 @@ void ScheduleData::addPerson(Person* person)
 }
 
 //Returns true if the provided exam ID already exists
-bool ScheduleData::containsExamID(Person::PERSON_ID compare)
+bool ScheduleData::containsExamID(Exam::EXAM_ID compare)
 {
-  for (size_t i = 0; i < exams_.size(); i++)
+  for (std::list<Exam>::iterator it = exams_.begin(); it != exams_.end(); it++)
     {
-      if (exams_[i].getId() == compare) return true;
+      if (it->getId() == compare) return true;
     }
   
   return false;
 }
 
+/*
 //Returns the examID at the given index
 Person::PERSON_ID ScheduleData::examID(int index)
 {
   return exams_[index].getId();
 }
+*/
 
 //Returns the exams for viewing
-std::vector<Exam>& ScheduleData::exams()
+std::list<Exam>& ScheduleData::exams()
 {
   return exams_;
 }

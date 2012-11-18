@@ -45,7 +45,7 @@ private:
         //Helpers for loadStudents()
         void parseLine(Registrations & reg, const std::string & line);
         int studentsInClass(const Registrations & reg, const std::string & crn);
-        std::vector<Exam> convertToExam(const Registrations & reg, const std::vector<std::string> & input, std::map<std::string,std::string> & match);
+        std::list<Exam> convertToExam(const Registrations & reg, const std::vector<std::string> & input, std::map<std::string,std::string> & match);
         
         //Pointer to a DBReader
         DBReader* db_;

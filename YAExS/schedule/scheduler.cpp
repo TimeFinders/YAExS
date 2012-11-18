@@ -63,13 +63,13 @@ int Scheduler::studentsInClass(const Scheduler::Registrations & reg, const std::
         return count;
 }
 
-//Converts a vector of strings into a vector of Exams
+//Converts a vector of strings into a list of Exams
 //Queries the database to use the exam id's instead of CRN's and
 //to reference exams
-std::vector<Exam> Scheduler::convertToExam(const Scheduler::Registrations & reg, const std::vector<std::string> & input, std::map<std::string,std::string> & match)
+std::list<Exam> Scheduler::convertToExam(const Scheduler::Registrations & reg, const std::vector<std::string> & input, std::map<std::string,std::string> & match)
 {
-        //Create the output vector
-        std::vector<Exam> out;
+        //Create the output list
+        std::list<Exam> out;
         
         //Cycle over each entry
         for (size_t i = 0; i < input.size(); i++)
@@ -127,14 +127,14 @@ bool Scheduler::loadStudents(std::string filename)
         for(int i = 0; i < data_.numPeople(); i++)
         {
                 //Get the exams
-                std::vector<Exam> exams = data_.people()[i]->getExams();
+                std::list<Exam> exams = data_.people()[i]->getExams();
 
                 //Print out information
                 std::cout << "Student ID: " << data_.people()[i]->getId() << std::endl;
 
-                for (size_t j = 0; j < exams.size(); j++)
+                for (std::list<Exam>::iterator it = exams.begin(); it != exams.end(); it++)
                 {
-                        std::cout << "  " << exams[j].getId() << std::endl;
+                        std::cout << "  " << it->getId() << std::endl;
                 }
         }
 

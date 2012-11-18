@@ -23,24 +23,24 @@ int main(int argc, char* argv[])
     for (int i = 0; i < people.size(); i++)
     {
         std::cout << people[i]->getId() << "'s exams:" <<std::endl;
-        std::vector<Exam> e = people[i]->getExams();
-        for(int j = 0; j < e.size(); j++)
+        std::list<Exam> e = people[i]->getExams();
+        for(std::list<Exam>::iterator it = e.begin(); it!=e.end(); it++)
         {
-            std::cout << '\t' << e[j].getId() << std::endl;
+            std::cout << '\t' << it->getId() << std::endl;
         }
     }
 
     
 
-    std::vector<Exam> someexams = GetSome::getSomeExams();
-    std::vector<Exam> otherExams = GetSome::getOtherExams();
-    std::vector<Exam> exams;
+    std::list<Exam> someexams = GetSome::getSomeExams();
+    std::list<Exam> otherExams = GetSome::getOtherExams();
+    std::list<Exam> exams;
     exams.insert( exams.end(), someexams.begin(), someexams.end() );
     exams.insert( exams.end(), otherExams.begin(), otherExams.end() );
 
-    for (int i = 0; i < exams.size(); i++)
+    for (std::list<Exam>::iterator it = exams.begin(); it!= exams.end(); it++)
     {
-        Exam e = exams[i];
+        Exam e = *it;
         TimeSlot t = e.getTime();
         std::cout << "exam " << e.getId() << " scheduled at " << t.getId() << std::endl;
     }
@@ -57,13 +57,12 @@ int main(int argc, char* argv[])
         //Load a model
     scipScheduler.loadModel(exams, people, numDays, slotsPerDay);
 
-    for (int i = 0; i < exams.size(); i++)
+    for (std::list<Exam>::iterator it = exams.begin(); it!= exams.end(); it++)
     {
-        Exam e = exams[i];
+        Exam e = *it;
         TimeSlot t = e.getTime();
         std::cout << "exam " << e.getId() << " scheduled at " << t.getId() << std::endl;
     }
-
     
     //Get the best solution
     scipScheduler.schedule();
@@ -82,13 +81,33 @@ int main(int argc, char* argv[])
     std::cout << "first location is ";
     (locs.front())->print();
 
+    /*
+    // this is no good because it probably makes a copy
     std::list<Exam> examList( exams.begin(),  exams.end() );
-    int status = LocationAssigner::assignLocations(examList, locs);
+    std::cout << " first exam in the list ";
+    examList.front().print();
+    std::cout << " first exam in the vector ";
+    exams.front().print();
+    std::cout << " first exam in the list "; 
+    std::cout << examList.front().getTime().getId() << std::endl;
+    std::cout << " first exam in the vector ";
+    std::cout << exams.front().getTime().getId() << std::endl;
+    std::cout << " change first exam in the list\n";
+    examList.front().assignTime(10);
+    //std::cout << " first exam in the vector ";
+    //exams.front().assignTime(20);
+    std::cout << " first exam in the list "; 
+    std::cout << examList.front().getTime().getId() << std::endl;
+    std::cout << " first exam in the vector ";
+    std::cout << exams.front().getTime().getId() << std::endl;
+    */
+
+    int status = LocationAssigner::assignLocations(exams, locs);
     std::cout << " location assigner exited with status " << status << std::endl;
 
     std::cout << " ENTIRE EXAM SCHEDULE " << std::endl;
     std::cout << "\n_________________________\n" << std::endl;
-    for (std::list<Exam>::iterator it = examList.begin(); it!= examList.end(); it++)
+    for (std::list<Exam>::iterator it = exams.begin(); it!= exams.end(); it++)
     {
         Exam e = *it;
         TimeSlot t = e.getTime();
@@ -112,9 +131,9 @@ int main(int argc, char* argv[])
 
     std::remove_if( people.begin(), people.end(), deleteAll );
 
-    for (int i = 0; i < exams.size(); i++)
+    for (std::list<Exam>::iterator it = exams.begin(); it!= exams.end(); it++)
     {
-        Exam e = exams[i];
+        Exam e = *it;
         TimeSlot t = e.getTime();
         std::cout << "exam " << e.getId() << " scheduled at " << t.getId() << std::endl;
     }
