@@ -41,6 +41,8 @@ class Exam
 		void assignLocation(ExamLocation * examLocation);
 		ExamLocation * getLocation() { return examLocation; };
 
+                void assignNumStudents(int num);
+
 		bool hasLocation();
 
 		// this should return a UNIQUE id for this exam

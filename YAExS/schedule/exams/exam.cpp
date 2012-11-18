@@ -26,6 +26,11 @@ void Exam::assignLocation(ExamLocation * location)
 	examLocation = location;
 }
 
+void Exam::assignNumStudents(int num)
+{
+        numStudents = num;
+}
+
 bool Exam::hasLocation()
 {
 	return examLocation != NULL;

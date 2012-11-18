@@ -9,69 +9,78 @@
 //Destructor
 ScheduleData::~ScheduleData()
 {
-  clearPeople();
-  clearExams();
+        clearPeople();
+        clearExams();
 }
 
 //Empties the data of exams
 void ScheduleData::clearExams()
 {
-  exams_.clear();
+        exams_.clear();
 }
 
 //Empties the data of people
 void ScheduleData::clearPeople()
 {
-  for (size_t i = 0; i < people_.size(); i++)
-    {
-      delete people_[i];
-    }
-  people_.clear();
+        for (size_t i = 0; i < people_.size(); i++)
+        {
+                delete people_[i];
+        }
+        people_.clear();
 }
 
 //Returns the number of exams
 int ScheduleData::numExams() const
 {
-  return exams_.size();
+        return exams_.size();
 }
 
 //Returns the number of people
 int ScheduleData::numPeople() const
 {
-  return people_.size();
+        return people_.size();
 }
 
 //Adds an exam to the data
 void ScheduleData::addExam(Exam exam)
 {
-  exams_.push_back(exam);
+        exams_.push_back(exam);
 }
 
 //Adds a person to the data
 void ScheduleData::addPerson(Person* person)
 {
-  people_.push_back(person->clone());
+        people_.push_back(person->clone());
 }
 
 //Returns true if the provided exam ID already exists
 bool ScheduleData::containsExamID(Exam::EXAM_ID compare)
 {
-  for (std::list<Exam>::iterator it = exams_.begin(); it != exams_.end(); it++)
-    {
-      if (it->getId() == compare) return true;
-    }
+        for (std::list<Exam>::iterator it = exams_.begin(); it != exams_.end(); it++)
+        {
+                if (it->getId() == compare) return true;
+        }
   
-  return false;
+        return false;
 }
 
-//Returns the exams for viewing
+ //Returns the exams for viewing
 std::list<Exam>& ScheduleData::exams()
 {
-  return exams_;
+        return exams_;
 }
 
 //Returns the people for viewing
 const std::vector<Person*>& ScheduleData::people()
 {
-  return people_;
+        return people_;
+}
+
+//Updates the number of students in the given exam
+void ScheduleData::updateNumStudents(std::string examID, int numStudents)
+{
+        for (std::list<Exam>::iterator i = exams_.begin(); i != exams_.end(); i++)
+        {
+                if (i->getId() == examID) i->assignNumStudents(numStudents);
+        }
 }

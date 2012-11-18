@@ -28,6 +28,7 @@ public:
         //Person::PERSON_ID examID(int index);
         std::list<Exam>& exams();
         const std::vector<Person*>& people();
+        void updateNumStudents(std::string examID, int numStudents);
   
 private:
         std::list<Exam> exams_;

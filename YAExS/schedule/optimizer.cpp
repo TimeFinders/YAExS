@@ -264,7 +264,7 @@ void Optimizer::loadModel(std::list<Exam> & exams,
 	loadConflictAtVariables(people);
 
 	// set the conflict at variables with conflict constraints
-	 loadConflictConstraints();
+        loadConflictConstraints();
 }
 
 

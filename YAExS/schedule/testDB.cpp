@@ -21,9 +21,6 @@ int main(int argc, char* argv[])
         sched.loadStudents("StudentIDs2012CRNs.csv");
         sched.loadLocations("locations/Rooms.csv", "locations/groupedRooms.csv");
 
-        //TEST: Return early since courses aren't properly set up
-        //return 0;
-
         //Run it!
         int examDays = 5;
         int slotsPerDay = 4;

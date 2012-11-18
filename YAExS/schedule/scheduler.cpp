@@ -36,7 +36,7 @@ bool Scheduler::loadExams()
 }
 
 //Adds an entry in the Registrations for the line
-void Scheduler::parseLine(Registrations & reg, const std::string & line)
+void Scheduler::parseLine(Registrations & reg, const std::string & line, std::map<std::string,std::string> & match)
 {
         //Split up the string into Student ID and CRN
         std::string studentID, crn;
@@ -44,26 +44,28 @@ void Scheduler::parseLine(Registrations & reg, const std::string & line)
         studentID = line.substr(0, comma);
         crn = line.substr(comma+1, line.size()-1);
 
-        //Add it
-        reg[studentID].push_back(crn);
+        //Add it if it's not already there
+        for (size_t i = 0; i < reg[studentID].size(); i++)
+        {
+                if (reg[studentID][i] == match[crn]) return;
+        }
+        reg[studentID].push_back(match[crn]);
 }
 
-//Returns how many students are enrolled in the given class
-int Scheduler::studentsInClass(const Scheduler::Registrations & reg, const std::string & crn)
+//Returns how many students are enrolled in the given exam
+int Scheduler::studentsInExam(const Registrations & reg, const std::string & examID)
 {
         int count = 0;
-        for (Scheduler::Registrations::const_iterator i = reg.begin(); i != reg.end(); i++)
+        for (Registrations::const_iterator i = reg.begin(); i != reg.end(); i++)
         {
-                if (std::find(i->second.begin(), i->second.end(), crn) != i->second.end()) count++;
+                if (std::find(i->second.begin(), i->second.end(), examID) != i->second.end()) count++;
         }
 
         return count;
 }
 
-//Converts a vector of strings into a list of Exams
-//Queries the database to use the exam id's instead of CRN's and
-//to reference exams
-std::list<Exam> Scheduler::convertToExam(const Scheduler::Registrations & reg, const std::vector<std::string> & input, std::map<std::string,std::string> & match)
+//Converts a vector of Exam ID's into a list of Exams
+std::list<Exam> Scheduler::convertToExam(const Registrations & reg, const std::vector<std::string> & input)
 {
         //Create the output list
         std::list<Exam> out;
@@ -71,11 +73,21 @@ std::list<Exam> Scheduler::convertToExam(const Scheduler::Registrations & reg, c
         //Cycle over each entry
         for (size_t i = 0; i < input.size(); i++)
         {
-                if (match[input[i]] == "") continue;
-                out.push_back(Exam(studentsInClass(reg, input[i]), match[input[i]]));
+                if (input[i] == "") continue;
+                out.push_back(Exam(studentsInExam(reg, input[i]), input[i]));
         }
 
         return out;
+}
+
+//Updates the number of students in each exam in data_
+void Scheduler::updateNumStudents(const Registrations & reg)
+{
+        for (std::list<Exam>::const_iterator i = data_.exams().begin(); i != data_.exams().end(); i++)
+        {
+                data_.updateNumStudents(i->getId(), studentsInExam(reg, i->getId()));
+                std::cout << i->getId() << " has " << studentsInExam(reg, i->getId()) << " students." << std::endl;
+        }
 }
 
 //Loads students from a file
@@ -90,16 +102,8 @@ bool Scheduler::loadStudents(std::string filename)
         if (!fin) return false;
 
         //Set up storage for information
-        Scheduler::Registrations reg;
-
-        //Read every line
-        std::cout << "Parsing lines" << std::endl;
-        while (!fin.eof())
-        {
-                std::string line;
-                fin >> line;
-                parseLine(reg, line);
-        }
+        //Should be Student ID -> vector<Exam ID>
+        Registrations reg;
 
         //Get the conversions from crn to exam id
         pqxx::result dbresult = db_->execute("SELECT courses_section.crn, \"examID\" FROM courses_course, courses_exammapping, courses_section WHERE courses_course.id = courses_section.course_id AND courses_section.crn = courses_exammapping.crn AND courses_course.status='hasexam'");
@@ -109,16 +113,28 @@ bool Scheduler::loadStudents(std::string filename)
                 match[dbresult[i][0].c_str()] = dbresult[i][1].c_str();
         }
 
+        //Read every line
+        std::cout << "Parsing lines" << std::endl;
+        while (!fin.eof())
+        {
+                std::string line;
+                fin >> line;
+                parseLine(reg, line, match);
+        }
+
         //Clear the people first
         data_.clearPeople();
         
         //Add each student to the ScheduleData
         std::cout << "Adding students to data." << std::endl;
-        for (Scheduler::Registrations::iterator i = reg.begin(); i != reg.end(); i++)
+        for (Registrations::iterator i = reg.begin(); i != reg.end(); i++)
         {
-                Student add(i->first, convertToExam(reg, i->second, match));
+                Student add(i->first, convertToExam(reg, i->second));
                 data_.addPerson(&add);
         }
+
+        //Update the ScheduleData's list of exams with the proper number of students
+        updateNumStudents(reg);
 
         //TEST: Print out all the information
         for(int i = 0; i < data_.numPeople(); i++)

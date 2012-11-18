@@ -39,9 +39,10 @@ public:
 
 private:
         //Helpers for loadStudents()
-        void parseLine(Registrations & reg, const std::string & line);
-        int studentsInClass(const Registrations & reg, const std::string & crn);
-        std::list<Exam> convertToExam(const Registrations & reg, const std::vector<std::string> & input, std::map<std::string,std::string> & match);
+        void parseLine(Registrations & reg, const std::string & line, std::map<std::string,std::string> & match);
+        int studentsInExam(const Registrations & reg, const std::string & examID);
+        std::list<Exam> convertToExam(const Registrations & reg, const std::vector<std::string> & input);
+        void updateNumStudents(const Registrations & reg);
         
         //Pointer to a DBReader
         DBReader* db_;
