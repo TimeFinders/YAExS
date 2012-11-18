@@ -64,14 +64,6 @@ bool ScheduleData::containsExamID(Exam::EXAM_ID compare)
   return false;
 }
 
-/*
-//Returns the examID at the given index
-Person::PERSON_ID ScheduleData::examID(int index)
-{
-  return exams_[index].getId();
-}
-*/
-
 //Returns the exams for viewing
 std::list<Exam>& ScheduleData::exams()
 {
