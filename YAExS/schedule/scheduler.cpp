@@ -21,7 +21,7 @@ bool Scheduler::loadExams()
         data_.clearExams();
         
         //Get the list of exam ID's marked as 'hasexam'
-        pqxx::result dbresult = db_->execute("SELECT DISTINCT \"examID\" FROM courses_course, courses_exammapping, courses_section WHERE courses_course.id = courses_section.course_id AND courses_section.crn = courses_exammapping.crn AND courses_course.status='hasexam'");
+        pqxx::result dbresult = db_->execute("SELECT DISTINCT \"examID_id\" FROM courses_course, courses_exammapping, courses_section WHERE courses_course.id = courses_section.course_id AND courses_section.crn = courses_exammapping.crn AND courses_course.status='hasexam'");
 
         //Check size
         if (dbresult.size() == 0) return false;
@@ -107,7 +107,7 @@ bool Scheduler::loadStudents(std::string filename)
         Registrations reg;
 
         //Get the conversions from crn to exam id
-        pqxx::result dbresult = db_->execute("SELECT courses_section.crn, \"examID\" FROM courses_course, courses_exammapping, courses_section WHERE courses_course.id = courses_section.course_id AND courses_section.crn = courses_exammapping.crn AND courses_course.status='hasexam'");
+        pqxx::result dbresult = db_->execute("SELECT courses_section.crn, \"examID_id\" FROM courses_course, courses_exammapping, courses_section WHERE courses_course.id = courses_section.course_id AND courses_section.crn = courses_exammapping.crn AND courses_course.status='hasexam'");
         std::map<std::string, std::string> match;
         for (size_t i = 0; i < dbresult.size(); i++)
         {
@@ -122,6 +122,9 @@ bool Scheduler::loadStudents(std::string filename)
                 fin >> line;
                 parseLine(reg, line, match);
         }
+
+        //Close the file stream
+        fin.close();
 
         //Clear the people first
         data_.clearPeople();
