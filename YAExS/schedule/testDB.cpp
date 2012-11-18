@@ -22,10 +22,12 @@ int main(int argc, char* argv[])
         sched.loadLocations("locations/Rooms.csv", "locations/groupedRooms.csv");
 
         //TEST: Return early since courses aren't properly set up
-        return 0;
+        //return 0;
 
         //Run it!
-        sched.startScheduling();
+        int examDays = 5;
+        int slotsPerDay = 4;
+        sched.startScheduling(examDays,  slotsPerDay );
 
         //Print output
         sched.printSchedule();
