@@ -46,18 +46,6 @@ class RoomGroup : public ExamLocation
 			capacity = totalSize;		
 		 };	
 
-		ExamLocation::LOCATION_ID getId() const
-		{
-			ExamLocation::LOCATION_ID id = "";
-			for (std::vector<Room>::const_iterator it = rooms.begin(); it!= rooms.end(); it++)
-			{
-				id += it->getId();
-				id += "_";
-			}
-			return id;
-		};
-
-
 		std::vector<Room> contains() const {return rooms;};	
 
 		// Return true if the given exam can fit in this room group, false otherwise.

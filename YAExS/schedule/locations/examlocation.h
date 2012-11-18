@@ -31,9 +31,6 @@ class ExamLocation
 
 		// Returns a vector of the constituent Room(s)
 		virtual std::vector<Room> contains() const = 0;
- 
- 		// return an identifier
-		virtual LOCATION_ID getId() const = 0;
 
 		//for debugging
 		virtual void print() const = 0;

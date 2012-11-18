@@ -59,11 +59,7 @@ class Room : public ExamLocation
 
 		bool operator== (const Room & r)  {	return (r.roomID == this->roomID); }
 
-		ExamLocation::LOCATION_ID getId() const{ return roomID; };
-		bool operator== (const Room & r) 
-		{	
-			return (r.roomID == this->roomID);
-		}
+		std::string getId() const{ return roomID; };
 
 		bool static overlaps(const ExamLocation * e1, const ExamLocation * e2) 
 		{
@@ -80,6 +76,5 @@ class Room : public ExamLocation
 			return false;
 		};
 
-		ROOM_ID getId() const {return roomID;};
 };
 #endif
