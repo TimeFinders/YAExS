@@ -58,8 +58,22 @@ Optimizer::~Optimizer()
 	releaseOverloadConstraints();
 	releaseConflictConstraints();
 
+	
+	// Close things up
+	if (shouldPrint_)
+	{
+		std::cout << "releasing the scip environment" << std::endl;
+	}
 	//close the SCIP environment:
+	//SCIPprintMemoryDiagnostic(scip_);	
     SCIPfree(&scip_);
+
+    // can use to double check that the memory was freed
+    //SCIPprintMemoryDiagnostic(scip_);	
+    if (shouldPrint_)
+	{
+		std::cout << "done releasing the scip environment" << std::endl;
+	}
 }
 
 void Optimizer::releaseExamIsAtVariables()
@@ -203,6 +217,12 @@ void Optimizer::releaseConflictConstraints()
     		SCIPreleaseCons(scip_, & mapIt->second );
     	}
     }
+
+    if (shouldPrint_)
+	{
+		std::cout << "done releasing conflict constraints" << std::endl;
+	}
+	
 }
 
 
