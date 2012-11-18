@@ -13,9 +13,15 @@ groups to create exam location objects.
 std::list<ExamLocation*> LocationReader::readLocations(std::string roomFilePath, std::string roomGroupFilePath)
 {	
 	std::list<ExamLocation*> rooms = readRooms(roomFilePath);
-	std::list<ExamLocation*> roomGroups  = readRoomGroups(roomGroupFilePath);
-	
-	rooms.splice(rooms.begin(), roomGroups);
+	if (rooms.empty())
+	{
+		std::cerr << "error, no rooms were read. will not attempt to read room groups." << std::endl;
+	}
+	else
+	{
+		std::list<ExamLocation*> roomGroups  = readRoomGroups(roomGroupFilePath);
+		rooms.splice(rooms.begin(), roomGroups);
+	}
 	return rooms;
 }
 

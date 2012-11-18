@@ -165,8 +165,8 @@ void Optimizer::releaseOverloadConstraints()
     for ( std::unordered_map< Person::PERSON_ID, std::unordered_map<Day::DAY_ID, SCIP_CONS *> >::iterator pit = overloadCon_.begin();
     	pit != overloadCon_.end(); pit++)
     {
-    	if (shouldPrint_)
-    		std::cout << "\t for person " << pit->first << std::endl;
+    	//if (shouldPrint_)
+    	//	std::cout << "\t for person " << pit->first << std::endl;
 
     	std::unordered_map<Day::DAY_ID, SCIP_CONS*> theMap = pit->second;
     	for (std::unordered_map<Day::DAY_ID, SCIP_CONS*>::iterator mapIt = theMap.begin(); 
@@ -191,8 +191,8 @@ void Optimizer::releaseConflictConstraints()
     for ( std::unordered_map<Person::PERSON_ID, std::unordered_map<TimeSlot::TIMESLOT_ID, SCIP_CONS*> >::iterator personIt = conflictCon_.begin();
     	personIt != conflictCon_.end(); personIt++)
     {
-    	if (shouldPrint_)
-    		std::cout << "\t for person " << personIt->first << std::endl;
+    	//if (shouldPrint_)
+    	//	std::cout << "\t for person " << personIt->first << std::endl;
 
     	std::unordered_map<TimeSlot::TIMESLOT_ID, SCIP_CONS *> theMap = personIt->second;
     	for (std::unordered_map<TimeSlot::TIMESLOT_ID, SCIP_CONS *>::iterator mapIt = theMap.begin(); 
@@ -391,7 +391,7 @@ void Optimizer::loadTwoPlusVariables(const std::vector<Person* > & people)
 		{
 			if (shouldPrint_)	
 			{
-				std::cout << "adding a two plus variable for person ";
+			//	std::cout << "adding a two plus variable for person ";
 				std::cout << (*it)->getId() << std::endl;
 			}
 			
@@ -435,7 +435,7 @@ void Optimizer::loadThreePlusVariables(const std::vector<Person* > & people)
 		{
 			if (shouldPrint_)
 			{
-				std::cout << "adding a three plus variable for person ";
+			//	std::cout << "adding a three plus variable for person ";
 				std::cout << (*it)->getId() << std::endl;
 			}
 

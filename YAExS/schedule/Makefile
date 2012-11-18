@@ -4,7 +4,7 @@ SCIP_ZIMPL =
 SCIP_LFLAGS = -L/usr/lib -lscip $(SCIP_ZIMPL) -lreadline  -lgmp -lz -llpispx  -lsoplex  -lobjscip -lnlpi.cppad
 PQXX_LFLAGS = -lpqxx
 
-TESTOPT_OBJ = testOpt.cpp optimizer.o exam.o
+TESTOPT_OBJ = testOpt.cpp locations/locationreader.cpp locations/locationassigner.cpp optimizer.o exam.o
 TESTDB_OBJ = testDB.cpp locations/locationreader.cpp locations/locationassigner.cpp scheduler.o optimizer.o dbreader.o scheduleData.o exam.o
 
 test: testOpt testDB
