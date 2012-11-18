@@ -16,6 +16,8 @@ static bool deleteAll( Person * p ) { delete p; return true; }
 
 int main(int argc, char* argv[])
 {
+
+
     // Set up a test example
 
     std::vector<Person* > people = GetSome::getSomePeople();
@@ -138,6 +140,8 @@ int main(int argc, char* argv[])
         std::cout << "exam " << e.getId() << " scheduled at " << t.getId() << std::endl;
     }
 	
+
+
 
     return 0;
 }
