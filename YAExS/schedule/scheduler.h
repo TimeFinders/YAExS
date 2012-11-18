@@ -22,6 +22,9 @@ public:
         Scheduler(DBReader* dbIn, Optimizer* optIn);
 
         //Setup functions
+        void setNumberOfExamDays(int numDays) {examDays_ = numDays;};
+        void setNumberOfSlotsPerDay(int numSlots) {slotsPerDay_ = numSlots;};
+
         bool loadExams();
         bool loadStudents(std::string filename);
         bool loadInstructors();
@@ -34,9 +37,10 @@ public:
         void printSchedule();
 
         bool assignRooms();
-        //bool printRooms();
+        bool printRooms();
 
         typedef std::map<std::string, std::vector<std::string> > Registrations;
+
 private:
         //Helpers for loadStudents()
         void parseLine(Registrations & reg, const std::string & line);
@@ -57,6 +61,9 @@ private:
 
         //exam locations to be used by the roomAssigner
         std::list<ExamLocation* > locations_;
+
+        int examDays_;
+        int slotsPerDay_;
 };
 
 

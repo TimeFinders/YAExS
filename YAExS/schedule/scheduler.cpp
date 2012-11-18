@@ -10,7 +10,10 @@
 #include "scheduler.h"
 
 //Constructors
-Scheduler::Scheduler(DBReader* dbIn, Optimizer* optIn) : db_(dbIn), optimizer_(optIn)
+Scheduler::Scheduler() : examDays_(5), slotsPerDay_(4)
+{}
+
+Scheduler::Scheduler(DBReader* dbIn, Optimizer* optIn) : db_(dbIn), optimizer_(optIn), examDays_(5), slotsPerDay_(4)
 {}
 
 //Load classes which have exams into the vector
@@ -161,11 +164,8 @@ bool Scheduler::loadLocations(std::string roomFilePath, std::string roomGroupFil
 //Loads the exams and students into SCIP and begins the scheduling
 bool Scheduler::startScheduling()
 {
-        int numDays = 3;
-        int slotsPerDay = 3;
-
         //Load the model
-        optimizer_->loadModel(data_.exams(), data_.people(), numDays, slotsPerDay);
+        optimizer_->loadModel(data_.exams(), data_.people(), examDays_, slotsPerDay_);
 
         //Run it
         optimizer_->schedule();
