@@ -21,17 +21,13 @@ public:
         Scheduler();
         Scheduler(DBReader* dbIn, Optimizer* optIn);
 
-        //Setup functions
-        void setNumberOfExamDays(int numDays) {examDays_ = numDays;};
-        void setNumberOfSlotsPerDay(int numSlots) {slotsPerDay_ = numSlots;};
-
         bool loadExams();
         bool loadStudents(std::string filename);
         bool loadInstructors();
         bool loadLocations(std::string roomFilePath, std::string roomGroupFilePath);
 
         //Scheduling functions
-        bool startScheduling();
+        bool startScheduling(int numberOfExamDays, int numberOfSlotsPerDay);
         std::string status();
         bool stopScheduling();
         void printSchedule();
@@ -53,17 +49,11 @@ private:
         //Pointer to an Optimizer
         Optimizer* optimizer_;
 
-        //Current state of the scheduling process
-        std::string state_;
-
         //Storage for any data being transferred around
         ScheduleData data_;
 
         //exam locations to be used by the roomAssigner
         std::list<ExamLocation* > locations_;
-
-        int examDays_;
-        int slotsPerDay_;
 };
 
 
