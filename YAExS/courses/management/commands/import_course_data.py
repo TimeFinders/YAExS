@@ -4,6 +4,7 @@ from django.core.management.base import BaseCommand
 from django.db import transaction
 
 from courses.bridge import import_courses
+from courses.bridge.rpi import add_cross_listing
 
 
 class Command(BaseCommand):
@@ -26,3 +27,6 @@ class Command(BaseCommand):
             force=options.get('force'),
             all=options.get('all')
         )
+
+        #calculate cross listing
+        add_cross_listing()

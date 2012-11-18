@@ -288,14 +288,6 @@ class ROCSRPIImporter(object):
         )
         return dept
 
-    def create_crosslistings(self, semester_obj, crosslistings):
-        "Creates all crosslisting information into the database for all the sections."
-        for crosslisting in crosslistings:
-            refid = ','.join(map(str, sorted(tuple(crosslisting.crns))))
-            crosslisting_obj, created = SectionCrosslisting.objects.get_or_create(semester=semester_obj, ref=refid)
-            Section.objects.filter(crn__in=crosslisting.crns).update(crosslisted=crosslisting_obj)
-
-
 class SISRPIImporter(ROCSRPIImporter):
     def get_files(self, latest_semester):
         from rpi_courses import list_sis_files_for_date
@@ -365,18 +357,6 @@ class SISRPIImporter(ROCSRPIImporter):
 
                 self.clear_unused(semester_obj)
 
-
-def remove_prereq_notes(section):
-    all_notes = []
-    for i in range(0, len(section.notes)):
-        notes = section.notes[i]
-        m = re.match("PRE-REQ: ", notes)
-        if m:
-            notes = ""
-        all_notes.append(notes)
-    section.notes = all_notes
-
-
 def import_latest_semester(force=False):
     "Imports RPI data into the database."
     logger.debug('Importing latest semester: %s' % datetime.datetime.now().strftime('%A %x %X %f%Z'))
@@ -412,22 +392,6 @@ def import_data(force=False, all=False):
     else:
         import_latest_semester(force=force)
 
-
-def import_catalog(a=False):
-    catalog = parse_catalog(a)
-    courses = Course.objects.all()
-    for c in courses:
-        key = str(c.department.code) + str(c.number)
-        if key in catalog.keys():
-            if 'description' in catalog[key].keys() and catalog[key]['description'] != "":
-                c.description = catalog[key]['description']
-            c.name = catalog[key]['title']
-            c.prereqs = catalog[key]['prereqs']
-            c.save()
-    # uses >1GB of ram - currently unacceptable
-    add_cross_listing()
-
-
 def add_cross_listing():
     """
         Determines which sections should have exams together.
@@ -456,61 +420,3 @@ def add_cross_listing():
             s1.save()
             visited.append(s1)
             ExamMapping(crn=s1.crn, examID=s1.pk).save()
-
-
-def export_schedule(crns):
-    weekday_offset = {}
-    for i, day in enumerate(DAYS):
-        weekday_offset[day] = i
-    calendar = Calendar()
-    calendar.add('prodid', '-//YACS Course Schedule//EN')
-    calendar.add('version', '2.0')
-    sections = Section.objects.filter(crn__in=crns).prefetch_related('periods', 'section_times', 'section_times__period', 'course', 'semester')
-    semester_start = datetime.datetime(sections[0].semester.year, sections[0].semester.month, 1, 0, tzinfo=pytz.timezone("America/New_York")).astimezone(pytz.utc)
-    found = False
-    current = datetime.datetime.utcnow()
-    semester_end = semester_start + datetime.timedelta(150)
-    events = list(rpi_calendars.filter_related_events(rpi_calendars.download_events(rpi_calendars.get_url_by_range(str(semester_start.date()).replace('-', ''), str(current.date()).replace('-', '')))))
-    events.extend(list(rpi_calendars.filter_related_events(rpi_calendars.download_events(rpi_calendars.get_url()))))
-    days_off = []
-    break_start = None
-    break_end = None
-    for e in events:
-        if re.search(str(sections[0].semester.name.split(' ')[0]) + ' ' + str(sections[0].semester.year), e.name) != None:
-            semester_start = e.start
-            found = True
-        if re.search(".*(no classes).*", e.name.lower()) != None and found:
-            days_off.append([e.start.date()])
-        if re.search(".*(spring break)|(thanksgiving).*", e.name.lower()) != None and found:
-            break_start = e.start
-        if re.search(".*(classes resume).*", e.name.lower()) != None and break_start != None:
-            break_end = e.start
-        if re.search("(.*)study-review days", str(e.name).lower()) != None and found:
-            semester_end = e.start
-            break
-    if break_start != None and break_end != None:
-        length = break_end - break_start
-        for i in range(length.days):
-            days_off.append([(break_start + datetime.timedelta(i)).date()])
-    for s in sections:
-        for p in s.periods.all():
-            event = Event()
-            offset = weekday_offset[p.days_of_week[0]] - semester_start.weekday()
-            if offset < 0:
-                offset = 7 + offset
-            begin = semester_start + datetime.timedelta(offset)
-            event.add('summary', '%s - %s (%s)' % (s.course.code, s.course.name, s.crn))
-            event.add('dtstart', datetime.datetime(begin.year, begin.month, begin.day, p.start.hour, p.start.minute, tzinfo=pytz.timezone("America/New_York")).astimezone(pytz.utc))
-            event.add('dtend', datetime.datetime(begin.year, begin.month, begin.day, p.end.hour, p.end.minute, tzinfo=pytz.timezone("America/New_York")).astimezone(pytz.utc))
-            days = []
-            for d in p.days_of_week:
-                days.append(d[:2])
-            event.add('rrule', dict(
-                freq='weekly',
-                interval=1,
-                byday=days,
-                until=datetime.datetime(semester_end.year, semester_end.month, semester_end.day, p.end.hour, p.end.minute, tzinfo=pytz.timezone("America/New_York")).astimezone(pytz.utc)))
-            event.add('exdate', days_off)
-            calendar.add_component(event)
-    output = str(calendar).replace("EXDATE", "EXDATE;VALUE=DATE")
-    return output
