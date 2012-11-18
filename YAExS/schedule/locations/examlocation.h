@@ -12,7 +12,7 @@
 
 // for debugging
 #include <iostream>
-#include <typeinfo>
+#include <string>
 
 class Exam;
 class Room;
@@ -20,6 +20,8 @@ class Room;
 class ExamLocation 
 {		
 	public:
+		typedef std::string LOCATION_ID;
+
 		// Return true if the given exam can fit in this location, false otherwise.
 		virtual bool willExamFit(Exam exam) const = 0;
 
@@ -29,9 +31,11 @@ class ExamLocation
 		// Returns a vector of the constituent Room(s)
 		virtual std::vector<Room> contains() const = 0;
  
+ 		// return an identifier
+		virtual LOCATION_ID getId() const = 0;
+
 		//for debugging
 		virtual void print() const = 0;
-
 
 	
 		

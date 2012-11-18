@@ -6,13 +6,13 @@
 */
 
 #include <algorithm>
-
 #include "locationassigner.h"
-
-
 
 // for debugging
 #include <iostream>
+
+#define debugMode
+
 
 
 // Assign exam locations to exams that have had times assigned. 
@@ -64,9 +64,12 @@ int LocationAssigner::assignLocations(
 		}
 		else
 		{
-			//std::cout << "activating location ";
-			//bestLoc -> print();
-			//std::cout << std::endl;
+			#ifdef debugMode
+			  	std::cout << "activating location ";
+				bestLoc -> print();
+				std::cout << std::endl;
+			#endif
+			
 
 			// location is no longer availabe
 			availableLocs = removeOverlappingLocations( bestLoc, availableLocs);
@@ -89,9 +92,12 @@ int LocationAssigner::assignLocations(
 
 			for (std::list<Exam>::iterator et = firstThisSlot; et != next; et++)
 			{
-				//activeLocs.front()->print();	
-				//std::cout << "\tassigned to ";
-				//et->print();
+				#ifdef debugMode
+					activeLocs.front()->print();	
+					std::cout << "\tassigned to ";
+					et->print();
+				#endif
+				
 
 
 				if (!activeLocs.empty())

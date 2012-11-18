@@ -8,12 +8,10 @@
 #include <string>
 #include <fstream>
 #include <unordered_map>
-#include "ctype.h"
 
-
-#include "examlocation.h"
+// this will include examlocation.h
 #include "room.h"
-#include "roomgroup.h"  
+#include "roomgroup.h"
 
 
 class LocationReader
@@ -25,7 +23,7 @@ public:
 private:
 
 	// the rooms from the room file. used to create room groups.
-	std::unordered_map<Room::ROOM_ID, Room*> rooms_;
+	std::unordered_map<std::string, Room*> rooms_;
 
 
 	// read in rooms. you must read rooms before the room groups.
@@ -38,6 +36,6 @@ private:
 	std::string fixRoomNumber( std::string roomNumber);
 
 	// return a room_id used to create a Room object from the building a room number
-	Room::ROOM_ID roomID(std::string building, std::string roomNumber);
+	std::string roomID(std::string building, std::string roomNumber);
 
 };

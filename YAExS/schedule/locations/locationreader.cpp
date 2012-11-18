@@ -8,6 +8,10 @@ groups to create exam location objects.
 #include <stdio.h>
 #include <string.h>
 #include <sstream>
+#include "examlocation.h"
+
+
+
 
 // read in both rooms and room groups, return a list of Rooms and RoomGroups
 std::list<ExamLocation*> LocationReader::readLocations(std::string roomFilePath, std::string roomGroupFilePath)
@@ -46,7 +50,7 @@ std::list<ExamLocation*>  LocationReader::readRooms(std::string roomFilePath)
 
 		std::string line;
 		std::string building, room, capacity;
-		Room::ROOM_ID roomName;
+		std::string roomName;
 		int roomSize;
 		while ( roomFile.good() )
 	    {
@@ -146,7 +150,7 @@ std::list<ExamLocation*>  LocationReader::readRoomGroups(std::string roomGroupFi
 
 			     	//add the room to the contained rooms list if valid
 			     	roomNumber = fixRoomNumber( roomNumber);
-			        Room::ROOM_ID roomName = roomID(building, roomNumber);
+			       std::string roomName = roomID(building, roomNumber);
 
 			     	Room * room = rooms_[roomName];
 			     	if (room == NULL)
@@ -195,7 +199,7 @@ std::string LocationReader::fixRoomNumber(std::string roomNumber)
 }
 
 // return a room_id used to create a Room object from the building a room number
-Room::ROOM_ID LocationReader::roomID(std::string building, std::string roomNumber)
+std::string LocationReader::roomID(std::string building, std::string roomNumber)
 {
-	return building + "_" + roomNumber;
+	return building + roomNumber;
 }
