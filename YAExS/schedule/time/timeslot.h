@@ -1,8 +1,7 @@
 /*
   ----- Time Slot Class Declaration-----
   A class that represents a time slot.
-  This class is just a placeholder that will
-  be improved/expanded later.
+  Really just a wrapper for an in time slot id.
 */
 
 #ifndef _timeslot_h_

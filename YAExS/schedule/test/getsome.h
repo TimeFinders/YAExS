@@ -51,7 +51,7 @@ public:
 		diff.assignTime(2);
 		exams.push_back(diff);
 
-		Exam algo(45, "aglo");
+		Exam algo(45, "algo");
 		algo.assignTime(2);
 		exams.push_back(algo);
 
