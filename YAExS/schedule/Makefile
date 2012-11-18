@@ -29,3 +29,6 @@ exam.o: exams/exam.cpp exams/exam.h
 
 scheduleData.o: scheduleData/scheduleData.cpp scheduleData/scheduleData.h
 	$(CC) scheduleData/scheduleData.cpp scheduleData/scheduleData.h $(CFLAGS)
+
+clean:
+	rm -frv *.o *.gch testDB testOpt
