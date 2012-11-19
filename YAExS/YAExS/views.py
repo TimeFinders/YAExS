@@ -4,3 +4,6 @@ from django.http import HttpRequest
 
 def home(request):
     return render(request, 'home.html')
+
+def restricted(request):
+    return render(request, '403.html')

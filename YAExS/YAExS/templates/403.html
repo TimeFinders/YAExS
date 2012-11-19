@@ -1,0 +1,18 @@
+{% extends "home.html" %}
+
+{% block css %}
+    {{ block.super }}
+
+    <link rel="stylesheet" type="text/less" href="{{STATIC_URL}}c/403.less" />
+{% endblock css %}
+
+
+{% block body %}
+    <span id="title">Permission Denied</span>
+
+    <p>If you believe you have reached this page in error, please try logging in again.  If you are still unable to access the application please contact the Office of the Registrar to gain access.</p>
+
+    <p>If you are a professor attempting to report exam information about your courses, please inform your department scheduler instead of attempting to use YAExS.</p>
+
+    <p>Any other questions can be directed at the Office of the Registrar</p>
+{% endblock body %}
