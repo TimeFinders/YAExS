@@ -1,11 +1,19 @@
 CC = g++ -std=c++0x 
 CFLAGS = -g -Wall -Wextra -c
-SCIP_ZIMPL = 
+OUTPUT = -o main
+
+SCIP_ZIMPL =
 SCIP_LFLAGS = -L/usr/lib -lscip $(SCIP_ZIMPL) -lreadline  -lgmp -lz -llpispx  -lsoplex  -lobjscip -lnlpi.cppad
 PQXX_LFLAGS = -lpqxx
 
+MAIN_OBJ = main.cpp locations/locationreader.cpp locations/locationassigner.cpp scheduler.o optimizer.o dbreader.o scheduleData.o exam.o
 TESTOPT_OBJ = testOpt.cpp locations/locationreader.cpp locations/locationassigner.cpp optimizer.o exam.o
 TESTDB_OBJ = testDB.cpp locations/locationreader.cpp locations/locationassigner.cpp scheduler.o optimizer.o dbmanager.o scheduleData.o exam.o
+
+all: main test
+
+main: $(MAIN_OBJ)
+	$(CC) $(MAIN_OBJ) $(OUTPUT) $(PQXX_LFLAGS) $(SCIP_LFLAGS)
 
 test: testOpt testDB
 
