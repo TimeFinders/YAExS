@@ -1,6 +1,5 @@
 import sys
 import os
-from django.core.urlresolvers import reverse_lazy
 
 
 def relative_path(*path):
@@ -186,7 +185,7 @@ AUTHENTICATION_BACKENDS = (
 CAS_SERVER_URL = "https://cas-auth.rpi.edu/cas/"
 CAS_IGNORE_REFERER = True
 CAS_LOGOUT_COMPLETELY = True
-LOGIN_URL=reverse_lazy('login')
+LOGIN_URL='/login/'
 
 
 COURSES_COLLEGE_PARSER = 'courses.bridge.rpi.import_data'
