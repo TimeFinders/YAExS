@@ -1,5 +1,6 @@
 import sys
 import os
+from django.core.urlresolvers import reverse
 
 
 def relative_path(*path):

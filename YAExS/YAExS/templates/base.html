@@ -22,7 +22,7 @@
             <div id="header">
                 {% block header %}
                     <a href="/" id="logo"></a>
-                    <a href="/logout/" id="login">Logout</a>
+                    <a href="{% url logout %}" id="login">Logout</a>
                 {% endblock header %}
             </div>
 
