@@ -5,7 +5,7 @@ from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns('Exams.views',
-    url(r'^hasexam/', 'updateExam', {'status': 'hasexam'}),
-    url(r'^unknown/', 'updateExam', {'status': 'unknown'}),
-    url(r'^noexam/', 'updateExam', {'status': 'noexam'}),
+    url(r'^hasexam/', 'updateExam', {'status': 'hasexam'}, name="hasexam"),
+    url(r'^unknown/', 'updateExam', {'status': 'unknown'}, name="unknown"),
+    url(r'^noexam/', 'updateExam', {'status': 'noexam'}, name="noexam"),
 )

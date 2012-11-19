@@ -9,16 +9,16 @@
         $(".exams").sortable({connectWith:".exams"});
 
         $(".noexam").sortable("option", "receive", function(event, ui){
-            $.post('/exam/noexam/', {id : ui.item.attr('id')})
+            $.post('{% url noexam %}', {id : ui.item.attr('id')})
 
         });
 
         $(".unknown").sortable("option", "receive", function(event, ui){
-            $.post('/exam/unknown/', {id : ui.item.attr('id')})
+            $.post('{% url unknown %}', {id : ui.item.attr('id')})
         });
 
         $(".hasexam").sortable("option", "receive", function(event, ui){
-            $.post('/exam/hasexam/', {id : ui.item.attr('id')})
+            $.post('{% url hasexam %}', {id : ui.item.attr('id')})
         });
         $(".name").click(function(){
             $(this).siblings(".courses").slideToggle();
