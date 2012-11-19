@@ -40,7 +40,8 @@ def main(request):
 
 @permission_required('Accounts.registrar', raise_exception=True)
 def scheduling(request):
-	if not _isScheduleRunning:
+	if not _isScheduleRunning():
+		print "test"
 		errors = None
 		if request.method == 'POST':
 			form = Scheduler(request.POST, request.FILES)
@@ -56,7 +57,6 @@ def scheduling(request):
 					errors = e.output.split("\n")
 		else:
 			form = Scheduler()
-
 
 		return render(request, 'accounts/scheduling.html', {'schedule' : form, 'errors' : errors})
 	else:
