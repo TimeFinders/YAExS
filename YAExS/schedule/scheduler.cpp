@@ -186,7 +186,9 @@ bool Scheduler::loadLocations(std::string roomFilePath, std::string roomGroupFil
 bool Scheduler::startScheduling(int numExamDays, int numSlotsPerDay)
 {
         //Load the model
-        optimizer_->loadModel(data_.exams(), data_.people(), numExamDays, numSlotsPerDay);
+        const std::vector<Person *> people = data_.people();
+        std::list<Exam> * examVectorPointer = &data_.exams();
+        optimizer_->loadModel(*examVectorPointer, people, numExamDays, numSlotsPerDay);
 
         //Run it
         optimizer_->schedule();
