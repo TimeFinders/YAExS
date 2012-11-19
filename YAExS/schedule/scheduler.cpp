@@ -1,6 +1,8 @@
 /*
   -----Scheduler Class Implementation-----
-  A class to act as a mediator betweeen an Optimizer and a DBManager.
+  A class to act as a mediator betweeen an Optimizer, a DBManager, 
+  a LocationReader and a LocationAssigner
+  Scheduler coordinates all scheduling activities. 
 */
 
 #include <algorithm>
