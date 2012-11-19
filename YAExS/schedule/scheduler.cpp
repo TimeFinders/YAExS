@@ -67,7 +67,7 @@ int Scheduler::studentsInExam(const Registrations & reg, const Exam::EXAM_ID & e
 }
 
 //Converts a vector of Exam ID's into a list of Exams
-std::list<Exam> Scheduler::convertToExam(const Registrations & reg, const std::vector<CRN> & input)
+std::list<Exam> Scheduler::convertToExam(const Registrations & reg, const std::vector<Exam::EXAM_ID> & input)
 {
         //Create the output list
         std::list<Exam> out;
@@ -87,8 +87,9 @@ void Scheduler::updateNumStudents(const Registrations & reg)
 {
         for (std::list<Exam>::const_iterator i = data_.exams().begin(); i != data_.exams().end(); i++)
         {
-                data_.updateNumStudents(i->getId(), studentsInExam(reg, i->getId()));
-                std::cout << i->getId() << " has " << studentsInExam(reg, i->getId()) << " students." << std::endl;
+                Exam::EXAM_ID examId = i->getId();
+                data_.updateNumStudents(examId, studentsInExam(reg, examId));
+                std::cout << examId << " has " << studentsInExam(reg, examId) << " students." << std::endl;
         }
 }
 
@@ -134,8 +135,9 @@ bool Scheduler::loadStudents(std::string filename)
         std::cout << "Adding students to data." << std::endl;
         for (Registrations::iterator i = reg.begin(); i != reg.end(); i++)
         {
-                Student add(i->first, convertToExam(reg, i->second));
-                data_.addPerson(&add);
+                Person::PERSON_ID personId = i->first;
+                Student studentToAdd(personId, convertToExam(reg, i->second));
+                data_.addPerson(&studentToAdd);
         }
 
         //Update the ScheduleData's list of exams with the proper number of students
