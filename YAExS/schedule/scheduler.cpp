@@ -187,8 +187,8 @@ bool Scheduler::startScheduling(int numExamDays, int numSlotsPerDay)
 {
         //Load the model
         const std::vector<Person *> people = data_.people();
-        std::list<Exam> * examVectorPointer = &data_.exams();
-        optimizer_->loadModel(*examVectorPointer, people, numExamDays, numSlotsPerDay);
+        std::list<Exam> * examListPointer = &data_.exams();
+        optimizer_->loadModel(*examListPointer, people, numExamDays, numSlotsPerDay);
 
         //Run it
         optimizer_->schedule();
@@ -236,4 +236,28 @@ void Scheduler::printRooms()
     }
      std::cout << "\n_________________________\n" << std::endl;
 
+}
+
+void Scheduler::writeScheduleToDB()
+{
+    std::list<Exam> * examListPointer = &data_.exams();
+    for (std::list<Exam>::iterator it = examListPointer->begin();
+            it != examListPointer->end(); it++)
+    {
+        writeExamToDB(*it);
+    }
+
+//    SECTION_ID (exam id) TIME_ID (time slot) ROOM (string)
+}
+
+void Scheduler::writeExamToDB( Exam & exam )
+{
+    Exam::EXAM_ID examID = exam.getId();
+    TimeSlot::TIMESLOT_ID timeslotID = (exam.getTime()).getId();
+    ExamLocation::LOCATION_ID locationID = (exam.getLocation())->getId();
+
+    std::cout << "inserting exam " << examID << " at time " << timeslotID;
+    std::cout << " in " << locationID << " into the database" << std::endl;
+
+//    pqxx::result dbresult = db_->execute("INSERT INTO", Accounts_schedule);
 }

@@ -33,5 +33,7 @@ int main(int argc, char* argv[])
         sched.assignRooms();
         sched.printRooms();
 
+        sched.writeScheduleToDB();
+
         return 0;
 }

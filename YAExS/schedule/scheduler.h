@@ -17,6 +17,9 @@
 class Scheduler
 {
 public:
+        typedef std::map<Person::PERSON_ID, std::vector<Exam::EXAM_ID> > Registrations;
+        typedef std::string CRN;
+
         //Constructors
         Scheduler();
         Scheduler(DBManager* dbIn, Optimizer* optIn);
@@ -35,8 +38,7 @@ public:
         bool assignRooms();
         void printRooms();
 
-        typedef std::map<Person::PERSON_ID, std::vector<Exam::EXAM_ID> > Registrations;
-        typedef std::string CRN;
+        void writeScheduleToDB();
 
 private:
         //Helpers for loadStudents()
@@ -44,7 +46,10 @@ private:
         int studentsInExam(const Registrations & reg, const Exam::EXAM_ID & examID);
         std::list<Exam> convertToExam(const Registrations & reg, const std::vector<Exam::EXAM_ID> & input);
         void updateNumStudents(const Registrations & reg);
-        
+
+        // helper for writeScheduleToDB
+        void writeExamToDB( Exam & exam );
+
         //Pointer to a DBManager
         DBManager* db_;
 
