@@ -1,12 +1,12 @@
-CC = g++ -std=c++0x 
-CFLAGS = -g -Wall -Wextra -c
+CC = g++ -std=c++0x -g
+CFLAGS = -Wall -Wextra -c
 OUTPUT = -o main
 
 SCIP_ZIMPL =
 SCIP_LFLAGS = -L/usr/lib -lscip $(SCIP_ZIMPL) -lreadline  -lgmp -lz -llpispx  -lsoplex  -lobjscip -lnlpi.cppad
 PQXX_LFLAGS = -lpqxx
 
-MAIN_OBJ = main.cpp locations/locationreader.cpp locations/locationassigner.cpp scheduler.o optimizer.o dbreader.o scheduleData.o exam.o
+MAIN_OBJ = main.cpp locations/locationreader.cpp locations/locationassigner.cpp scheduler.o optimizer.o dbmanager.o scheduleData.o exam.o
 TESTOPT_OBJ = testOpt.cpp locations/locationreader.cpp locations/locationassigner.cpp optimizer.o exam.o
 TESTDB_OBJ = testDB.cpp locations/locationreader.cpp locations/locationassigner.cpp scheduler.o optimizer.o dbmanager.o scheduleData.o exam.o
 
@@ -33,7 +33,7 @@ dbmanager.o: dbmanager.cpp dbmanager.h
 	$(CC) dbmanager.cpp $(CFLAGS)
 
 exam.o: exams/exam.cpp exams/exam.h
-	$(CC)exams/exam.cpp exams/exam.h $(CFLAGS)
+	$(CC) exams/exam.cpp exams/exam.h $(CFLAGS)
 
 scheduleData.o: scheduleData/scheduleData.cpp scheduleData/scheduleData.h
 	$(CC) scheduleData/scheduleData.cpp scheduleData/scheduleData.h $(CFLAGS)

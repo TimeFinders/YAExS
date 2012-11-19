@@ -36,11 +36,16 @@ int main(int argc, char* argv[])
         {
                 //Get the next line
                 std::string line;
-                config >> line;
+                getline(config, line);
 
                 //Remove all spaces
                 size_t space;
-                while ((space = line.find(' ')) != line.npos) line.erase(space,1);
+                space = line.find(' ');
+                while (space != line.npos)
+                {
+                        line.erase(space,1);
+                        space = line.find(' ');
+                }
 
                 //Skip comments
                 if (line[0] == '#') continue;
@@ -93,13 +98,16 @@ int main(int argc, char* argv[])
         std::string dbSetupString = "user=" + settings["db_username"];
         dbSetupString += " password=" + settings["db_password"];
         dbSetupString += " host=" + settings["db_host"];
-        dbSetupString += " name=" + settings["db_name"];
+        dbSetupString += " dbname=" + settings["db_name"];
         dbSetupString += " port=" + settings["db_port"];
         DBManager dbManager(dbSetupString);
         Optimizer opt(false);
         
         //Create a Scheduler
         Scheduler sched(&dbManager, &opt);
+
+        //Truncate the output table in case something goes wrong partway through
+        sched.clearDBSchedule();
 
         //Try to load exams and students
         sched.loadExams();
@@ -133,7 +141,7 @@ int main(int argc, char* argv[])
                 sched.assignRooms();
 
                 //Load results into database
-                //sched.writeScheduleToDB();
+                sched.writeScheduleToDB();
 
                 //Delete the pid file to let the website know it's done
                 remove(argv[4]);
