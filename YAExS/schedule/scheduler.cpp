@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <fstream>
 #include <map>
+#include <sstream>
 
 #include "scheduler.h"
 
@@ -247,7 +248,6 @@ void Scheduler::writeScheduleToDB()
         writeExamToDB(*it);
     }
 
-//    SECTION_ID (exam id) TIME_ID (time slot) ROOM (string)
 }
 
 void Scheduler::writeExamToDB( Exam & exam )
@@ -259,5 +259,23 @@ void Scheduler::writeExamToDB( Exam & exam )
     std::cout << "inserting exam " << examID << " at time " << timeslotID;
     std::cout << " in " << locationID << " into the database" << std::endl;
 
-//    pqxx::result dbresult = db_->execute("INSERT INTO", Accounts_schedule);
+    std::string dbCall;
+    std::ostringstream callStream;
+    
+    callStream << "INSERT INTO \"Accounts_schedule\" (section_id, timeslot, location) ";
+    callStream << "VALUES (";
+    callStream << examID;
+    callStream << ", ";
+    callStream << timeslotID;
+    callStream << ", ";
+    callStream << "'";
+    callStream << locationID;
+    callStream << "'";
+    callStream << ")";
+    
+    dbCall = callStream.str();
+    std::cout << dbCall << std::endl;
+
+
+    pqxx::result dbresult = db_->execute(dbCall);
 }
