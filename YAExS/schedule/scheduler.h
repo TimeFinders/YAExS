@@ -35,13 +35,14 @@ public:
         bool assignRooms();
         void printRooms();
 
-        typedef std::map<std::string, std::vector<std::string> > Registrations;
+        typedef std::map<std::string, std::vector<Exam::EXAM_ID> > Registrations;
+        typedef std::string CRN;
 
 private:
         //Helpers for loadStudents()
-        void parseLine(Registrations & reg, const std::string & line, std::map<std::string,std::string> & match);
-        int studentsInExam(const Registrations & reg, const std::string & examID);
-        std::list<Exam> convertToExam(const Registrations & reg, const std::vector<std::string> & input);
+        void parseLine(Registrations & reg, const std::string & line, std::map<CRN, Exam::EXAM_ID> & match);
+        int studentsInExam(const Registrations & reg, const Exam::EXAM_ID & examID);
+        std::list<Exam> convertToExam(const Registrations & reg, const std::vector<CRN> & input);
         void updateNumStudents(const Registrations & reg);
         
         //Pointer to a DBReader
