@@ -11,7 +11,7 @@
 // for debugging
 #include <iostream>
 
-#define debugMode
+//#define debugMode
 
 
 

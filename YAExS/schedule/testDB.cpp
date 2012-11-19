@@ -33,8 +33,11 @@ int main(int argc, char* argv[])
         sched.assignRooms();
         sched.printRooms();
 
-        sched.writeScheduleToDB();
-        sched.clearDBSchedule();
+        //std::cout << "writing the schedule to the database" << std::endl;
+        //sched.writeScheduleToDB();
+
+        //std::cout << "clearing the schedule from the database" << std::endl;
+        //sched.clearDBSchedule();
 
         return 0;
 }

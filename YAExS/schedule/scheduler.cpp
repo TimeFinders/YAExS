@@ -261,8 +261,8 @@ void Scheduler::writeExamToDB( Exam & exam )
     TimeSlot::TIMESLOT_ID timeslotID = (exam.getTime()).getId();
     ExamLocation::LOCATION_ID locationID = (exam.getLocation())->getId();
 
-    std::cout << "inserting exam " << examID << " at time " << timeslotID;
-    std::cout << " in " << locationID << " into the database" << std::endl;
+    //std::cout << "inserting exam " << examID << " at time " << timeslotID;
+    //std::cout << " in " << locationID << " into the database" << std::endl;
 
     std::string dbCall;
     std::ostringstream callStream;
@@ -279,7 +279,7 @@ void Scheduler::writeExamToDB( Exam & exam )
     callStream << ")";
     
     dbCall = callStream.str();
-    std::cout << dbCall << std::endl;
+    //std::cout << dbCall << std::endl;
 
 
     pqxx::result dbresult = db_->execute(dbCall);
