@@ -100,7 +100,6 @@ def displaySchedule(request):
 
 
 def _isScheduleRunning():
-	return True
 	try:
 		with open(PID_FILE) as f:
 			kill(int(f.read()), 0)
