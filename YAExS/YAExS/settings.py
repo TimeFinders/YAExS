@@ -187,3 +187,7 @@ LOGIN_URL="/login/"
 
 
 COURSES_COLLEGE_PARSER = 'courses.bridge.rpi.import_data'
+
+PID_FILE = 'scip.pid'
+REG_FILE = 'reg.csv'
+OPT_EXEC = '/home/blah'

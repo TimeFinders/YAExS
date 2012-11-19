@@ -410,7 +410,7 @@ def add_cross_listing():
             or (compare(s1.section_times.all(), s2.section_times.all()))):
                 found = True
                 print s1.course, s1, "crosslisted as", s2.course, s2
-                ExamMapping(crn=s1.crn, examID=s2.pk).save()
+                ExamMapping(crn=s1.crn, examID=s2).save()
                 s1.visited = 1
                 s1.save()
                 break
@@ -419,4 +419,4 @@ def add_cross_listing():
             s1.visited = 2
             s1.save()
             visited.append(s1)
-            ExamMapping(crn=s1.crn, examID=s1.pk).save()
+            ExamMapping(crn=s1.crn, examID=s1).save()

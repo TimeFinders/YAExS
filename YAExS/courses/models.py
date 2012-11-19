@@ -497,4 +497,4 @@ class SemesterDepartment(models.Model):
 
 class ExamMapping(models.Model):
     crn = models.IntegerField(unique=True)
-    examID = models.IntegerField()
+    examID = models.ForeignKey(Section, related_name="mapping")

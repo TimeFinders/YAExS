@@ -1,0 +1,10 @@
+{% extends "accounts/registrar.html" %}
+
+
+{% block body %}
+	<p>Scheduler is Currently Running.  Click cancel to terminate scheduling</p>
+	<form method="post" action="{% url cancel %}">
+		{% csrf_token %}
+		<input type="submit" value="Cancel Scheduling" />
+	</form>
+{% endblock body %}
