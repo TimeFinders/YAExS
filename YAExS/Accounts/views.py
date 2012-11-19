@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required, permission_required
 from django.http import HttpRequest
 from django.core.exceptions import PermissionDenied
-from courses.models import Department, Course, ExamMapping
+from courses.models import Department, Course, Section, ExamMapping
 from models import Schedule
 from forms import Scheduler
 from os import kill, remove
@@ -90,7 +90,13 @@ def displaySchedule(request):
 	for sched in Schedule.objects.all().prefetch_related('section__mapping'):
 		c = {'location' : sched.location, 'timeslot' : sched.timeslot, 'sections' : []}
 
-		sched.section.mapping.all().values_list('crn')
+		crns = (x[0] for x in sched.section.mapping.all().values_list('crn'))
+		c['sections'].extend(list(Section.objects.filter(crn__in=crns).prefetch_related('course__department')))
+
+		info.append(c)
+
+
+	return render(request, 'accounts/schedule.html', {'schedule': info})
 
 
 def _isScheduleRunning():
