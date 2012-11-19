@@ -59,7 +59,8 @@ int Scheduler::studentsInExam(const Registrations & reg, const Exam::EXAM_ID & e
         int count = 0;
         for (Registrations::const_iterator i = reg.begin(); i != reg.end(); i++)
         {
-                if (std::find(i->second.begin(), i->second.end(), examID) != i->second.end()) count++;
+                const std::vector<Exam::EXAM_ID> examIds = i->second;
+                if (std::find(examIds.begin(), examIds.end(), examID) != examIds.end()) count++;
         }
 
         return count;
