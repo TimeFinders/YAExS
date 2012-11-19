@@ -37,7 +37,7 @@ bool Scheduler::loadExams()
 }
 
 //Adds an entry in the Registrations for the line
-void Scheduler::parseLine(Registrations & reg, const std::string & line, std::map<std::string,std::string> & match)
+void Scheduler::parseLine(Registrations & reg, const std::string & line, std::map<CRN, Exam::EXAM_ID> & match)
 {
         //Split up the string into Student ID and CRN
         std::string studentID, crn;
@@ -54,7 +54,7 @@ void Scheduler::parseLine(Registrations & reg, const std::string & line, std::ma
 }
 
 //Returns how many students are enrolled in the given exam
-int Scheduler::studentsInExam(const Registrations & reg, const std::string & examID)
+int Scheduler::studentsInExam(const Registrations & reg, const Exam::EXAM_ID & examID)
 {
         int count = 0;
         for (Registrations::const_iterator i = reg.begin(); i != reg.end(); i++)
@@ -66,7 +66,7 @@ int Scheduler::studentsInExam(const Registrations & reg, const std::string & exa
 }
 
 //Converts a vector of Exam ID's into a list of Exams
-std::list<Exam> Scheduler::convertToExam(const Registrations & reg, const std::vector<std::string> & input)
+std::list<Exam> Scheduler::convertToExam(const Registrations & reg, const std::vector<CRN> & input)
 {
         //Create the output list
         std::list<Exam> out;
