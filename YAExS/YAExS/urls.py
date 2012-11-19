@@ -5,7 +5,7 @@ from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns('',
-    url(r'^$', 'YAExS.views.home'),
+    url(r'^$', 'YAExS.views.home', name="default"),
     url(r'^accounts/', include('Accounts.urls')),
     url(r'^exam/', include('Exams.urls')),
     url(r'^login/$', 'django_cas.views.login'),
