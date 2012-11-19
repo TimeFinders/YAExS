@@ -1,0 +1,41 @@
+
+{% extends "base.html" %}
+
+{% block css %}
+	{{ block.super }}
+
+	<link rel="stylesheet" type="text/less" href="{{STATIC_URL}}accounts/c/registrar.less" />
+{% endblock css %}
+
+{% block header %}
+	{{ block.super }}
+
+	<div id="reg_navContainer">
+		<ul id="reg_nav">
+			<li><a href="{% url home %}">Dashboard</a></li>
+			<li><a href="{% url scheduling %}">Scheduling</a></li>
+			<li><a href="{% url schedule %}">Schedule</a></li>
+			<li>User Management</li>
+		</ul>
+	</div>
+{% endblock header %}
+
+{% block body %}
+	{% if message %}
+		<p style="color: red">{{ message }}</p>
+	{% endif %}
+	
+
+	<p>{{ info }} / {{ all }} courses have information about exams.</p>
+
+	<p>There are {{ exams }} exams in total</p>
+
+	{% if running %}
+		<p>The scheduler is currently running.  Go to the Scheduling tab to cancel the scheduler.
+	{% elif schedule %}
+		<p>There is a schedule for you to view.  Go the the Schedule tab to see the schedule.</p>
+	{% else %}
+		<p>Go to the Scheduling tab if you would like to begin scheduling exams.</p>
+	{% endif %}
+
+{% endblock body %}

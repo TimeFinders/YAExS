@@ -1,0 +1,21 @@
+{% extends "accounts/registrar.html" %}
+
+{% block css %}
+	{{ block.super }}
+	<link rel="stylesheet" type="text/less" href="{{STATIC_URL}}accounts/c/dispSchedule.less" />
+{% endblock css %}
+
+{% block body %}
+	<table>
+		{% for exam in schedule %}
+			<tr><td>
+				<ul>{% for sec in exam.sections %}
+				<li>{{sec.course.department.code}}-{{sec.course.number}}- {{sec.number}}: {{sec.course.name}}</li>
+			{% endfor %}
+		</ul></td>
+		<td>{{exam.location}}</td>
+		<td>{{exam.timeslot}}</td></tr>
+
+		{% endfor %}
+	</table>
+{% endblock body %}

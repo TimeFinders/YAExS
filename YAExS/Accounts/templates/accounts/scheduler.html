@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript">
+
+    $(document).ready(function(){
+
+        $(".exams").sortable({connectWith:".exams"});
+
+        $(".noexam").sortable("option", "receive", function(event, ui){
+            $.post('{% url noexam %}', {id : ui.item.attr('id')})
+
+        });
+
+        $(".unknown").sortable("option", "receive", function(event, ui){
+            $.post('{% url unknown %}', {id : ui.item.attr('id')})
+        });
+
+        $(".hasexam").sortable("option", "receive", function(event, ui){
+            $.post('{% url hasexam %}', {id : ui.item.attr('id')})
+        });
+        $(".name").click(function(){
+            $(this).siblings(".courses").slideToggle();
+            return false;
+        });
+    });
+
+    </script>
+{% endblock js %}
+
+{% block css %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/less" href="{{STATIC_URL}}accounts/c/schedule.less" />
+{% endblock css %}
+
+{% block body %}
+    Please select your department:
+
+    {% for dept in depts %}
+        <div class="dept">
+            <div class="name">{{dept.code}} - {{dept.name}}</div>
+            <div class="courses">
+                <div class="container">
+                    <span class="title">No Exam</title>
+                    <ul class="noexam exams">
+                        {% for course in dept.noexam %}
+                            <li id="{{course.id}}">{{course.number}} - {{course.name}}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="container">
+                    <span class="title">Unknown</title>
+                    <ul class="unknown exams">
+                        {% for course in dept.unknown %}
+                            <li id="{{course.id}}">{{course.number}} - {{course.name}}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="container">
+                    <span class="title">Has Exam</title>
+                    <ul class="hasexam exams">
+                        {% for course in dept.hasexam %}
+                            <li id="{{course.id}}">{{course.number}} - {{course.name}}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+{% endblock body %}
