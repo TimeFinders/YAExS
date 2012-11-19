@@ -28,3 +28,15 @@ pqxx::result DBManager::execute(const std::string& query)
   w.commit();
   return ret;
 }
+
+//Deactiavtes the database connection
+void DBManager::deactivate()
+{
+  connect_.deactivate();
+}
+
+//Reactiavtes the database connection after deactivation
+void DBManager::reactivate()
+{
+  connect_.activate();
+}

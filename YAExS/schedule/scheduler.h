@@ -40,6 +40,8 @@ public:
 
         void writeScheduleToDB();
         void clearDBSchedule();
+        void deactivateDB();
+        void reactivateDB();
 
 private:
         //Helpers for loadStudents()

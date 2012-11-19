@@ -284,3 +284,15 @@ void Scheduler::writeExamToDB( Exam & exam )
 
     pqxx::result dbresult = db_->execute(dbCall);
 }
+
+//Deactivates the database in case of fork or other issues
+void Scheduler::deactivateDB()
+{
+        db_->deactivate();
+}
+
+//reactivates the database after a deactivation
+void Scheduler::reactivateDB()
+{
+        db_->reactivate();
+}

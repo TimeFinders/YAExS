@@ -102,7 +102,7 @@ int main(int argc, char* argv[])
         dbSetupString += " port=" + settings["db_port"];
         DBManager dbManager(dbSetupString);
         Optimizer opt(false);
-        
+
         //Create a Scheduler
         Scheduler sched(&dbManager, &opt);
 
@@ -116,6 +116,9 @@ int main(int argc, char* argv[])
                 std::cerr << "Could not read " << argv[3] << std::endl;
                 return 1;
         }
+
+        //Deactivate the database before forking
+        sched.deactivateDB();
         
         //Fork to let the parent return
         pid_t pid = fork();
@@ -133,18 +136,28 @@ int main(int argc, char* argv[])
         }
         else //Child
         {
+                //Reactivate the database connection
+                sched.reactivateDB();
+                
                 //Run the scheduler
                 sched.startScheduling(examDays, slotsPerDay);
 
                 //Load locations and assign rooms
                 sched.loadLocations(settings["roomfile"], settings["roomgroupfile"]);
+
+                std::cout << "Load locations complete" << std::endl;
+                
                 sched.assignRooms();
+
+                std::cout << "Assign rooms complete" << std::endl;
 
                 //Load results into database
                 sched.writeScheduleToDB();
 
                 //Delete the pid file to let the website know it's done
                 remove(argv[4]);
+
+                std::cout << "Child done" << std::endl;
         }
 
         //Finish up

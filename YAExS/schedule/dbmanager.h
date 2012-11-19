@@ -22,6 +22,8 @@ public:
 
     //General use functions
     pqxx::result execute(const std::string& query);
+    void deactivate();
+    void reactivate();
 
 private:
     //Objects for the database connection itself
