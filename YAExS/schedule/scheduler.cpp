@@ -250,6 +250,11 @@ void Scheduler::writeScheduleToDB()
 
 }
 
+void Scheduler::clearDBSchedule()
+{
+    pqxx::result dbresult = db_->execute("TRUNCATE TABLE \"Accounts_schedule\"");
+}
+
 void Scheduler::writeExamToDB( Exam & exam )
 {
     Exam::EXAM_ID examID = exam.getId();

@@ -39,6 +39,7 @@ public:
         void printRooms();
 
         void writeScheduleToDB();
+        void clearDBSchedule();
 
 private:
         //Helpers for loadStudents()
