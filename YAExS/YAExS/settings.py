@@ -10,8 +10,10 @@ sys.path.insert(0, relative_path('lib'))
 
 # Django settings for YAExS project.
 
-DEBUG = True
-COMPRESS_ENABLED = False
+PRODUCTION = False
+
+DEBUG = not PRODUCTION
+COMPRESS_ENABLED = PRODUCTION
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
@@ -183,7 +185,7 @@ AUTHENTICATION_BACKENDS = (
 CAS_SERVER_URL = "https://cas-auth.rpi.edu/cas/"
 CAS_IGNORE_REFERER = True
 CAS_LOGOUT_COMPLETELY = True
-LOGIN_URL="/login/"
+LOGIN_URL='/login/'
 
 
 COURSES_COLLEGE_PARSER = 'courses.bridge.rpi.import_data'
