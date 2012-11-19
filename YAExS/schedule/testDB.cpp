@@ -9,12 +9,12 @@
 
 int main(int argc, char* argv[])
 {
-        //Create a DBReader and Optimizer
-        DBReader dbReader("user=andrew password=andrew host=ec2-23-20-128-235.compute-1.amazonaws.com dbname=django port=5432");
+        //Create a DBManager and Optimizer
+        DBManager dbManager("user=andrew password=andrew host=ec2-23-20-128-235.compute-1.amazonaws.com dbname=django port=5432");
         Optimizer opt(false);
 
         //Create a Scheduler
-        Scheduler sched(&dbReader, &opt);
+        Scheduler sched(&dbManager, &opt);
 
         //Try to load exams and students
         sched.loadExams();

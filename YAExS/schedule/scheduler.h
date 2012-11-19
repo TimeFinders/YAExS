@@ -1,12 +1,12 @@
 /*
   -----Scheduler Class Declaration-----
-  A class to act as a mediator betweeen an Optimizer and a DBReader.
+  A class to act as a mediator betweeen an Optimizer and a DBManager.
 */
 
 #ifndef _scheduler_h_
 #define _scheduler_h_
 
-#include "dbreader.h"
+#include "dbmanager.h"
 #include "optimizer.h"
 #include "exams/exam.h"
 #include "people/student.h"
@@ -19,7 +19,7 @@ class Scheduler
 public:
         //Constructors
         Scheduler();
-        Scheduler(DBReader* dbIn, Optimizer* optIn);
+        Scheduler(DBManager* dbIn, Optimizer* optIn);
 
         bool loadExams();
         bool loadStudents(std::string filename);
@@ -45,8 +45,8 @@ private:
         std::list<Exam> convertToExam(const Registrations & reg, const std::vector<Exam::EXAM_ID> & input);
         void updateNumStudents(const Registrations & reg);
         
-        //Pointer to a DBReader
-        DBReader* db_;
+        //Pointer to a DBManager
+        DBManager* db_;
 
         //Pointer to an Optimizer
         Optimizer* optimizer_;

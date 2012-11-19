@@ -5,7 +5,7 @@ SCIP_LFLAGS = -L/usr/lib -lscip $(SCIP_ZIMPL) -lreadline  -lgmp -lz -llpispx  -l
 PQXX_LFLAGS = -lpqxx
 
 TESTOPT_OBJ = testOpt.cpp locations/locationreader.cpp locations/locationassigner.cpp optimizer.o exam.o
-TESTDB_OBJ = testDB.cpp locations/locationreader.cpp locations/locationassigner.cpp scheduler.o optimizer.o dbreader.o scheduleData.o exam.o
+TESTDB_OBJ = testDB.cpp locations/locationreader.cpp locations/locationassigner.cpp scheduler.o optimizer.o dbmanager.o scheduleData.o exam.o
 
 test: testOpt testDB
 
@@ -15,14 +15,14 @@ testOpt: $(TESTOPT_OBJ)
 testDB: $(TESTDB_OBJ)
 	$(CC) $(TESTDB_OBJ) -o testDB $(PQXX_LFLAGS) $(SCIP_LFLAGS)
 
-scheduler.o: scheduler.cpp scheduler.h optimizer.o dbreader.o
+scheduler.o: scheduler.cpp scheduler.h optimizer.o dbmanager.o
 	$(CC) scheduler.cpp $(CFLAGS)
 
 optimizer.o: optimizer.cpp optimizer.h
 	$(CC) optimizer.cpp optimizer.h $(CFLAGS)
 
-dbreader.o: dbreader.cpp dbreader.h
-	$(CC) dbreader.cpp $(CFLAGS)
+dbmanager.o: dbmanager.cpp dbmanager.h
+	$(CC) dbmanager.cpp $(CFLAGS)
 
 exam.o: exams/exam.cpp exams/exam.h
 	$(CC)exams/exam.cpp exams/exam.h $(CFLAGS)

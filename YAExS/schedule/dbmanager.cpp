@@ -1,24 +1,24 @@
 /*
-  -----Database Reader Class Implementation-----
+  -----Database Manager Class Implementation-----
   A class to manage the connection to the database for course, exam and student info.
 */
 
-#include "dbreader.h"
+#include "dbmanager.h"
 
 //Default constructor, does not set up a connection
-DBReader::DBReader() {}
+DBManager::DBManager() {}
 
 //Constructor that takes a string of database settings to connect
-DBReader::DBReader(const std::string& settings) : connect_(settings) {}
+DBManager::DBManager(const std::string& settings) : connect_(settings) {}
 
 //Destructor, ensures that the connection is closed
-DBReader::~DBReader()
+DBManager::~DBManager()
 {
   connect_.disconnect();
 }
 
 //Executes the SQL query passed in as a string and returns the result
-pqxx::result DBReader::execute(const std::string& query)
+pqxx::result DBManager::execute(const std::string& query)
 {
   //Create some work on the database
   pqxx::work w(connect_);

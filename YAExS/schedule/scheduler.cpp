@@ -1,6 +1,6 @@
 /*
   -----Scheduler Class Implementation-----
-  A class to act as a mediator betweeen an Optimizer and a DBReader.
+  A class to act as a mediator betweeen an Optimizer and a DBManager.
 */
 
 #include <algorithm>
@@ -10,7 +10,7 @@
 #include "scheduler.h"
 
 //Constructors
-Scheduler::Scheduler(DBReader* dbIn, Optimizer* optIn) : db_(dbIn), optimizer_(optIn)
+Scheduler::Scheduler(DBManager* dbIn, Optimizer* optIn) : db_(dbIn), optimizer_(optIn)
 {}
 
 //Load classes which have exams into the vector
