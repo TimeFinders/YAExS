@@ -55,7 +55,7 @@ int main(int argc, char* argv[])
 
 
     //Create an Optimizer
-    Optimizer scipScheduler(true);
+    Optimizer scipScheduler;
         //Load a model
     scipScheduler.loadModel(exams, people, numDays, slotsPerDay);
 

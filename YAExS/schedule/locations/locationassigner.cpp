@@ -11,10 +11,6 @@
 // for debugging
 #include <iostream>
 
-//#define debugMode
-
-
-
 // Assign exam locations to exams that have had times assigned. 
 // After call, exam objects will have ExamLocation assigned.	
 
@@ -64,12 +60,10 @@ int LocationAssigner::assignLocations(
 		}
 		else
 		{
-			#ifdef debugMode
-			  	std::cout << "activating location ";
-				bestLoc -> print();
-				std::cout << std::endl;
-			#endif
-			
+                        DEBUG_PRINT("activating location ");
+#ifdef debugMode
+                        bestLoc -> print();
+#endif
 
 			// location is no longer availabe
 			availableLocs = removeOverlappingLocations( bestLoc, availableLocs);
@@ -92,11 +86,11 @@ int LocationAssigner::assignLocations(
 
 			for (std::list<Exam>::iterator et = firstThisSlot; et != next; et++)
 			{
-				#ifdef debugMode
-					activeLocs.front()->print();	
-					std::cout << "\tassigned to ";
-					et->print();
-				#endif
+#ifdef debugMode
+                                activeLocs.front()->print();	
+                                std::cout << "\tassigned to ";
+                                et->print();
+#endif
 				
 
 
@@ -122,13 +116,13 @@ int LocationAssigner::assignLocations(
 			// reset everything for next time slot, if not at end already
 			if (next != exams.end() )	
 			{		
-			//	std::cout << "\n\nmoving on to timeslot " << next->getTime().toPrint() << std::endl;
+                                //	std::cout << "\n\nmoving on to timeslot " << next->getTime().toPrint() << std::endl;
 				availableLocs = examLocations;
 				firstThisSlot = next;
 			}
 			else
 			{
-			//	std::cout << "\nall time slots complete\n" << std::endl;
+                                //	std::cout << "\nall time slots complete\n" << std::endl;
 			}
 
 		}//end if check for end of time slot
@@ -189,12 +183,12 @@ ExamLocation* LocationAssigner::bestLocation(Exam e, std::list<ExamLocation*> av
 
 // function object that returns true when there is an overlap
 class olap {    
-  private:
-    const ExamLocation * loc;       // call for which to return true
-  public:
-    olap (const ExamLocation * examLoc) : loc(examLoc){};
+private:
+        const ExamLocation * loc;       // call for which to return true
+public:
+        olap (const ExamLocation * examLoc) : loc(examLoc){};
 
-    bool operator() (ExamLocation * l) { return Room::overlaps(loc, l); };
+        bool operator() (ExamLocation * l) { return Room::overlaps(loc, l); };
 };
 
 // Remove locations from locList that overlap with the given loc. 

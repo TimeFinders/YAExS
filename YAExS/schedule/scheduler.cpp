@@ -92,7 +92,8 @@ void Scheduler::updateNumStudents(const Registrations & reg)
         {
                 Exam::EXAM_ID examId = i->getId();
                 data_.updateNumStudents(examId, studentsInExam(reg, examId));
-                std::cout << examId << " has " << studentsInExam(reg, examId) << " students." << std::endl;
+                
+                DEBUG_PRINT(examId << " has " << studentsInExam(reg, examId) << " students.");
         }
 }
 
@@ -120,7 +121,7 @@ bool Scheduler::loadStudents(std::string filename)
         }
 
         //Read every line
-        std::cout << "Parsing lines" << std::endl;
+        DEBUG_PRINT("Parsing lines");
         while (!fin.eof())
         {
                 std::string line;
@@ -135,7 +136,7 @@ bool Scheduler::loadStudents(std::string filename)
         data_.clearPeople();
         
         //Add each student to the ScheduleData
-        std::cout << "Adding students to data." << std::endl;
+        DEBUG_PRINT("Adding students to data.");
         for (Registrations::iterator i = reg.begin(); i != reg.end(); i++)
         {
                 Person::PERSON_ID personId = i->first;
@@ -154,11 +155,11 @@ bool Scheduler::loadStudents(std::string filename)
                 std::list<Exam> exams = person->getExams();
 
                 //Print out information
-                std::cout << "Student ID: " << person->getId() << std::endl;
+                DEBUG_PRINT("Student ID: " << person->getId());
 
                 for (std::list<Exam>::iterator it = exams.begin(); it != exams.end(); it++)
                 {
-                        std::cout << "  " << it->getId() << std::endl;
+                        DEBUG_PRINT("  " << it->getId());
                 }
         }
 
@@ -211,80 +212,79 @@ void Scheduler::printSchedule()
 
 bool Scheduler::assignRooms()
 {
-    std::cout << "ASSIGNING ROOMS!" << std::endl;
-    int status = LocationAssigner::assignLocations(data_.exams(), locations_);
+        DEBUG_PRINT("Assigning rooms");
+        int status = LocationAssigner::assignLocations(data_.exams(), locations_);
 
-    return (status == 0);
+        return (status == 0);
 }
 
 void Scheduler::printRooms()
 {
-    std::cout << "\n_________________________\n" << std::endl;
-    for (std::list<Exam>::iterator it = (data_.exams()).begin(); it != (data_.exams()).end(); it++)
-    {
-        std::cout << "exam: " << it->getId() << " with " << it->size() << " students";
-        std::cout << " scheduled at time " << (it->getTime()).getId();
+        std::cout << "\n_________________________\n" << std::endl;
+        for (std::list<Exam>::iterator it = (data_.exams()).begin(); it != (data_.exams()).end(); it++)
+        {
+                std::cout << "exam: " << it->getId() << " with " << it->size() << " students";
+                std::cout << " scheduled at time " << (it->getTime()).getId();
 
-        if (it->hasLocation())
-        {
-            std::cout << " in ";
-            ExamLocation * l = it->getLocation();
-            std::cout << l->getId();
+                if (it->hasLocation())
+                {
+                        std::cout << " in ";
+                        ExamLocation * l = it->getLocation();
+                        std::cout << l->getId();
+                }
+                else
+                {
+                        std::cout << " has no location assigned";
+                }
+                std::cout << std::endl;
         }
-        else
-        {
-            std::cout << " has no location assigned";
-        }
-        std::cout << std::endl;
-    }
-     std::cout << "\n_________________________\n" << std::endl;
+        std::cout << "\n_________________________\n" << std::endl;
 
 }
 
 void Scheduler::writeScheduleToDB()
 {
-    std::list<Exam> * examListPointer = &data_.exams();
-    for (std::list<Exam>::iterator it = examListPointer->begin();
-            it != examListPointer->end(); it++)
-    {
-        writeExamToDB(*it);
-    }
+        std::list<Exam> * examListPointer = &data_.exams();
+        for (std::list<Exam>::iterator it = examListPointer->begin();
+             it != examListPointer->end(); it++)
+        {
+                writeExamToDB(*it);
+        }
 
 }
 
 void Scheduler::clearDBSchedule()
 {
-    pqxx::result dbresult = db_->execute("TRUNCATE TABLE \"Accounts_schedule\"");
+        pqxx::result dbresult = db_->execute("TRUNCATE TABLE \"Accounts_schedule\"");
 }
 
 void Scheduler::writeExamToDB( Exam & exam )
 {
-    Exam::EXAM_ID examID = exam.getId();
-    TimeSlot::TIMESLOT_ID timeslotID = (exam.getTime()).getId();
-    ExamLocation::LOCATION_ID locationID = (exam.getLocation())->getId();
+        Exam::EXAM_ID examID = exam.getId();
+        TimeSlot::TIMESLOT_ID timeslotID = (exam.getTime()).getId();
+        ExamLocation::LOCATION_ID locationID = (exam.getLocation())->getId();
 
-    //std::cout << "inserting exam " << examID << " at time " << timeslotID;
-    //std::cout << " in " << locationID << " into the database" << std::endl;
+        DEBUG_PRINT("inserting exam " << examID << " at time " << timeslotID << " in " << locationID << " into the database");
 
-    std::string dbCall;
-    std::ostringstream callStream;
+        std::string dbCall;
+        std::ostringstream callStream;
     
-    callStream << "INSERT INTO \"Accounts_schedule\" (section_id, timeslot, location) ";
-    callStream << "VALUES (";
-    callStream << examID;
-    callStream << ", ";
-    callStream << timeslotID;
-    callStream << ", ";
-    callStream << "'";
-    callStream << locationID;
-    callStream << "'";
-    callStream << ")";
+        callStream << "INSERT INTO \"Accounts_schedule\" (section_id, timeslot, location) ";
+        callStream << "VALUES (";
+        callStream << examID;
+        callStream << ", ";
+        callStream << timeslotID;
+        callStream << ", ";
+        callStream << "'";
+        callStream << locationID;
+        callStream << "'";
+        callStream << ")";
     
-    dbCall = callStream.str();
-    //std::cout << dbCall << std::endl;
+        dbCall = callStream.str();
+        DEBUG_PRINT(dbCall);
 
 
-    pqxx::result dbresult = db_->execute(dbCall);
+        pqxx::result dbresult = db_->execute(dbCall);
 }
 
 //Deactivates the database in case of fork or other issues

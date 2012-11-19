@@ -11,7 +11,7 @@ int main(int argc, char* argv[])
 {
         //Create a DBManager and Optimizer
         DBManager dbManager("user=andrew password=andrew host=ec2-23-20-128-235.compute-1.amazonaws.com dbname=django port=5432");
-        Optimizer opt(false);
+        Optimizer opt;
 
         //Create a Scheduler
         Scheduler sched(&dbManager, &opt);

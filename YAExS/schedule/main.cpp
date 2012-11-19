@@ -14,10 +14,10 @@ int main(int argc, char* argv[])
         //Check arguments
         if (argc != 5)
         {
-                std::cerr << "Usage: " << argv[0] << "days slots-per-day registrations-file pid-file" << std::endl;
+                std::cerr << "Usage: " << argv[0] << " days slots-per-day registrations-file pid-file" << std::endl;
                 return 1;
         }
-
+        
         //Parse inputs
         int examDays = atoi(argv[1]);
         int slotsPerDay = atoi(argv[2]);
@@ -93,7 +93,7 @@ int main(int argc, char* argv[])
                 std::cerr << "roomgroupfile must be defined." << std::endl;
                 return 1;
         }
-        
+
         //Create a DBManager and Optimizer
         std::string dbSetupString = "user=" + settings["db_username"];
         dbSetupString += " password=" + settings["db_password"];
@@ -101,13 +101,14 @@ int main(int argc, char* argv[])
         dbSetupString += " dbname=" + settings["db_name"];
         dbSetupString += " port=" + settings["db_port"];
         DBManager dbManager(dbSetupString);
-        Optimizer opt(false);
+        Optimizer opt;
 
         //Create a Scheduler
         Scheduler sched(&dbManager, &opt);
 
         //Truncate the output table in case something goes wrong partway through
         sched.clearDBSchedule();
+        
 
         //Try to load exams and students
         sched.loadExams();
@@ -144,20 +145,13 @@ int main(int argc, char* argv[])
 
                 //Load locations and assign rooms
                 sched.loadLocations(settings["roomfile"], settings["roomgroupfile"]);
-
-                std::cout << "Load locations complete" << std::endl;
-                
                 sched.assignRooms();
-
-                std::cout << "Assign rooms complete" << std::endl;
 
                 //Load results into database
                 sched.writeScheduleToDB();
 
                 //Delete the pid file to let the website know it's done
                 remove(argv[4]);
-
-                std::cout << "Child done" << std::endl;
         }
 
         //Finish up

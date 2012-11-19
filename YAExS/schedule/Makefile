@@ -2,6 +2,9 @@ CC = g++ -std=c++0x -g
 CFLAGS = -Wall -Wextra -c
 OUTPUT = -o main
 
+ifdef DEBUG
+CFLAGS += -DdebugMode
+endif
 SCIP_ZIMPL =
 SCIP_LFLAGS = -L/usr/lib -lscip $(SCIP_ZIMPL) -lreadline  -lgmp -lz -llpispx  -lsoplex  -lobjscip -lnlpi.cppad
 PQXX_LFLAGS = -lpqxx

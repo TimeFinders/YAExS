@@ -19,13 +19,19 @@
 #include <objscip/objscip.h>
 #include <objscip/objscipdefplugins.h>
 
+#ifndef DEBUG_PRINT
+#define DEBUG_PRINT(x)
+#ifdef debugMode
+#undef DEBUG_PRINT
+#define DEBUG_PRINT(x) std::cout << x << std::endl;
+#endif
+#endif
+
 class Optimizer
 {
 public:
     //Constructors
     Optimizer();
-
-    Optimizer(bool enablePrinting);
 
     //Destructor
     ~Optimizer();
@@ -48,9 +54,6 @@ public:
     void printSolutionAndNonzeroValues();
 
 private:
-    // if true lots of debugging info will print to standard out
-    bool shouldPrint_;
-
     //SCIP problem information
     SCIP* scip_;
 
