@@ -147,10 +147,11 @@ bool Scheduler::loadStudents(std::string filename)
         for(int i = 0; i < data_.numPeople(); i++)
         {
                 //Get the exams
-                std::list<Exam> exams = data_.people()[i]->getExams();
+                Person * person = data_.people()[i];
+                std::list<Exam> exams = person->getExams();
 
                 //Print out information
-                std::cout << "Student ID: " << data_.people()[i]->getId() << std::endl;
+                std::cout << "Student ID: " << person->getId() << std::endl;
 
                 for (std::list<Exam>::iterator it = exams.begin(); it != exams.end(); it++)
                 {
