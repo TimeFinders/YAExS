@@ -72,8 +72,10 @@ int LocationAssigner::assignLocations(
 	{
 		currentExam = *eit;
 	
-		std::cout << "now trying to assign to exam " << std::endl; 
-		 currentExam.print();
+		DEBUG_PRINT( "now trying to assign to exam ");
+		#ifdef debugMode
+			currentExam.print();
+		#endif
 
 		ExamLocation * bestLoc = bestLocation(currentExam, availableLocs);
 		activeLocs.push_back(bestLoc);
@@ -99,19 +101,17 @@ int LocationAssigner::assignLocations(
 		next++;
 		if ( next == exams.end() || next->getTime() != currentSlot )
 		{
-			//std::cout << "LAST EXAM OF THIS TIME SLOT " << std::endl;
+			DEBUG_PRINT("LAST EXAM OF THIS TIME SLOT ");
 
 			// assign all the exams to activeLocs, biggest exams
 			// to biggest active location
 			activeLocs.sort(ExamLocation::isLarger);
 
-			//std::cout << "at time slot " << currentSlot.toPrint() << " the active locs are" << std::endl;	
-
 			for (std::list<Exam>::iterator et = firstThisSlot; et != next; et++)
 			{
 				#ifdef debugMode
                     activeLocs.front()->print();	
-                    std::cout << "\tassigned to ";
+                    DEBUG_PRINT("\tassigned to ");
                     et->print();
 				#endif
 
@@ -119,52 +119,48 @@ int LocationAssigner::assignLocations(
 				{	
 					// assign the exam
 					ExamLocation * frontLoc = activeLocs.front();
-					std::cerr << "trying to assign ";
-					frontLoc ->print();
+					#ifdef debugMode
+						DEBUG_PRINT("trying to assign ");
+						frontLoc ->print();
+					#endif
 
 					et->assignLocation(activeLocs.front());	
 
 					if ( !et->hasLocation() )
 					{
-						std::cerr << "error exam ";
-						et->print();
-						std::cerr << "has no location: ";
-						std::cerr << et->hasLocation();
+						#ifdef debugMode
+							DEBUG_PRINT("error exam ");
+							et->print();
+							DEBUG_PRINT("has no location: " + et->hasLocation());
+						#endif
 
-						ExamLocation * theLoc = et->getLocation();
-						if (theLoc == NULL)
-						{
-							std::cerr << " and indeed its location is null" << std::endl;
-						}
-						else
-						{
-							std::cerr << "but its location is not null" << std::endl;
-							(et->getLocation())->print();
-						}
 						return 8;
 					}
 				}
 				else
 				{
+					// there are no active locations so we are in trouble;
+					DEBUG_PRINT("Error there are no active locations. exit status 9.");
 					return 9;
 				}
 				activeLocs.pop_front();
 			}
 			if (!activeLocs.empty())
 			{
+				DEBUG_PRINT("Error somehow missed active locations. exit status 10.");
 				return 10;
 			}			
 			
 			// reset everything for next time slot, if not at end already
 			if (next != exams.end() )	
 			{		
-                                //	std::cout << "\n\nmoving on to timeslot " << next->getTime().toPrint() << std::endl;
+                DEBUG_PRINT("moving on to timeslot " << next->getTime().toPrint());
 				availableLocs = examLocations;
 				firstThisSlot = next;
 			}
 			else
 			{
-                                //	std::cout << "\nall time slots complete\n" << std::endl;
+                DEBUG_PRINT("all time slots complete\n");
 			}
 
 		}//end if check for end of time slot
@@ -191,7 +187,7 @@ ExamLocation* LocationAssigner::bestLocation(Exam e, std::list<ExamLocation*> av
 	// if there are no availble locations we can't fit a best one.
 	if (available.empty())
 	{
-		std::cerr << "no available locations at all" << std::endl;
+		DEBUG_PRINT("no available locations at all");
 		return NULL;
 	}
 	
@@ -200,7 +196,7 @@ ExamLocation* LocationAssigner::bestLocation(Exam e, std::list<ExamLocation*> av
 	// if exam will not fit in the first (biggest) location there is no hope
 	if (!(*it)->willExamFit(e))	
 	{
-		std::cerr << "no available locations big enough" << std::endl;
+		DEBUG_PRINT("no available locations big enough");
 		return NULL;
 	}
 	
@@ -267,6 +263,14 @@ bool LocationAssigner::assignNullLocations(
 			it->assignLocation( loc );
 			assignedAny = true;
 		}
+	}
+	if (assignedAny)
+	{
+		DEBUG_PRINT("assign null locations assigned at least one null location.");
+	}
+	else
+	{	
+		DEBUG_PRINT("assign null locations did not assign any null locations");
 	}
 	return assignedAny;
 }

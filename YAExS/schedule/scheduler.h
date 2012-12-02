@@ -55,11 +55,11 @@
 #include "locations/locationassigner.h"
 
 #ifndef DEBUG_PRINT
-#define DEBUG_PRINT(x)
-#ifdef debugMode
-#undef DEBUG_PRINT
-#define DEBUG_PRINT(x) std::cout << x << std::endl;
-#endif
+  #define DEBUG_PRINT(x)
+  #ifdef debugMode
+    #undef DEBUG_PRINT
+    #define DEBUG_PRINT(x) std::cout << x << std::endl;
+  #endif
 #endif
 
 class Scheduler
