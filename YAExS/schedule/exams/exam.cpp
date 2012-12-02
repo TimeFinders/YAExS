@@ -46,7 +46,12 @@ void Exam::assignNumStudents(int num)
 
 bool Exam::hasLocation()
 {
-	return examLocation != NULL;
+	return (examLocation != NULL);
+	//	return false;
+	//if ((this->examLocation)->getID() == unassignedID)
+	//	return false;
+
+	//return true;
 }
 
 bool Exam::isEarlier(Exam e1, Exam e2)

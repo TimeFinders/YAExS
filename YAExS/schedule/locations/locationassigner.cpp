@@ -29,6 +29,9 @@
 
 // This function is huge. Should split up into smaller functions.
 
+
+
+
 //Returns 0 if all goes well,
 int LocationAssigner::assignLocations( 
 	std::list<Exam> & exams, 
@@ -37,6 +40,10 @@ int LocationAssigner::assignLocations(
 	if (exams.empty())
 	{
 		return -1;
+	}
+	if (examLocations.empty())
+	{
+		return -2;
 	}
 
 	// Sort the examLocations by decreasing size
@@ -64,7 +71,12 @@ int LocationAssigner::assignLocations(
 	for (std::list<Exam>::iterator eit = exams.begin(); eit != exams.end(); eit++)
 	{
 		currentExam = *eit;
-		
+	
+		DEBUG_PRINT( "now trying to assign to exam ");
+		#ifdef debugMode
+			currentExam.print();
+		#endif
+
 		ExamLocation * bestLoc = bestLocation(currentExam, availableLocs);
 		activeLocs.push_back(bestLoc);
 		if ( bestLoc == NULL)
@@ -73,10 +85,10 @@ int LocationAssigner::assignLocations(
 		}
 		else
 		{
-                        DEBUG_PRINT("activating location ");
-#ifdef debugMode
-                        bestLoc -> print();
-#endif
+            DEBUG_PRINT("activating location ");
+			#ifdef debugMode
+                bestLoc -> print();
+			#endif
 
 			// location is no longer availabe
 			availableLocs = removeOverlappingLocations( bestLoc, availableLocs);
@@ -89,53 +101,66 @@ int LocationAssigner::assignLocations(
 		next++;
 		if ( next == exams.end() || next->getTime() != currentSlot )
 		{
-			//std::cout << "LAST EXAM OF THIS TIME SLOT " << std::endl;
+			DEBUG_PRINT("LAST EXAM OF THIS TIME SLOT ");
 
 			// assign all the exams to activeLocs, biggest exams
 			// to biggest active location
 			activeLocs.sort(ExamLocation::isLarger);
 
-			//std::cout << "at time slot " << currentSlot.toPrint() << " the active locs are" << std::endl;	
-
 			for (std::list<Exam>::iterator et = firstThisSlot; et != next; et++)
 			{
-#ifdef debugMode
-                                activeLocs.front()->print();	
-                                std::cout << "\tassigned to ";
-                                et->print();
-#endif
-				
-
+				#ifdef debugMode
+                    activeLocs.front()->print();	
+                    DEBUG_PRINT("\tassigned to ");
+                    et->print();
+				#endif
 
 				if (!activeLocs.empty())
 				{	
 					// assign the exam
+					ExamLocation * frontLoc = activeLocs.front();
+					#ifdef debugMode
+						DEBUG_PRINT("trying to assign ");
+						frontLoc ->print();
+					#endif
+
 					et->assignLocation(activeLocs.front());	
 
 					if ( !et->hasLocation() )
-						return 8;
+					{
+						#ifdef debugMode
+							DEBUG_PRINT("error exam ");
+							et->print();
+							DEBUG_PRINT("has no location: " + et->hasLocation());
+						#endif
 
+						return 8;
+					}
 				}
 				else
+				{
+					// there are no active locations so we are in trouble;
+					DEBUG_PRINT("Error there are no active locations. exit status 9.");
 					return 9;
-	
+				}
 				activeLocs.pop_front();
 			}
 			if (!activeLocs.empty())
 			{
+				DEBUG_PRINT("Error somehow missed active locations. exit status 10.");
 				return 10;
 			}			
 			
 			// reset everything for next time slot, if not at end already
 			if (next != exams.end() )	
 			{		
-                                //	std::cout << "\n\nmoving on to timeslot " << next->getTime().toPrint() << std::endl;
+                DEBUG_PRINT("moving on to timeslot " << next->getTime().toPrint());
 				availableLocs = examLocations;
 				firstThisSlot = next;
 			}
 			else
 			{
-                                //	std::cout << "\nall time slots complete\n" << std::endl;
+                DEBUG_PRINT("all time slots complete\n");
 			}
 
 		}//end if check for end of time slot
@@ -153,9 +178,16 @@ int LocationAssigner::assignLocations(
 // (can tell if single room by size of (ExamLocation*)->contains()
 ExamLocation* LocationAssigner::bestLocation(Exam e, std::list<ExamLocation*> available)
 {
+	// first check if the exam has no students
+	if (e.size() == 0)
+	{
+		return Room::getEmptyRoom();
+	}
+
 	// if there are no availble locations we can't fit a best one.
 	if (available.empty())
 	{
+		DEBUG_PRINT("no available locations at all");
 		return NULL;
 	}
 	
@@ -164,6 +196,7 @@ ExamLocation* LocationAssigner::bestLocation(Exam e, std::list<ExamLocation*> av
 	// if exam will not fit in the first (biggest) location there is no hope
 	if (!(*it)->willExamFit(e))	
 	{
+		DEBUG_PRINT("no available locations big enough");
 		return NULL;
 	}
 	
@@ -216,3 +249,28 @@ std::list<ExamLocation *> LocationAssigner::removeOverlappingLocations(
 
 
 
+// Assign null locations. returns true if assigned any
+bool LocationAssigner::assignNullLocations( 
+	std::list<Exam> & exams)
+{
+	bool assignedAny = false;
+	for (std::list<Exam>::iterator it = exams.begin();
+			it != exams.end(); it++)
+	{
+		if (!it->hasLocation())
+		{	
+			ExamLocation * loc =  Room::getNullRoom() ;
+			it->assignLocation( loc );
+			assignedAny = true;
+		}
+	}
+	if (assignedAny)
+	{
+		DEBUG_PRINT("assign null locations assigned at least one null location.");
+	}
+	else
+	{	
+		DEBUG_PRINT("assign null locations did not assign any null locations");
+	}
+	return assignedAny;
+}

@@ -33,7 +33,20 @@ int main(int argc, char* argv[])
         
         //Parse inputs
         int examDays = atoi(argv[1]);
+        // require at least 2 exam days because otherwise
+        // the chance of infeasibility is huge.
+        if (examDays < 2)
+        {
+            std::cerr << "Number of exam days must be at least two to avoid problems" << std::endl;
+            return 1;
+        }
+
         int slotsPerDay = atoi(argv[2]);
+        if (slotsPerDay < 1)
+        {
+            std::cerr << "Number of exam slots per day must be at least one" << std::endl;
+            return 1;
+        }
 
         //Load configuration file
         std::map<std::string,std::string> settings;
@@ -156,15 +169,24 @@ int main(int argc, char* argv[])
                 //Run the scheduler
                 sched.startScheduling(examDays, slotsPerDay);
 
+                std::cout << "done scheduling, loading the locations..." << std::endl;
+
                 //Load locations and assign rooms
                 sched.loadLocations(settings["roomfile"], settings["roomgroupfile"]);
+
+                 std::cout << "done loading locations, assign the locations..." << std::endl;
+
                 sched.assignRooms();
+
+                std::cout << "done assigning locations,  writing to database..." << std::endl;
 
                 //Load results into database
                 sched.writeScheduleToDB();
 
                 //Delete the pid file to let the website know it's done
                 remove(argv[4]);
+
+                std::cout << "all done." << std::endl;
         }
 
         //Finish up

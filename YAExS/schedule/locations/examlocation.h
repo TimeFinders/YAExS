@@ -39,6 +39,8 @@
 class Exam;
 class Room;
 
+#define unassignedID "unassigned";
+
 class ExamLocation 
 {		
 	public:

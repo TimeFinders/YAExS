@@ -26,7 +26,7 @@
 #include "scheduler.h"
 
 //Constructors
-Scheduler::Scheduler(DBManager* dbIn, Optimizer* optIn) : db_(dbIn), optimizer_(optIn)
+Scheduler::Scheduler(DBManager* dbIn, Optimizer* optIn) : db_(dbIn), optimizer_(optIn), roomsAreAssigned(false)
 {}
 
 //Load classes which have exams into the vector
@@ -186,6 +186,11 @@ bool Scheduler::loadLocations(std::string roomFilePath, std::string roomGroupFil
         std::cerr << "Locations list is not empty. Only loadLocations once" << std::endl;
         return false;   
     }
+
+    if (roomsAreAssigned)
+    {
+        std::cerr << "Rooms have already been assigned. Only assign rooms once." << std::endl;
+    }
     
    LocationReader lr;
    locations_  = lr.readLocations(roomFilePath, roomGroupFilePath);
@@ -225,8 +230,26 @@ void Scheduler::printSchedule()
 
 bool Scheduler::assignRooms()
 {
+        if (roomsAreAssigned)
+        {
+            std::cerr << "Rooms have already been assigned. Only assign rooms once." << std::endl;
+        }
+
         DEBUG_PRINT("Assigning rooms");
         int status = LocationAssigner::assignLocations(data_.exams(), locations_);
+        std::cerr << "Location Assigner exited with status: " + status << std::endl;
+        std::cout << status << std::endl;
+        roomsAreAssigned = (status == 0);
+
+        // if the rooms were not assigned correctly, assign empty rooms
+        if (roomsAreAssigned == false)
+        {
+            std::cerr << "Rooms were not assigned correctly" << std::endl;
+
+            // assign null rooms
+           LocationAssigner::assignNullLocations( data_.exams() );
+        }
+
 
         return (status == 0);
 }
@@ -257,6 +280,7 @@ void Scheduler::printRooms()
 
 void Scheduler::writeScheduleToDB()
 {
+
         std::list<Exam> * examListPointer = &data_.exams();
         for (std::list<Exam>::iterator it = examListPointer->begin();
              it != examListPointer->end(); it++)
@@ -275,8 +299,13 @@ void Scheduler::writeExamToDB( Exam & exam )
 {
         Exam::EXAM_ID examID = exam.getId();
         TimeSlot::TIMESLOT_ID timeslotID = (exam.getTime()).getId();
-        ExamLocation::LOCATION_ID locationID = (exam.getLocation())->getId();
 
+        ExamLocation::LOCATION_ID locationID = "noLocation";
+        if (exam.hasLocation()) 
+        {
+            locationID = (exam.getLocation())->getId();
+        }
+        
         DEBUG_PRINT("inserting exam " << examID << " at time " << timeslotID << " in " << locationID << " into the database");
 
         std::string dbCall;
