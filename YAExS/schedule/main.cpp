@@ -22,8 +22,19 @@
 
 #include "scheduler.h"
 
+#ifndef DEBUG_PRINT
+  #define DEBUG_PRINT(x)
+  #ifdef debugMode
+    #undef DEBUG_PRINT
+    #define DEBUG_PRINT(x) std::cout << x << std::endl;
+  #endif
+#endif
+
 int main(int argc, char* argv[])
 {
+
+        DEBUG_PRINT("Checking arguments");
+        
         //Check arguments
         if (argc != 5)
         {
@@ -48,6 +59,8 @@ int main(int argc, char* argv[])
             return 1;
         }
 
+        DEBUG_PRINT("Loading configuration file");
+          
         //Load configuration file
         std::map<std::string,std::string> settings;
         std::ifstream config("config.txt");
@@ -120,6 +133,8 @@ int main(int argc, char* argv[])
                 return 1;
         }
 
+        DEBUG_PRINT("Creating Scheduler");
+
         //Create a DBManager and Optimizer
         std::string dbSetupString = "user=" + settings["db_username"];
         dbSetupString += " password=" + settings["db_password"];
@@ -132,9 +147,12 @@ int main(int argc, char* argv[])
         //Create a Scheduler
         Scheduler sched(&dbManager, &opt);
 
+        DEBUG_PRINT("Truncating table");
+
         //Truncate the output table in case something goes wrong partway through
         sched.clearDBSchedule();
-        
+
+        DEBUG_PRINT("Loading exams and students");
 
         //Try to load exams and students
         sched.loadExams();
@@ -146,6 +164,8 @@ int main(int argc, char* argv[])
 
         //Deactivate the database before forking
         sched.deactivateDB();
+
+        DEBUG_PRINT("Forking...");
         
         //Fork to let the parent return
         pid_t pid = fork();
@@ -163,8 +183,12 @@ int main(int argc, char* argv[])
         }
         else //Child
         {
+                DEBUG_PRINT("Child running, reactivating database connection");
+                
                 //Reactivate the database connection
                 sched.reactivateDB();
+
+                DEBUG_PRINT("Scheduling");
                 
                 //Run the scheduler
                 sched.startScheduling(examDays, slotsPerDay);
