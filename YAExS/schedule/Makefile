@@ -34,14 +34,6 @@ all: main test
 main: $(MAIN_OBJ)
 	$(CC) $(MAIN_OBJ) $(OUTPUT) $(PQXX_LFLAGS) $(SCIP_LFLAGS)
 
-test: testOpt testDB
-
-testOpt: $(TESTOPT_OBJ)
-	$(CC) $(TESTOPT_OBJ) $(SCIP_LFLAGS) -o testOpt
-
-testDB: $(TESTDB_OBJ)
-	$(CC) $(TESTDB_OBJ) -o testDB $(PQXX_LFLAGS) $(SCIP_LFLAGS)
-
 scheduler.o: scheduler.cpp scheduler.h optimizer.o dbmanager.o
 	$(CC) scheduler.cpp $(CFLAGS)
 
@@ -58,4 +50,4 @@ scheduleData.o: scheduleData/scheduleData.cpp scheduleData/scheduleData.h
 	$(CC) scheduleData/scheduleData.cpp scheduleData/scheduleData.h $(CFLAGS)
 
 clean:
-	rm -frv *.o *.gch testDB testOpt
+	rm -frv *.o *.gch
