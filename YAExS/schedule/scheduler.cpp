@@ -212,8 +212,11 @@ bool Scheduler::startScheduling(int numExamDays, int numSlotsPerDay)
         std::list<Exam> * examListPointer = &data_.exams();
         optimizer_->loadModel(*examListPointer, people, numExamDays, numSlotsPerDay);
 
+        DEBUG_PRINT("Model loaded. Now calling Optimizer schedule");
         //Run it
         optimizer_->schedule();
+
+        DEBUG_PRINT("Scheduling done.");
 
         return true;
 }

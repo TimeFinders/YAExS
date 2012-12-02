@@ -897,9 +897,13 @@ void Optimizer::printThreePlusVariables()
 //Run the solver
 void Optimizer::schedule()
 {
+		DEBUG_PRINT("calling SCIPsolve to schedule exams");
         SCIPsolve(scip_);
+        DEBUG_PRINT("getting the best solution");
         solution_ = SCIPgetBestSol (scip_);
+        DEBUG_PRINT("assigning exam times based on the best solution");
         assignExamTimes();
+        DEBUG_PRINT("done scheduling");
 }
 
 const char* Optimizer::examAtVariableName(const Exam & exam, const TimeSlot & timeslot)
