@@ -43,6 +43,9 @@ public:
 	//Returns 0 if all goes well	
 	static int assignLocations( std::list<Exam> & exams, std::list<ExamLocation *> examLocations);
 
+  // assign null locations to exams with no locations. returns true if assigned any null locations
+  static bool assignNullLocations(std::list<Exam> & exams);
+
 private:
 	// Return the "best" location for exam e from the available list.
 	// Returns NULL if no location is suitable.

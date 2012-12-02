@@ -29,6 +29,9 @@
 
 // This function is huge. Should split up into smaller functions.
 
+
+
+
 //Returns 0 if all goes well,
 int LocationAssigner::assignLocations( 
 	std::list<Exam> & exams, 
@@ -37,6 +40,10 @@ int LocationAssigner::assignLocations(
 	if (exams.empty())
 	{
 		return -1;
+	}
+	if (examLocations.empty())
+	{
+		return -2;
 	}
 
 	// Sort the examLocations by decreasing size
@@ -64,7 +71,10 @@ int LocationAssigner::assignLocations(
 	for (std::list<Exam>::iterator eit = exams.begin(); eit != exams.end(); eit++)
 	{
 		currentExam = *eit;
-		
+	
+		std::cout << "now trying to assign to exam " << std::endl; 
+		 currentExam.print();
+
 		ExamLocation * bestLoc = bestLocation(currentExam, availableLocs);
 		activeLocs.push_back(bestLoc);
 		if ( bestLoc == NULL)
@@ -73,10 +83,10 @@ int LocationAssigner::assignLocations(
 		}
 		else
 		{
-                        DEBUG_PRINT("activating location ");
-#ifdef debugMode
-                        bestLoc -> print();
-#endif
+            DEBUG_PRINT("activating location ");
+			#ifdef debugMode
+                bestLoc -> print();
+			#endif
 
 			// location is no longer availabe
 			availableLocs = removeOverlappingLocations( bestLoc, availableLocs);
@@ -99,26 +109,45 @@ int LocationAssigner::assignLocations(
 
 			for (std::list<Exam>::iterator et = firstThisSlot; et != next; et++)
 			{
-#ifdef debugMode
-                                activeLocs.front()->print();	
-                                std::cout << "\tassigned to ";
-                                et->print();
-#endif
-				
-
+				#ifdef debugMode
+                    activeLocs.front()->print();	
+                    std::cout << "\tassigned to ";
+                    et->print();
+				#endif
 
 				if (!activeLocs.empty())
 				{	
 					// assign the exam
+					ExamLocation * frontLoc = activeLocs.front();
+					std::cerr << "trying to assign ";
+					frontLoc ->print();
+
 					et->assignLocation(activeLocs.front());	
 
 					if ( !et->hasLocation() )
-						return 8;
+					{
+						std::cerr << "error exam ";
+						et->print();
+						std::cerr << "has no location: ";
+						std::cerr << et->hasLocation();
 
+						ExamLocation * theLoc = et->getLocation();
+						if (theLoc == NULL)
+						{
+							std::cerr << " and indeed its location is null" << std::endl;
+						}
+						else
+						{
+							std::cerr << "but its location is not null" << std::endl;
+							(et->getLocation())->print();
+						}
+						return 8;
+					}
 				}
 				else
+				{
 					return 9;
-	
+				}
 				activeLocs.pop_front();
 			}
 			if (!activeLocs.empty())
@@ -153,9 +182,16 @@ int LocationAssigner::assignLocations(
 // (can tell if single room by size of (ExamLocation*)->contains()
 ExamLocation* LocationAssigner::bestLocation(Exam e, std::list<ExamLocation*> available)
 {
+	// first check if the exam has no students
+	if (e.size() == 0)
+	{
+		return Room::getEmptyRoom();
+	}
+
 	// if there are no availble locations we can't fit a best one.
 	if (available.empty())
 	{
+		std::cerr << "no available locations at all" << std::endl;
 		return NULL;
 	}
 	
@@ -164,6 +200,7 @@ ExamLocation* LocationAssigner::bestLocation(Exam e, std::list<ExamLocation*> av
 	// if exam will not fit in the first (biggest) location there is no hope
 	if (!(*it)->willExamFit(e))	
 	{
+		std::cerr << "no available locations big enough" << std::endl;
 		return NULL;
 	}
 	
@@ -216,3 +253,20 @@ std::list<ExamLocation *> LocationAssigner::removeOverlappingLocations(
 
 
 
+// Assign null locations. returns true if assigned any
+bool LocationAssigner::assignNullLocations( 
+	std::list<Exam> & exams)
+{
+	bool assignedAny = false;
+	for (std::list<Exam>::iterator it = exams.begin();
+			it != exams.end(); it++)
+	{
+		if (!it->hasLocation())
+		{	
+			ExamLocation * loc =  Room::getNullRoom() ;
+			it->assignLocation( loc );
+			assignedAny = true;
+		}
+	}
+	return assignedAny;
+}

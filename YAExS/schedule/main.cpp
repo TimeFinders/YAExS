@@ -156,9 +156,16 @@ int main(int argc, char* argv[])
                 //Run the scheduler
                 sched.startScheduling(examDays, slotsPerDay);
 
+                std::cout << "done scheduling, about to load the locations." << std::endl;
+
                 //Load locations and assign rooms
                 sched.loadLocations(settings["roomfile"], settings["roomgroupfile"]);
+
+                 std::cout << "done loading locations, about to assign the locations." << std::endl;
+
                 sched.assignRooms();
+
+                std::cout << "done assigning locations,  writing to database." << std::endl;
 
                 //Load results into database
                 sched.writeScheduleToDB();

@@ -56,6 +56,15 @@ class Room : public ExamLocation
 		void print() const { std::cout << roomID;
 			std::cout << " " << " capacity: " << capacity << std::endl; };	
 
+		static Room* getNullRoom(){
+			Room * r = new Room("unassigned", 0);
+			return r;
+		}
+
+		static Room* getEmptyRoom(){
+			Room * r = new Room("emptyRoom", 0);
+			return r;
+		}
 
 		bool operator== (const Room & r)  {	return (r.roomID == this->roomID); }
 

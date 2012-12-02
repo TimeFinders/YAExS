@@ -69,7 +69,7 @@ public:
         typedef std::string CRN;
 
         // Constructors
-        Scheduler();
+       // Scheduler();
         Scheduler(DBManager* dbIn, Optimizer* optIn);
 
 	// Load information functions
@@ -115,6 +115,9 @@ private:
 
         //exam locations to be used by the roomAssigner
         std::list<ExamLocation* > locations_;
+
+        // true if the rooms have been assigned successfully, else false
+        bool roomsAreAssigned;
 };
 
 
