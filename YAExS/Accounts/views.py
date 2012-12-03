@@ -21,7 +21,7 @@ from courses.models import Department, Course, Section, ExamMapping
 from models import Schedule
 from forms import Scheduler
 from os import kill, remove
-from YAExS.settings import PID_FILE, REG_FILE, OPT_EXEC
+from YAExS.settings import PID_FILE, REG_FILE, OPT_EXEC, CONF_FILE
 from subprocess import check_output, STDOUT, CalledProcessError
 
 
@@ -65,7 +65,7 @@ def scheduling(request):
 					for c in form.cleaned_data['registrations'].chunks():
 						f.write(c)
 				try:
-					#check_output([OPT_EXEC, str(form.cleaned_data['examDays']), str(form.cleaned_data['examsPerDay']), REG_FILE, PID_FILE], stderr=STDOUT)
+					check_output([OPT_EXEC, str(form.cleaned_data['examDays']), str(form.cleaned_data['examsPerDay']), REG_FILE, PID_FILE, CONF_FILE], stderr=STDOUT)
 					request.session['message'] = 'Scheduling Started Successfully'
 					return redirect( 'home')
 				except CalledProcessError as e:

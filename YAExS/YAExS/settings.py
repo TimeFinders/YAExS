@@ -43,7 +43,7 @@ DATABASES = {
         'NAME': 'django',                      # Or path to database file if using sqlite3.
         'USER': 'andrew',                      # Not used with sqlite3.
         'PASSWORD': 'andrew',                  # Not used with sqlite3.
-        'HOST': 'ec2-23-20-128-235.compute-1.amazonaws.com',                      # Set to empty string for localhost. Not used with sqlite3.
+        'HOST': 'ec2-184-72-136-193.compute-1.amazonaws.com',                      # Set to empty string for localhost. Not used with sqlite3.
         'PORT': '5432',                      # Set to empty string for default. Not used with sqlite3.
     }
 }
@@ -205,6 +205,8 @@ LOGIN_URL='/login/'
 
 COURSES_COLLEGE_PARSER = 'courses.bridge.rpi.import_data'
 
-PID_FILE = 'scip.pid'
+PID_FILE = 'pid'
 REG_FILE = 'reg.csv'
-OPT_EXEC = '/home/blah'
+COMF_FILE = 'schedule/config.txt'
+OPT_EXEC = 'schedule/main'
+
