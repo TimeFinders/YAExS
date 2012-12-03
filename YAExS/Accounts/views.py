@@ -29,7 +29,7 @@ from subprocess import check_output, STDOUT, CalledProcessError
 def main(request):
     user = request.user
 
-    if user.has_perm('Acccounts.registrar'):
+    if user.has_perm('Accounts.registrar'):
     	from django.db.models import Q
 
     	message = request.session.get('message', None)
