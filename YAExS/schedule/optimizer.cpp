@@ -189,7 +189,7 @@ void Optimizer::loadModel(std::list<Exam> & exams,
                           const std::vector<Person* > & people,
                           int numDays, int slotsPerDay)
 {
-        DEBUG_PRINT("loading model into SCIP");
+    DEBUG_PRINT("loading model into SCIP");
 
 	// save the exams for later;
 	std::list<Exam> * examPointer = &exams;
@@ -218,8 +218,12 @@ void Optimizer::loadModel(std::list<Exam> & exams,
 	// load conflict  at variables
 	loadConflictAtVariables(people);
 
+	DEBUG_PRINT("DONE LOADING THE CONFLICT IS AT VARIABLES, NOW LOADING CONFLICT CONSTRAINTS");
+
 	// set the conflict at variables with conflict constraints
-        loadConflictConstraints();
+    loadConflictConstraints();
+
+    DEBUG_PRINT("DONE LOADING THE SCIP MODEL");
 }
 
 
@@ -509,7 +513,7 @@ void Optimizer::loadConflictConstraints(Person * person)
 	
 	Person::PERSON_ID personID = person->getId();
 
-        DEBUG_PRINT("\t for person " + personID);
+    DEBUG_PRINT("\t for person " + personID);
 
 	// for each person the variables map of a given time slot has all of the 
 	// exam is at variables for that time slot that that person takes.
@@ -545,7 +549,7 @@ void Optimizer::loadConflictConstraints(Person * person)
 		// add the variables to the constraint
 
 		// conflict variable
-                DEBUG_PRINT("\t\t\t adding conflict variable");
+                DEBUG_PRINT("\t\t adding conflict variable");
 		SCIP_VAR * conflictVariable = conflictVarIt->second;
 		SCIPaddCoefLinear(scip_, constraintPointer, conflictVariable, conflictCoef);
 
@@ -893,9 +897,13 @@ void Optimizer::printThreePlusVariables()
 //Run the solver
 void Optimizer::schedule()
 {
+		DEBUG_PRINT("calling SCIPsolve to schedule exams");
         SCIPsolve(scip_);
+        DEBUG_PRINT("getting the best solution");
         solution_ = SCIPgetBestSol (scip_);
+        DEBUG_PRINT("assigning exam times based on the best solution");
         assignExamTimes();
+        DEBUG_PRINT("done scheduling");
 }
 
 const char* Optimizer::examAtVariableName(const Exam & exam, const TimeSlot & timeslot)
