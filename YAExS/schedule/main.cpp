@@ -36,9 +36,9 @@ int main(int argc, char* argv[])
         DEBUG_PRINT("Checking arguments");
         
         //Check arguments
-        if (argc != 5)
+        if (argc != 6)
         {
-                std::cerr << "Usage: " << argv[0] << " days slots-per-day registrations-file pid-file" << std::endl;
+                std::cerr << "Usage: " << argv[0] << " days slots-per-day registrations-file pid-file config-file" << std::endl;
                 return 1;
         }
         
@@ -63,7 +63,7 @@ int main(int argc, char* argv[])
           
         //Load configuration file
         std::map<std::string,std::string> settings;
-        std::ifstream config("config.txt");
+        std::ifstream config(argv[5]);
         if (!config)
         {
                 std::cerr << "Error opening configuration file config.txt" << std::endl;
