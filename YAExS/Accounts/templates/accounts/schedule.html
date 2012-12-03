@@ -7,6 +7,7 @@
 
 {% block body %}
 	<table>
+		<tr><th>Section</th><th>Location</th><th>Time Slot</th></tr>
 		{% for exam in schedule %}
 			<tr><td>
 				<ul>{% for sec in exam.sections %}
