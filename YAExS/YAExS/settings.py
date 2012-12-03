@@ -207,6 +207,6 @@ COURSES_COLLEGE_PARSER = 'courses.bridge.rpi.import_data'
 
 PID_FILE = 'pid'
 REG_FILE = 'reg.csv'
-COMF_FILE = 'schedule/config.txt'
+CONF_FILE = 'schedule/config.txt'
 OPT_EXEC = 'schedule/main'
 
