@@ -22,8 +22,8 @@ else
 CC += -O3
 endif
 SCIP_ZIMPL =
-SCIP_LFLAGS = -L/usr/lib -lscip $(SCIP_ZIMPL) -lreadline  -lgmp -lz -llpispx  -lsoplex  -lobjscip -lnlpi.cppad
-PQXX_LFLAGS = -lpqxx
+SCIP_LFLAGS = -L/usr/lib -lscip $(SCIP_ZIMPL) -lreadline  -lgmp -lz -llpispx  -lsoplex  -lobjscip -lnlpi.cppad -lzimpl
+PQXX_LFLAGS = -lpqxx -L/usr/pgsql-9.2/lib -lpq
 
 MAIN_OBJ = main.cpp locations/locationreader.cpp locations/locationassigner.cpp scheduler.o optimizer.o dbmanager.o scheduleData.o exam.o
 TESTOPT_OBJ = testOpt.cpp locations/locationreader.cpp locations/locationassigner.cpp optimizer.o exam.o
