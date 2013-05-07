@@ -1,10 +1,10 @@
 # Credentials for the database
-db_username = andrew
-db_password = andrew
-db_host = ec2-50-19-7-52.compute-1.amazonaws.com
+db_username = django
+db_password = django
+db_host = localhost
 db_name = django
 db_port = 5432
 
 # Room filenames
-roomfile = locations/Rooms.csv
-roomgroupfile = locations/groupedRooms.csv
+roomfile = schedule/locations/Rooms.csv
+roomgroupfile = schedule/locations/groupedRooms.csv
