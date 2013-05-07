@@ -76,10 +76,7 @@ private:
     // exam is at time variables
     std::unordered_map< Exam::EXAM_ID, std::unordered_map<TimeSlot::TIMESLOT_ID, SCIP_VAR *> > examIsAt_;
 
-    // person has two or more exams in one day variables
-    std::unordered_map <Person::PERSON_ID, SCIP_VAR * > twoPlus_;
-
-    // person has three or more exams in one dat variables
+    // person has three or more exams in one day variables
     std::unordered_map <Person::PERSON_ID, SCIP_VAR * > threePlus_;
 
     // conflict variables
@@ -90,7 +87,7 @@ private:
     // exam can meet at exactly one time constraint
     std::unordered_map< Exam::EXAM_ID, SCIP_CONS *> onceCon_;
 
-    // set the two plus and three plus variables constraint
+    // set the three plus variables constraint
     std::unordered_map< Person::PERSON_ID, std::unordered_map<Day::DAY_ID, SCIP_CONS *> >overloadCon_;
 
     // conflict constraints
@@ -113,7 +110,6 @@ private:
 
     // LOADING SCIP INFO
     void loadExamIsAtVariables();
-    void loadTwoPlusVariables(const std::vector<Person*> & people);
     void loadThreePlusVariables(const std::vector<Person*> & people);
     void loadConflictAtVariables(const std::vector<Person*> & people);
 
@@ -126,7 +122,6 @@ private:
 
     // RELEASING SCIP INFO
     void releaseExamIsAtVariables();
-    void releaseTwoPlusVariables();
     void releaseThreePlusVariables();
     void releaseConflictAtVariables();
 
@@ -137,7 +132,6 @@ private:
 
     // PRINT VALUES OF (NONZERO) VARIABLES in the solution_
     void printExamIsAtVariables();
-    void printTwoPlusVariables();
     void printThreePlusVariables();
     void printConflictVariables();
     
@@ -145,7 +139,6 @@ private:
     // used for naming variables and constraints for SCIP. const char *'s are needed for SCIP
     static const char* examAtVariableName( const Exam & exam, const TimeSlot & timeslot );
     static const char* conflictAtVariableName( Person::PERSON_ID personID, TimeSlot::TIMESLOT_ID tsID );
-    static const char* twoPlusVariableName( Person * person );
     static const char* threePlusVariableName( Person * person );
     static const char* onceConName( Exam::EXAM_ID eid );
     static const char* onceConName( const Exam & exam );
