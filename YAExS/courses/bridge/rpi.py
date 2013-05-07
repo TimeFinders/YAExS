@@ -371,6 +371,15 @@ class SISRPIImporter(ROCSRPIImporter):
                     sections_modified.send(sender=self, semester=semester_obj)
 
                 self.clear_unused(semester_obj)
+def remove_prereq_notes(section):
+    all_notes = []
+    for i in range(0, len(section.notes)):
+        notes = section.notes[i]
+        m = re.match("PRE-REQ: ", notes)
+        if m:
+            notes = ""
+        all_notes.append(notes)
+    section.notes = all_notes
 
 def import_latest_semester(force=False):
     "Imports RPI data into the database."

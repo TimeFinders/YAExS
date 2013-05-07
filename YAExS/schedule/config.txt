@@ -1,7 +1,7 @@
 # Credentials for the database
-db_username = andrew
-db_password = andrew
-db_host = ec2-184-72-136-193.compute-1.amazonaws.com
+db_username = django
+db_password = django
+db_host = localhost
 db_name = django
 db_port = 5432
 

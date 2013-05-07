@@ -1,5 +1,4 @@
 BeautifulSoup==3.2.1
-Django==1.4.2
 RPICourses==1.0.5
 South==0.7.6
 argparse==1.2.1

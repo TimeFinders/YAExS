@@ -17,7 +17,11 @@ OUTPUT = -o main
 
 ifdef DEBUG
 CFLAGS += -DdebugMode
+ifdef PROFILING
+CC += -pg
+else
 CC += -g
+endif
 else
 CC += -O3
 endif
