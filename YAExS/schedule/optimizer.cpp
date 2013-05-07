@@ -546,9 +546,8 @@ SCIP_CONS * Optimizer::createPersonalOverloadConstraint(Person::PERSON_ID person
 {
 	//in zimpl:
 	//subto overload: 
-	//	forall <p,d> in PEOPLE cross DAYS do
-	//		sum <e> in EXAMS[p]: 
-	//			(sum <t> in DAYSLOT[d]: examIsAt [e,t]) - threePlus[p] <= 2;
+		// forall <p,d> in PEOPLE cross DAYS do
+		//  - threePlus[p] + sum <e> in EXAMS[p]: (sum <t> in DAYSLOT[d]: examIsAt [e,t])  <= 2;
 
 	bool isInitial = true;
 	// there is no lower bound, so use negative infinity
@@ -618,9 +617,9 @@ void Optimizer::loadOverloadConstraints()
 
 	//in zimpl:
 	//subto overload: 
-	//	forall <p,d> in PEOPLE cross DAYS do
-	//		sum <e> in EXAMS[p]: 
-	//			(sum <t> in DAYSLOT[d]: examIsAt [e,t]) - threePlus[p]) <= 2;
+	// forall <p,d> in PEOPLE cross DAYS do
+	//	- threePlus[p] + sum <e> in EXAMS[p]: (sum <t> in DAYSLOT[d]: examIsAt [e,t])  <= 2;
+
 
 	// loop over people
 	for (std::unordered_map <Person::PERSON_ID, SCIP_VAR *>::const_iterator pIt= threePlus_.begin();
