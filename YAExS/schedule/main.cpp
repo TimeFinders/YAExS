@@ -169,6 +169,8 @@ int main(int argc, char* argv[])
                 //Run the scheduler
                 sched.startScheduling(examDays, slotsPerDay);
 
+		sched.printSchedule();
+
                 std::cout << "done scheduling, loading the locations..." << std::endl;
 
                 //Load locations and assign rooms
@@ -183,11 +185,14 @@ int main(int argc, char* argv[])
                 //Load results into database
                 sched.writeScheduleToDB();
 
+
                 //Delete the pid file to let the website know it's done
                 remove(argv[4]);
 
                 std::cout << "all done." << std::endl;
         }
+
+
 
         //Finish up
         return 0;
