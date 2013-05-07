@@ -25,6 +25,8 @@
 #include <sstream>
 #include <iostream>
 #include <unordered_map>
+#include <thread>
+#include <unistd.h>
 #include "exams/exam.h"
 #include "people/person.h"
 #include "time/day.h"

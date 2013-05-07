@@ -806,9 +806,35 @@ void Optimizer::printThreePlusVariables()
 //Run the solver
 void Optimizer::schedule()
 {
+
+		auto scipMemChecker = [this](){
+			sleep(300);
+			SCIPprintMemoryDiagnostic(this->scip_);
+			switch(SCIPgetStatus(this->scip_)){
+				case SCIP_STATUS_MEMLIMIT:
+					std::cerr << "SCIP Memory limit reached" << std::endl;
+					return;
+				case SCIP_STATUS_OPTIMAL:
+				case SCIP_STATUS_TIMELIMIT:
+				case SCIP_STATUS_BESTSOLLIMIT:
+				case SCIP_STATUS_SOLLIMIT:
+				case SCIP_STATUS_GAPLIMIT:
+				case SCIP_STATUS_STALLNODELIMIT:
+				case SCIP_STATUS_NODELIMIT:
+				case SCIP_STATUS_USERINTERRUPT:
+					return;
+				default:
+					break;
+			}
+		};
+		std::thread memCheckThread(scipMemChecker);
+		memCheckThread.detach();
+
+
         SCIPsolve(scip_);
         solution_ = SCIPgetBestSol (scip_);
         assignExamTimes();
+
 }
 
 const char* Optimizer::examAtVariableName(const Exam & exam, const TimeSlot & timeslot)
