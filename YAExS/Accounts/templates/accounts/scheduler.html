@@ -24,6 +24,16 @@
             $(this).siblings(".courses").slideToggle();
             return false;
         });
+
+        $(".exams > li").dblclick(function(){
+            $("#overlay, #preferences").css("display", "block");
+        });
+
+        $("#overlay > .close, #overlay").click(function(){
+            $("#overlay, #preferences").css("display", "none");
+        });
+
+
     });
 
     </script>
@@ -67,5 +77,10 @@
                 </div>
             </div>
         </div>
+
+
     {% endfor %}
+    <div id="overlay"><span class="close"/></div>
+    <div id="preferences"></div>
+
 {% endblock body %}

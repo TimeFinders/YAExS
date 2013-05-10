@@ -199,9 +199,9 @@ AUTHENTICATION_BACKENDS = (
 
 CAS_SERVER_URL = "https://cas-auth.rpi.edu/cas/"
 CAS_IGNORE_REFERER = True
-CAS_REDIRECT_URL = "http://sdd.steifel.net/yaexs/"
+CAS_REDIRECT_URL = "http://localhost:8000"
 CAS_LOGOUT_COMPLETELY = True
-LOGIN_URL='/yaexs/login/'
+LOGIN_URL='/login/'
 
 
 COURSES_COLLEGE_PARSER = 'courses.bridge.rpi.import_data'
