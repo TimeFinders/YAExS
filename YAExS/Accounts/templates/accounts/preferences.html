@@ -1,0 +1,22 @@
+Exam Preferences for {{course.name}}
+
+<p>Select which days you DON'T want the exam on:</p>
+<ul class="days">
+    <li>Monday</li>
+    <li>Tuesday</li>
+    <li>Wednesday</li>
+    <li>Thursday</li>
+    <li>Friday</li>
+</ul>
+
+<input id="save" type="button" value="save" />
+
+<script language="javascript">
+    $(".days li").click(function(){
+        $(this).toggleClass("selected");
+    });
+    $("#save").click(function(){
+        $("#overlay > .close").click();
+        $("#preferences").empty();
+    });
+</script>

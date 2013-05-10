@@ -26,12 +26,17 @@
         });
 
         $(".exams > li").dblclick(function(){
+
+            $.ajax('{% url preference %}' + $(this).attr('id'),{success: function(data){
+                $("#preferences").html(data);
+            }});
             $("#overlay, #preferences").css("display", "block");
         });
 
         $("#overlay > .close, #overlay").click(function(){
             $("#overlay, #preferences").css("display", "none");
         });
+
 
 
     });
