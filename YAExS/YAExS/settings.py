@@ -25,7 +25,7 @@ sys.path.insert(0, relative_path('lib'))
 
 # Django settings for YAExS project.
 
-PRODUCTION = True
+PRODUCTION = False
 
 DEBUG = not PRODUCTION
 COMPRESS_ENABLED = PRODUCTION
